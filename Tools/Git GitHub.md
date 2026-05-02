@@ -324,9 +324,8 @@ git push origin <branch_name>
 + Keep your fork updated.
 
 ```
-git fetch upstream
 git checkout main
-git merge upstream/main
+git pull upstream main
 git push origin main
 ```
 
