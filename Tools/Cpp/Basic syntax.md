@@ -384,6 +384,70 @@ Null Pointer
 int* p = nullptr;
 ```
 
+##### Arrow Operator `->`
+
+The arrow operator `->` is used to access members of an object through a pointer.
+
+| Expression      | Meaning                           |
+| --------------- | --------------------------------- |
+| `obj.member`    | Access a member through an object |
+| `ptr->member`   | Access a member through a pointer |
+| `(*ptr).member` | Equivalent to `ptr->member`       |
+
+Example with `class`
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Robot {
+public:
+    double x;
+    double y;
+
+    void move(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
+
+    void printPosition() const {
+        cout << "(" << x << ", " << y << ")" << endl;
+    }
+};
+
+int main() {
+    Robot robot;
+    robot.x = 0.0;
+    robot.y = 0.0;
+
+    Robot* robot_ptr = &robot;
+
+    robot_ptr->move(1.0, 2.0);	// robot.move(1.0, 2.0);
+    robot_ptr->printPosition();
+
+    return 0;
+}
+```
+
+ `robot_ptr` is a pointer to a `Robot` object.
+
+```cpp
+robot_ptr->move(1.0, 2.0);
+```
+
+is equivalent to
+
+```cpp
+(*robot_ptr).move(1.0, 2.0);
+```
+
+The arrow operator can be used to access both data members and member functions.
+
+```cpp
+robot_ptr->x;
+robot_ptr->move(1.0, 2.0);
+```
+
 ##### References
 
 A reference is another name for an existing variable.

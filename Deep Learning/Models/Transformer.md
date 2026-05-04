@@ -26,8 +26,9 @@ $$
 
 The embedding layer does not yet encode word order. It only maps each token into a continuous representation space where semantic and syntactic information can be learned.
 
-The same idea is used on the decoder side output tokens are also converted to vectors of dimension $d_{\text{model}}$. The model **shares the same weight matrix** between the two embedding layers and the pre-softmax linear transformation. In the embedding layers, the weights are multiplied by
+The same idea is used on the decoder side output tokens are also converted to vectors of dimension $d_{\text{model}}$. 
 
+In the embedding layers, the weights are multiplied by
 $$
 \sqrt{d_{\text{model}}}
 $$
@@ -104,9 +105,9 @@ $$
 \boldsymbol{v}_j
 $$
 
-contains the information that will be aggregated if position $j$ is attended to.
+contains the information that will be **aggregated** if position $j$ is attended to.
 
-An attention function maps a query and a set of key-value pairs to an output. For one query position, the **attention weights** are
+For one query position, the **attention weights** are
 $$
 \alpha_{ij}
 =
@@ -116,7 +117,7 @@ $$
 \right)
 $$
 
-The weight assigned to each value is computed by a **compatibility function** of the **query** with the corresponding **key**.
+The weight assigned to each value is computed by a **compatibility function** ${\boldsymbol{q}_i\boldsymbol{k}_j^{T}}/{\sqrt{d_k}}$ .
 
 The output vector at position $i$ is
 $$
@@ -127,23 +128,13 @@ $$
 
 This lets each input position attend to all positions in the previous encoder layer. 
 
-Therefore, the representation at one token can directly incorporate information from any other token, regardless of distance.
-
-Here, $n$ is the sequence length, and $d$ is the representation dimension of each token.
-
-+ For self-attention, the **complexity per-layer** is $O(n^2\cdot d)$ because each of the $n$ positions attends to all $n$ positions, and each compatibility computation involves a $d$-dimensional representation. 
-
-+ The **sequential operations** is $O(1)$ because all positions can be computed in parallel by matrix multiplication. 
-
-+ The **maximum path length** is $O(1)$ because any two positions can be directly connected within one self-attention layer, which makes long-range dependencies easier to learn.
-
 ##### Scaled Dot-Product Attention
 
 <img src="/home/yunxiu/Desktop/ROS2_study/Pictures/image-20260502162229980.png" alt="image-20260502162229980" style="zoom: 28%;" />
 
 The input consists of queries and keys of dimension $d_k$, and values of dimension $d_v$. 
 
-In practice, the attention function is computed on a set of queries simultaneously, packed together into a matrix $Q$. The keys and values are also packed together into matrices $K$ and $V$.
+In practice, the **attention function** is computed on a set of queries simultaneously, packed together into a matrix $Q$. The keys and values are also packed together into matrices $K$ and $V$.
 
 Assume there are $n_q$ query positions and $n_k$ key-value positions. Then the matrix dimensions are
 
@@ -159,7 +150,7 @@ $$
 V\in\mathbb{R}^{n_k\times d_v}
 $$
 
-The **dot product** $QK^T$ measures compatibility between queries and keys.
+The **dot product** $QK^T$ measures **compatibility** between queries and keys.
 $$
 QK^T\in\mathbb{R}^{n_q\times n_k}
 $$
@@ -170,7 +161,34 @@ $$
 $$
 prevents the softmax function from entering regions of extremely small gradients when $d_k$ is large, mitigating the vanishing gradient issue of the dot product.
 
-The **softmax** converts compatibility scores into attention weights. Multiplication by $V$ forms the weighted sum of values.
+The **softmax** converts compatibility scores into **attention weights**. The **attention matrix** is the softmax-normalized compatibility matrix between queries and keys. 
+
+Each row gives the **attention distribution** of one query position over all key-value positions.
+$$
+\operatorname{softmax}
+(
+\frac{QK^T}{\sqrt{d_k}}
+)
+
+=
+
+\begin{bmatrix}
+\operatorname{softmax}\left(\boldsymbol{q}_1K^T/\sqrt{d_k}\right) \\
+\operatorname{softmax}\left(\boldsymbol{q}_2K^T/\sqrt{d_k}\right) \\
+\vdots \\
+\operatorname{softmax}\left(\boldsymbol{q}_{n_q}K^T/\sqrt{d_k}\right)
+\end{bmatrix}
+
+=
+
+\begin{bmatrix}
+\alpha_{11} & \alpha_{12} & \cdots & \alpha_{1n_k} \\
+\alpha_{21} & \alpha_{22} & \cdots & \alpha_{2n_k} \\
+\vdots & \vdots & \ddots & \vdots \\
+\alpha_{n_q1} & \alpha_{n_q2} & \cdots & \alpha_{n_qn_k}
+\end{bmatrix}
+$$
+An **attention function** maps a query and a set of key-value pairs to an output.
 $$
 \operatorname{Attention}(Q,K,V)
 =
@@ -180,7 +198,7 @@ $$
 \right)V
 $$
 
-Therefore, each query position produces one output vector of dimension $d_v$. Each row of the attention matrix represents the attention distribution of one query position over all key-value positions, showing how much that token attends to every token.
+Therefore, each query position produces one output vector of dimension $d_v$. 
 $$
 \text {Attention}(Q,K,V)\in\mathbb{R}^{n_q\times d_v}
 $$
@@ -388,11 +406,11 @@ $$
 identical layers. Each decoder layer has three sub-layers
 
 $$
-\text{Masked Multi-Head Self-Attention}
-\rightarrow
-\text{Encoder-Decoder Multi-Head Attention}
-\rightarrow
-\text{Position-wise Feed-Forward Network}.
+\text{Masked Multi-Head Self-Attention} \\
+\downarrow \\
+\text{Encoder-Decoder Multi-Head Attention} \\
+\downarrow \\
+\text{Position-wise Feed-Forward Network}
 $$
 
 Each sub-layer is wrapped with residual connection and layer normalization.
@@ -431,8 +449,6 @@ $$
 $$
 
 ##### Encoder-Decoder Multi-Head Attention
-
-The decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack.
 
 In this attention layer, the queries come from the previous decoder layer, while the memory keys and values come from the output of the encoder
 
@@ -486,21 +502,34 @@ $$
 
 The softmax converts logits into predicted next-token probabilities over the vocabulary.
 
-During inference, the model generates tokens auto-regressively. The token predicted at one step is fed back into the decoder input for the next step. During training, the shifted target sequence allows all positions to be processed in parallel under the causal mask.
+### Forward Flow During Training
 
-### Forward Flow
+For an input sequence
 
-The source tokens are embedded and enriched with positional encodings
+$$
+(x_1,\ldots,x_n)
+$$
+
+the source tokens are first converted to embeddings and added with positional encodings
+
+$$
+\boldsymbol{h}_i^{(0)}
+=
+\operatorname{Embedding}(x_i)+PE_i,
+\qquad i=1,\ldots,n
+$$
+
+where
 
 $$
 \boldsymbol{h}^{(0)}
 =
-\operatorname{Embedding}(x)
-+
-PE
+(\boldsymbol{h}_1^{(0)},\ldots,\boldsymbol{h}_n^{(0)})
 $$
 
-The encoder repeatedly applies
+is the input to the encoder stack.
+
+The encoder is composed of a stack of $N=6$ identical layers. For each encoder layer $\ell=1,\ldots,N$, the first sub-layer is multi-head self-attention
 
 $$
 \boldsymbol{u}^{(\ell)}
@@ -514,6 +543,8 @@ $$
 \right)
 $$
 
+The second sub-layer is the position-wise feed-forward network
+
 $$
 \boldsymbol{h}^{(\ell)}
 =
@@ -525,23 +556,25 @@ $$
 \right)
 $$
 
-After $N$ layers, the encoder output is
+After $N=6$ encoder layers, the encoder outputs a sequence of continuous representations
 
 $$
-\boldsymbol{z}=\boldsymbol{h}^{(N)}
+\boldsymbol{z}
+=
+\boldsymbol{h}^{(N)}
+=
+(\boldsymbol{z}_1,\ldots,\boldsymbol{z}_n)
 $$
 
-The decoder receives shifted target embeddings plus positional encodings
+The decoder receives the output embeddings offset by one position. Therefore, the initial decoder representation can be written as
 
 $$
 \boldsymbol{s}^{(0)}
 =
-\operatorname{Embedding}(y_{<i})
-+
-PE
+\operatorname{Embedding}(\text{outputs shifted right})+PE
 $$
 
-Each decoder layer applies masked self-attention,
+The decoder is also composed of a stack of $N=6$ identical layers. For each decoder layer $\ell=1,\ldots,N$, the first sub-layer is masked multi-head self-attention
 
 $$
 \boldsymbol{r}^{(\ell)}
@@ -555,7 +588,15 @@ $$
 \right)
 $$
 
-then encoder-decoder attention,
+The second sub-layer is encoder-decoder multi-head attention. The queries come from the previous decoder sub-layer, while the memory keys and values come from the encoder output
+
+$$
+Q \leftarrow \boldsymbol{r}^{(\ell)},
+\qquad
+K,V \leftarrow \boldsymbol{z}
+$$
+
+Thus,
 
 $$
 \boldsymbol{a}^{(\ell)}
@@ -565,11 +606,11 @@ $$
 \boldsymbol{r}^{(\ell)}
 +
 \operatorname{MultiHeadAttention}
-(Q_{\text{dec}},K_{\text{enc}},V_{\text{enc}})
+(\boldsymbol{r}^{(\ell)},\boldsymbol{z},\boldsymbol{z})
 \right)
 $$
 
-then the position-wise feed-forward network,
+The third sub-layer is the position-wise feed-forward network
 
 $$
 \boldsymbol{s}^{(\ell)}
@@ -582,7 +623,15 @@ $$
 \right)
 $$
 
-Finally, the decoder output is projected to vocabulary logits and normalized
+After $N=6$ decoder layers, the decoder output is
+
+$$
+\boldsymbol{s}^{(N)}
+=
+(\boldsymbol{s}_1^{(N)},\ldots,\boldsymbol{s}_m^{(N)})
+$$
+
+Each decoder output vector is passed through a learned linear transformation and softmax to produce predicted next-token probabilities
 
 $$
 P(y_i\mid y_{<i},x)
@@ -592,3 +641,23 @@ P(y_i\mid y_{<i},x)
 \boldsymbol{s}_i^{(N)}W_{\text{vocab}}+\boldsymbol{b}_{\text{vocab}}
 \right)
 $$
+
+**During training,** the shifted target sequence allows all positions to be processed in parallel under the causal mask.
+
+**During inference**, the model generates tokens auto-regressively. The token predicted at one step is fed back into the decoder input for the next step. 
+
+### Why Self-Attention Is Efficient
+
+Here, $n$ is the sequence length, and $d$ is the representation dimension of each token.
+
+|   Layer Type   |   Complexity per Layer   | Sequential Operations | Maximum Path Length |
+| :------------: | :----------------------: | :-------------------: | :-----------------: |
+| Self-Attention |     $O(n^2 \cdot d)$     |        $O(1)$         |       $O(1)$        |
+|   Recurrent    |     $O(n \cdot d^2)$     |        $O(n)$         |       $O(n)$        |
+| Convolutional  | $O(k \cdot n \cdot d^2)$ |        $O(1)$         |   $O(\log_k(n))$    |
+
++ For self-attention, the **complexity per-layer** is $O(n^2\cdot d)$ because each of the $n$ positions attends to all $n$ positions, and each compatibility computation involves a $d$-dimensional representation. 
+
++ The **sequential operations** is $O(1)$ because all positions can be computed in parallel by matrix multiplication. 
+
++ The **maximum path length** is $O(1)$ because any two positions can be directly connected within one self-attention layer, which makes long-range dependencies easier to learn.
