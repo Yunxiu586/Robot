@@ -117,10 +117,6 @@ $$
 
 ### astar_bsline
 
-**A* algorithm** efficiently finds the shortest path by evaluating nodes with the **f = g + h** score. 
-
-It explores the most promising nodes first using a priority queue (min-heap), where **g** is the exact cost from the start, and **h** is a heuristic estimate (like Euclidean distance) to the goal. The algorithm tracks the optimal parent for each node to reconstruct the path upon reaching the goal.
-
 ```python
 def astar(start, goal, grid):
     rows, cols = grid.shape
