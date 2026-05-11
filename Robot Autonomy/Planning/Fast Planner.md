@@ -2,7 +2,57 @@
 
 [toc]
 
+### Abstract
+
+In this paper, a robust and efficient quadrotor motion planning system is proposed for fast flight in 3-D complex environments. 
+
+The paper first adopts a kinodynamic path searching method to find a safe, kinodynamic feasible, and minimum-time initial trajectory in the discretized control space. 
+
+Then, the smoothness and clearance of the trajectory are improved by a B-spline optimization, which incorporates gradient information from a Euclidean distance field (EDF) and dynamic constraints efficiently utilizing the convex hull property of B-spline. 
+
+Finally, by representing the final trajectory as a non-uniform B-spline, the paper adopts an iterative time adjustment method to guarantee dynamically feasible and non-conservative trajectories.
+
 ### Kinodynamic Path Searching
+
+##### Kinodynamic Path Searching Algorithm
+
+The searching loop is similar to the standard A* algorithm, where $\mathcal P$ and $\mathcal C$ refer to the open and closed
+set. Instead of straight lines, motion primitives respecting the quadrotor dynamic are used as graph edge. A structure $Node$ is used to record a primitive, the voxel the primitives ends in and the $g_c$ and $f_c$ cost.
+
+```pseudocode
+Initialize open set P and closed set C;
+
+while P is not empty do
+    n_c <- P.pop();
+    C.insert(n_c);
+
+    if ReachGoal(n_c) or AnalyticExpand(n_c) then
+        return RetrievePath();
+
+    primitives <- Expand(n_c);
+    nodes <- Prune(primitives);
+
+    for each n_i in nodes do
+        if n_i not in C and CheckFeasible(n_i) then
+            g_temp <- n_c.g_c + EdgeCost(n_i);
+
+            if n_i not in P then
+                P.add(n_i);
+            else if g_temp >= n_i.g_c then
+                continue;
+
+            n_i.parent <- n_c;
+            n_i.g_c <- g_temp;
+            n_i.f_c <- n_i.g_c + Heuristic(n_i);
+```
+
+`Expand()` applies discretized control inputs for duration $\tau$ and generates dynamically consistent motion primitives. Primitives `Expand()` the voxel grid map iteratively.
+
+ `Prune()` removes primitives ending in the same voxel except the one with the smallest $f_c$. 
+
+`CheckFeasible()` checks safety and dynamic feasibility of the remained primitives.
+
+ `AnalyticExpand()` directly connects the current state $\boldsymbol{x}_c$ to the goal state $\boldsymbol{x}_g$ using the closed-form trajectory above; if the connection is safe and dynamically feasible, the search terminates early.
 
 #####  Primitives Generation
 
@@ -74,7 +124,7 @@ e^{-\mathbf{A}t}\dot{\boldsymbol{x}}(t)
 =
 e^{-\mathbf{A}t}\mathbf{A}\boldsymbol{x}(t)
 +
-e^{-\mathbf{A}t}\mathbf{B}\boldsymbol{u}(t).
+e^{-\mathbf{A}t}\mathbf{B}\boldsymbol{u}(t)
 $$
 
 Since
@@ -87,7 +137,7 @@ e^{-\mathbf{A}t}\boldsymbol{x}(t)
 =
 e^{-\mathbf{A}t}\dot{\boldsymbol{x}}(t)
 -
-e^{-\mathbf{A}t}\mathbf{A}\boldsymbol{x}(t),
+e^{-\mathbf{A}t}\mathbf{A}\boldsymbol{x}(t)
 $$
 
 we obtain
@@ -98,7 +148,7 @@ $$
 e^{-\mathbf{A}t}\boldsymbol{x}(t)
 \right)
 =
-e^{-\mathbf{A}t}\mathbf{B}\boldsymbol{u}(t).
+e^{-\mathbf{A}t}\mathbf{B}\boldsymbol{u}(t)
 $$
 
 Integrating both sides from $0$ to $t$ gives
@@ -111,30 +161,20 @@ e^{-\mathbf{A}t}\boldsymbol{x}(t)
 \int_0^t
 e^{-\mathbf{A}\tau}
 \mathbf{B}\boldsymbol{u}(\tau)
-\,d\tau.
+\,d\tau
 $$
 
-Therefore,
+Therefore, the **complete solution of the state equation** is
 
-$$
-\boldsymbol{x}(t)
-=
-e^{\mathbf{A}t}\boldsymbol{x}(0)
-+
-e^{\mathbf{A}t}
-\int_0^t
-e^{-\mathbf{A}\tau}
-\mathbf{B}\boldsymbol{u}(\tau)
-\,d\tau.
-$$
-
-The **complete solution of the state equation** is
 $$
 \boldsymbol{x}(t) = e^{\mathbf{A}t}\boldsymbol{x}(0) + \int_{0}^{t} e^{\mathbf{A}(t-\tau)} \mathbf{B}\boldsymbol{u}(\tau)\, d\tau
 $$
 
-In `Expand()`, given the current quadrotor state, a set of discretized control inputs $\mathcal{U}_D \subset \mathcal{U}$ is applied for duration $\tau$. In practice $n=2$, which corresponds to a double integrator. Each axis is uniformly discretized as
-
+In `Expand()`, given the current quadrotor state, a set of discretized control inputs $\mathcal{U}_D \subset \mathcal{U}$ is applied for duration $\tau$. In practice $n=2$, which corresponds to a double integrator. 
+$$
+x(t) = \begin{bmatrix} p(t) \\ v(t) \end{bmatrix}\\ u(t) = a(t)
+$$
+Each axis is uniformly discretized as
 $$
 [-u_{\max}, u_{\max}]
 \rightarrow
@@ -203,8 +243,6 @@ v_{\mu g} - v_{\mu c}
 \end{bmatrix}
 $$
 
-The corresponding cost is
-
 $$
 \mathcal{J}^{*}(T)
 =
@@ -220,8 +258,9 @@ $$
 \rho T
 $$
 
-The optimal time $T$ is obtained by substituting $\alpha_{\mu}$ and $\beta_{\mu}$ into $\mathcal{J}^{*}(T)$ and finding the roots of
+where $p_{\mu c}$, $v_{\mu c}$, $p_{\mu g}$, $v_{\mu g}$ are the current and goal position and velocity.
 
+The optimal time $T$ is obtained by substituting $\alpha_{\mu}$ and $\beta_{\mu}$ into $\mathcal{J}^{*}(T)$ and finding the roots of
 $$
 \frac{\partial \mathcal{J}^{*}(T)}{\partial T}=0
 $$
@@ -236,46 +275,6 @@ Finally, $f_c$ is defined as
 $$
 f_c = g_c + h_c = g_c + \mathcal{J}^{*}(T_h)
 $$
-
-##### Kinodynamic Path Searching Algorithm
-
-The searching loop is similar to the standard A* algorithm, where $\mathcal P$ and $\mathcal C$ refer to the open and closed
-set. Instead of straight lines, motion primitives respecting the quadrotor dynamic are used as graph edge. A structure $Node$ is used to record a primitive, the voxel the primitives ends in and the $g_c$ and $f_c$ cost.
-
-```pseudocode
-Initialize open set P and closed set C;
-
-while P is not empty do
-    n_c <- P.pop();
-    C.insert(n_c);
-
-    if ReachGoal(n_c) or AnalyticExpand(n_c) then
-        return RetrievePath();
-
-    primitives <- Expand(n_c);
-    nodes <- Prune(primitives);
-
-    for each n_i in nodes do
-        if n_i not in C and CheckFeasible(n_i) then
-            g_temp <- n_c.g_c + EdgeCost(n_i);
-
-            if n_i not in P then
-                P.add(n_i);
-            else if g_temp >= n_i.g_c then
-                continue;
-
-            n_i.parent <- n_c;
-            n_i.g_c <- g_temp;
-            n_i.f_c <- n_i.g_c + Heuristic(n_i);
-```
-
-`Expand()` applies discretized control inputs for duration $\tau$ and generates dynamically consistent motion primitives.
-
- `Prune()` removes primitives ending in the same voxel except the one with the smallest $f_c$. 
-
-`CheckFeasible()` checks safety and dynamic feasibility of the remained primitives.
-
- `AnalyticExpand()` directly connects the current state $\boldsymbol{x}_c$ to the goal state $\boldsymbol{x}_g$ using the closed-form trajectory above; if the connection is safe and dynamically feasible, the search terminates early.
 
 ##### Analytic Expansion
 
@@ -645,7 +644,7 @@ Here $\mathbf{M}_{p_b+1}$ is a constant matrix determined by $p_b$. The derivati
 
 ##### Convex Hull Property
 
-The convex hull property is used to ensure both dynamic feasibility and safety. For dynamic feasibility, it is sufficient to constrain all velocity and acceleration control points:
+The convex hull property is used to ensure both dynamic feasibility and safety. For dynamic feasibility, it is sufficient to constrain all velocity and acceleration control points
 
 $$
 \boldsymbol{V}_i \in [-v_{\max},v_{\max}]^3
@@ -653,7 +652,7 @@ $$
 \boldsymbol{A}_i \in [-a_{\max},a_{\max}]^3
 $$
 
-For the uniform B-spline used in the paper, the derivative control points are computed as
+For the uniform B-spline, the derivative control points are computed as
 
 $$
 \boldsymbol{V}_i = \frac{1}{\Delta t}(\boldsymbol{Q}_{i+1}-\boldsymbol{Q}_i)
@@ -661,8 +660,9 @@ $$
 \boldsymbol{A}_i = \frac{1}{\Delta t}(\boldsymbol{V}_{i+1}-\boldsymbol{V}_i)
 $$
 
-For safety, every convex hull of the B-spline should be collision-free. Let $d_h$ be the distance between an occupied voxel and any point $\boldsymbol{Q}_h$ in the convex hull. Let $d_c$ be the distance between the occupied voxel and a control point. If $r_{12}, r_{23}, r_{34}$ denote distances between adjacent control points in a cubic B-spline convex hull, then the triangle inequality gives
+<img src="/home/yunxiu/Desktop/ROS2_study/Pictures/f3ae7b9c-2246-4529-bba2-ffee1e3e08ad.png" alt="f3ae7b9c-2246-4529-bba2-ffee1e3e08ad" style="zoom: 75%;" />
 
+For safety, every convex hull of the B-spline should be collision-free. Let $d_h$ be the distance between an occupied voxel and any point $\boldsymbol{Q}_h$ in the convex hull. Let $d_c$ be the distance between the occupied voxel and any one control point. If $r_{12}, r_{23}, r_{34}$ denote distances between adjacent control points in a cubic B-spline convex hull, then the triangle inequality gives
 $$
 d_h > d_c - r_h
 \\
@@ -689,7 +689,7 @@ then the convex hull is guaranteed to be collision-free.
 
 ##### Problem Formulation
 
-For a $p_b$ degree B-spline trajectory defined by control points $\{\boldsymbol{Q}_0,\boldsymbol{Q}_1,\cdots,\boldsymbol{Q}_N\}$, the optimization variables are the interior control points
+For a $p_b$ degree B-spline trajectory defined by control points $\{\boldsymbol{Q}_0,\boldsymbol{Q}_1,\cdots,\boldsymbol{Q}_N\}$, the optimization variables are the interior $N+1-2p_b$ control points
 
 $$
 \{\boldsymbol{Q}_{p_b}, \boldsymbol{Q}_{p_b+1}, \cdots, \boldsymbol{Q}_{N-p_b}\}
@@ -703,7 +703,7 @@ $$
 
 where $f_s$ is the smoothness cost, $f_c$ is the collision cost, and $f_v$, $f_a$ are soft limits on velocity and acceleration.
 
-The smoothness cost captures the geometric information of the trajectory and does not depend on time allocation. It is formulated as an elastic band cost
+The **smoothness cost** captures the geometric information of the trajectory and does not depend on time allocation. It is formulated as an **elastic band cost**
 
 $$
 f_s =
@@ -717,7 +717,7 @@ $$
 
 This views the trajectory as an elastic band, where $\boldsymbol{F}_{i+1,i}$ and $\boldsymbol{F}_{i-1,i}$ are joint forces of two springs connected to $\boldsymbol{Q}_i$. If all terms are zero, the control points are uniformly distributed in a straight line.
 
-The collision cost is formulated as the repulsive force of obstacles acting on each control point
+The **collision cost** is formulated as the repulsive force of obstacles acting on each control point
 
 $$
 f_c = \sum_{i=p_b}^{N-p_b} F_c(d(\boldsymbol{Q}_i))
@@ -733,17 +733,6 @@ F_c(d(\boldsymbol{Q}_i)) =
 \end{cases}
 $$
 
-The Euclidean distance field provides both $d(\boldsymbol{Q}_i)$ and the gradient direction. For gradient-based optimization, the collision gradient is
-
-$$
-\nabla_{\boldsymbol{Q}_i}F_c
-=
-\begin{cases}
-2(d(\boldsymbol{Q}_i)-d_{thr})\nabla d(\boldsymbol{Q}_i) & d(\boldsymbol{Q}_i) \le d_{thr} \\
-0 & d(\boldsymbol{Q}_i) > d_{thr}
-\end{cases}
-$$
-
 Velocity and acceleration are penalized when they exceed the maximum allowable values. For one-dimensional velocity $v_{\mu}$, where $\mu \in \{x,y,z\}$,
 
 $$
@@ -754,7 +743,7 @@ F_v(v_{\mu}) =
 \end{cases}
 $$
 
-The acceleration penalty $F_a$ has the same form. Using the convex hull property, the paper defines
+The acceleration penalty $F_a$ has the same form. Using the convex hull property, we defines
 
 $$
 f_v =
@@ -780,7 +769,7 @@ $$
 \Delta t_m = t_{m+1}-t_m
 $$
 
-is independent. The first- and second-order derivative control points of a non-uniform B-spline are
+is independent to others. The first- and second-order derivative control points of a non-uniform B-spline are
 
 $$
 \boldsymbol{V}_i' =
@@ -792,7 +781,7 @@ $$
 \frac{(p_b-1)(\boldsymbol{V}_{i+1}'-\boldsymbol{V}_i')}{t_{i+p_b+1}-t_{i+2}}
 $$
 
-By the convex hull property, enforcing all first- and second-order derivative control points within the feasible domain is sufficient to enforce dynamic feasibility of the whole trajectory.
+By the convex hull property, enforcing all first and second order derivative control points within the feasible domain is sufficient to enforce dynamic feasibility of the whole trajectory.
 
 ##### Velocity Knot Span Adjustment
 
@@ -865,12 +854,11 @@ $$
 Then
 
 $$
-\hat{A}_{i,\mu}
-=
-\frac{p_b-1}{\hat{t}_{i+p_b+1}-\hat{t}_{i+2}}
-(\hat{V}_{i+1,\mu}-\hat{V}_{i,\mu})
-=
-\frac{1}{\mu_a^2}A_{i,\mu}'
+\begin{align*}
+\hat{A}_{i,\mu} &= \frac{p_b-1}{\hat{t}_{i+p_b+1}-\hat{t}_{i+2}}(\hat{V}_{i+1,\mu}-\hat{V}_{i,\mu}) \\
+&= \frac{1}{\mu_a} \frac{p_b-1}{\mu_a t_{i+p_b+1}-t_{i+2}} \left( \frac{1}{\mu_a} V'_{i+1,\mu} - \frac{1}{\mu_a} V'_{i,\mu} \right) \\
+&= \frac{1}{\mu_a^2} \frac{p_b-1}{t_{i+p_b+1}-t_{i+2}} (V'_{i+1,\mu}-V'_{i,\mu}) = \frac{1}{\mu_a^2} A'_{i,\mu}
+\end{align*}
 $$
 
 Let
@@ -892,21 +880,21 @@ $$
 
 ##### Iterative Time Adjustment Algorithm
 
-```pseudocode
+```text
 repeat
-    V, A <- findInfeasible();
+    V, A ← findInfeasible()
 
-    for each V_i_prime in V do
-        v_m <- max_{mu in {x,y,z}} |V_{i,mu}_prime|;
-        mu_v_prime <- min{alpha_v, v_m / v_max};
-        AdjustKnotSpansVel(V_i_prime, mu_v_prime);
+    for each V_i' in V do
+        v_m <- max_{mu ∈ {x,y,z}} |V'_{i,mu}|
+        mu'_v <- min{α_v, v_m / v_max}
+        AdjustKnotSpansVel(V_i', mu'_v)
 
-    for each A_i_prime in A do
-        a_m <- max_{mu in {x,y,z}} |A_{i,mu}_prime|;
-        mu_a_prime <- min{alpha_a, (a_m / a_max)^{1/2}};
-        AdjustKnotSpansAcc(A_i_prime, mu_a_prime);
+    for each A_i' in A do
+        a_m <- max_{mu ∈ {x,y,z}} |A'_{i,mu}|
+        mu'_a <- min{α_a, sqrt(a_m / a_max)}
+        AdjustKnotSpansAcc(A_i', mu'_a)
 
-until V is empty and A is empty
+until V.empty() and A.empty()
 ```
 
 The constants $\alpha_v$ and $\alpha_a$ are slightly larger than $1$. They prevent any knot span from being extended excessively in a single iteration, because one knot span influences multiple derivative control points and one derivative control point is also affected by multiple knot spans.

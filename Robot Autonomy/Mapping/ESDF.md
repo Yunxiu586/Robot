@@ -1,6 +1,42 @@
-# ESDF
-
 [toc]
+
+# EDF
+
+##### Definition
+
+**Euclidean Distance Field** (EDF) is a scalar field that stores the Euclidean distance from each point to the nearest obstacle. EDF is usually computed from an occupancy grid by Euclidean Distance Transform (EDT)
+
+For a continuous point $\boldsymbol{x} \in \mathbb{R}^{3}$, EDF is defined as
+
+$$
+D(\boldsymbol{x})
+=
+\min_{\boldsymbol{o} \in \mathcal{O}}
+\left\|
+\boldsymbol{x} - \boldsymbol{o}
+\right\|_2
+$$
+
+where $\mathcal{O}$ denotes the obstacle set.
+
+For a voxel grid, if $\boldsymbol{x}_{\boldsymbol{i}}$ is the center of voxel $\boldsymbol{i}$, then
+
+$$
+D(\boldsymbol{i})
+=
+\min_{\boldsymbol{j} \in \mathcal{I}_{\mathrm{occ}}}
+\left\|
+\boldsymbol{x}_{\boldsymbol{i}}
+-
+\boldsymbol{x}_{\boldsymbol{j}}
+\right\|_2
+$$
+
+where $\mathcal{I}_{\mathrm{occ}}$ is the set of occupied voxel indices.
+
+$D(\boldsymbol{x}) = 0$ means on obstacle surfaces.
+
+# ESDF
 
 ##### Definition
 

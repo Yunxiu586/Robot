@@ -1,2 +1,0 @@
-# Frenet Optimal Trajectory
-

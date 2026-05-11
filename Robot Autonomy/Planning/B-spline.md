@@ -1,4 +1,6 @@
-# Trajectory Smoothing
+# B-spline
+
+[toc]
 
 ### Bézier Curve
 
@@ -27,6 +29,8 @@ A B‑spline curve is defined by control points, a **knot vector**, and the **de
 
 **Local support** : modifying one control point only affects the curve locally (over about “degree $+1$” knot spans), making it highly suitable for long and complex trajectories.
 
+##### Basis Function Representation
+
 A B‑spline curve of degree $p$ is defined by $n+1$ control points $P_0,P_1,...,P_n$ and a knot vector $U=\{u_0,u_1,...,u_m\}$, where $m=n+p+1$.
 $$
 C(u) = \sum_{i=0}^{n} N_{i,p}(u) \cdot P_i
@@ -49,8 +53,37 @@ where
 $$
 \sum_{i=0}^{n} N_{i,p}(u) = 1 \quad \text{for } u \in \left[u_{p}, u_{n+1}\right]
 $$
+
+For an **open uniform knot vector**, the first $p+1$ knots are equal, the last $p+1$ knots are equal, and the middle knots increase uniformly
+$$
+u_i =
+\begin{cases}
+0, & 0 \leq i \leq p \\
+i-p, & p+1 \leq i \leq n \\
+n-p+1, & n+1 \leq i \leq n+p+1
+\end{cases}
+$$
 **eg.** Given the knot vector $U=\{0,0,0,0,1,2,2,2\}$ and $u=0.5$, compute the cubic B-spline basis functions $N_{i,3}(u)$ for $i=0,1,2,3$ using the recurrence formula with the convention $0/0=0$.
 
+Here $m=7$, and $p=3$. Thus,
+$$
+n=m-p-1=7-3-1=3
+$$
+
+So the curve has control points
+
+$$
+P_0,P_1,P_2,P_3
+$$
+
+Therefore, the valid parameter interval is
+$$
+[u_p,u_{n+1}] = [u_3,u_4]
+$$
+Hence,
+$$
+u \in [0,1]
+$$
 Only $N_{3,0}(0.5)=1$ since $u∈[u_3,u_4)=[0,1).$ All others are $0$.
 $$
 [N_{0,0},N_{1,0},N_{2,0},N_{3,0}]_{u=0.5}=[0,0,0,1]
@@ -99,10 +132,8 @@ The computed values of the basis functions are below.
 | $u$  | $N_{0,3}(u)$ | $N_{1,3}(u)$ | $N_{2,3}(u)$ | $N_{3,3}(u)$ |
 | :--: | :----------: | :----------: | :----------: | :----------: |
 | 0.0  |    1.0000    |    0.0000    |    0.0000    |    0.0000    |
-| 0.5  |    0.0625    |    0.5625    |    0.3750    |    0.0000    |
-| 1.0  |    0.0000    |    0.1667    |    0.6667    |    0.1667    |
-| 1.5  |    0.0000    |    0.0208    |    0.4792    |    0.5000    |
-| 2.0  |    0.0000    |    0.0000    |    0.0000    |    1.0000    |
+| 0.5  |    0.1250    |    0.5938    |    0.2500    |    0.0313    |
+| 1.0  |    0.0000    |    0.2500    |    0.5000    |    0.2500    |
 
 Through the following calculations, 5 points on the B-spline curve are derived.
 $$
@@ -114,6 +145,153 @@ C(1.5) = \sum_{i=0}^{3} N_{i,p}(0) \cdot P_i	\\
 C(2.0) = \sum_{i=0}^{3} N_{i,p}(0) \cdot P_i
 \end{align*}
 $$
+
+##### Matrix Representation
+
+For a uniform B-spline curve, each knot span has the same length
+
+$$
+\Delta u = u_{k+1} - u_k
+$$
+
+where $u \in [u_k,u_{k+1})$ is the current parameter interval and $k$ is the index of the current knot interval.
+
+The global parameter $u$ can be normalized into a local parameter
+
+$$
+s(u) = \frac{u-u_k}{\Delta u}, \quad s(u) \in [0,1)
+$$
+
+Then the B-spline curve on this local interval can be written in matrix form as
+
+$$
+C(s(u)) = \boldsymbol{s}(u)^T \mathbf{M}_{p+1}\mathbf{P}_k
+$$
+
+where
+
+$$
+\boldsymbol{s}(u)=
+\begin{bmatrix}
+1 & s(u) & s^2(u) & \cdots & s^p(u)
+\end{bmatrix}^T
+$$
+
+$p$ is the degree of the B-spline curve, $\mathbf{M}_{p+1}$ is the basis matrix of the B-spline that determined only by the degree $p$, and $\mathbf{P}_k$ contains the $p+1$ local control points that affect the curve segment on $u\in[u_k,u_{k+1})$
+$$
+\mathbf{P}_k=
+\begin{bmatrix}
+P_{k-p} \\
+P_{k-p+1} \\
+\vdots \\
+P_k
+\end{bmatrix}
+$$
+
+It only uses the local control points
+
+$$
+P_{k-p},P_{k-p+1},...,P_k
+$$
+
+because of the local support property of B-spline basis functions.
+
+For a cubic B-spline, $p=3$. Thus,
+
+$$
+\boldsymbol{s}(u)=
+\begin{bmatrix}
+1 & s(u) & s^2(u) & s^3(u)
+\end{bmatrix}^T
+$$
+
+and
+
+$$
+\mathbf{P}_k=
+\begin{bmatrix}
+P_{k-3} \\
+P_{k-2} \\
+P_{k-1} \\
+P_k
+\end{bmatrix}
+$$
+
+The cubic B-spline basis matrix is
+
+$$
+\mathbf{M}_4=
+\frac{1}{6}
+\begin{bmatrix}
+1 & 4 & 1 & 0 \\
+-3 & 0 & 3 & 0 \\
+3 & -6 & 3 & 0 \\
+-1 & 3 & -3 & 1
+\end{bmatrix}
+$$
+
+Therefore,
+
+$$
+C(s(u)) =
+\begin{bmatrix}
+1 & s & s^2 & s^3
+\end{bmatrix}
+\frac{1}{6}
+\begin{bmatrix}
+1 & 4 & 1 & 0 \\
+-3 & 0 & 3 & 0 \\
+3 & -6 & 3 & 0 \\
+-1 & 3 & -3 & 1
+\end{bmatrix}
+\begin{bmatrix}
+P_{k-3} \\
+P_{k-2} \\
+P_{k-1} \\
+P_k
+\end{bmatrix}
+$$
+
+where $s=s(u)$.
+
+Expanding the matrix multiplication gives
+$$
+C(s)=
+B_0(s)P_{k-3}
++
+B_1(s)P_{k-2}
++
+B_2(s)P_{k-1}
++
+B_3(s)P_k
+$$
+
+where
+
+$$
+\begin{align*}
+B_0(s) &= \frac{1}{6}(1-3s+3s^2-s^3) \\
+B_1(s) &= \frac{1}{6}(4-6s^2+3s^3) \\
+B_2(s) &= \frac{1}{6}(1+3s+3s^2-3s^3) \\
+B_3(s) &= \frac{1}{6}s^3
+\end{align*}
+$$
+
+These four basis functions satisfy
+
+$$
+B_0(s)+B_1(s)+B_2(s)+B_3(s)=1
+$$
+
+for
+
+$$
+s\in[0,1]
+$$
+
+Therefore, the curve point $C(s)$ is a weighted average of the four local control points.
+
+
 
 ### astar_bsline
 
