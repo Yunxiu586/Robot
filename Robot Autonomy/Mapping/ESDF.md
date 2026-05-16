@@ -153,29 +153,3 @@ $$
 $$
 \sum_{i=0}^{1} \sum_{j=0}^{1} \sum_{k=0}^{1} \omega_{ijk}=1
 $$
-
-##### Motion Planning
-
-For a planned trajectory $\boldsymbol{p}(t)$, the ESDF provides direct collision checking by testing whether the distance is larger than a safety margin $d_{\mathrm{safe}}$
-
-$$
-\phi(\boldsymbol{p}(t)) \geq d_{\mathrm{safe}}
-$$
-
-A common soft collision cost is
-
-$$
-J_{\mathrm{obs}} =
-\int_{0}^{T}
-\left[\max\left(0, d_{\mathrm{safe}} - \phi(\boldsymbol{p}(t))\right)\right]^2 dt
-$$
-
-When the trajectory is represented by a discrete sequence of points $\{\boldsymbol{p}_k\}_{k=0}^{N}$, the integral is often approximated as
-
-$$
-J_{\mathrm{obs}} \approx
-\sum_{k=0}^{N}
-\left[\max\left(0, d_{\mathrm{safe}} - \phi(\boldsymbol{p}_k)\right)\right]^2 \Delta t
-$$
-
-This cost encourages the trajectory to remain in regions with sufficient clearance while still allowing gradient-based optimization.

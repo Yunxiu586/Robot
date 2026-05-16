@@ -323,9 +323,18 @@ git push origin <branch_name>
 
 + Keep your fork updated.
 
+
+
 ```
 git checkout main
 git pull upstream main
 git push origin main
+```
+
+```
+git checkout -b <branch_name>
+git add .
+git commit -m "<description>"
+git push origin <branch_name>
 ```
 

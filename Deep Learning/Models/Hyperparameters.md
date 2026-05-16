@@ -21,7 +21,7 @@ H(X)
 -\sum_{i=1}^{N}p(x_i)\log p(x_i)
 $$
 
-A uniform distribution has high entropy because all outcomes are similarly likely. A sharp distribution has low entropy because one outcome dominates.
+Among all distributions on the same finite support, the uniform distribution has the maximum entropy. A sharp distribution has low entropy because one outcome dominates.
 
 For a Bernoulli distribution,
 
@@ -72,17 +72,17 @@ $$
 H(X|Y)=H(X,Y)-H(Y)
 $$
 
-If knowing $Y$ reduces the uncertainty of $X$, then
+For discrete random variables,
 
 $$
 H(X|Y)\le H(X)
 $$
 
-This reduction in uncertainty is the information that $Y$ provides about $X$.
+The reduction in uncertainty is the information that $Y$ provides about $X$.
 
 **Mutual information** measures how much information two random variables share.
 $$
-I(X,Y)
+I(X;Y)
 =
 H(X)+H(Y)-H(X,Y)
 $$
@@ -90,7 +90,7 @@ $$
 Equivalently,
 
 $$
-I(X,Y)
+I(X;Y)
 =
 H(X)-H(X|Y)
 =
@@ -100,7 +100,7 @@ $$
 Using the joint and marginal distributions,
 
 $$
-I(X,Y)
+I(X;Y)
 =
 \sum_{i=1}^{N_1}
 \sum_{j=1}^{N_2}
@@ -112,13 +112,13 @@ $$
 Mutual information is always non-negative.
 
 $$
-I(X,Y)\ge 0
+I(X;Y)\ge 0
 $$
 
 When $X$ and $Y$ are independent,
 
 $$
-I(X,Y)=0
+I(X;Y)=0
 $$
 
 Mutual information can capture both linear and nonlinear dependence between variables.
@@ -202,13 +202,13 @@ $$
 D_{\mathrm{JS}}(p\|q)=D_{\mathrm{JS}}(q\|p)
 $$
 
-It is also bounded.
+With natural logarithms, it is bounded by
 
 $$
 0\le D_{\mathrm{JS}}(p\|q)\le \log 2
 $$
 
-A smaller JS divergence means that the two distributions are more similar.
+With base-2 logarithms, the upper bound is $1$. A smaller JS divergence means that the two distributions are more similar.
 
 ##### Cross-Entropy Loss
 
@@ -327,26 +327,34 @@ $$
 
 MSE gives a larger penalty to large prediction errors because the error is squared.
 
-The derivative with respect to the prediction is
-
-$$
-\frac{\partial L_{\mathrm{MSE}}}{\partial \hat{y}}
-=
-2(\hat{y}-y)
-$$
-
-If the averaged form is used,
+For the averaged vector form,
 
 $$
 L_{\mathrm{MSE}}
 =
-\frac{1}{2}(\hat{y}-y)^2
+\frac{1}{K}
+\|\hat{\boldsymbol{y}}-\boldsymbol{y}\|_2^2
 $$
 
-then the derivative becomes simpler.
+the gradient is
 
 $$
-\frac{\partial L_{\mathrm{MSE}}}{\partial \hat{y}}
+\nabla_{\hat{\boldsymbol{y}}}L_{\mathrm{MSE}}
+=
+\frac{2}{K}
+(\hat{\boldsymbol{y}}-\boldsymbol{y})
+$$
+
+For the half squared error,
+
+$$
+L=\frac{1}{2}(\hat{y}-y)^2
+$$
+
+the derivative is
+
+$$
+\frac{\partial L}{\partial \hat{y}}
 =
 \hat{y}-y
 $$
@@ -478,7 +486,7 @@ Since usually $\eta\lambda<1$, the parameter vector is slightly shrunk at each u
 
 ##### Weight decay
 
-Weight decay is closely related to $L_2$ regularization. It directly shrinks the weights during optimization.
+Weight decay is closely related to $L_2$ regularization. For standard gradient descent or SGD, they have the same update form. For adaptive optimizers, classical $L_2$ regularization and decoupled weight decay are generally not equivalent.
 $$
 \boldsymbol{\theta}_{t+1}
 =
@@ -514,12 +522,11 @@ $$
 \in \mathbb{R}^{d}
 $$
 
-A binary mask is sampled as
+A binary mask is sampled componentwise as
 
 $$
-\boldsymbol{m}
-\sim
-\operatorname{Bernoulli}(p)
+m_j\sim \operatorname{Bernoulli}(p),
+\qquad j=1,\dots,d
 $$
 
 where $p$ is the keep probability. The dropped activation is
@@ -532,7 +539,7 @@ $$
 
 Dropout prevents neurons from relying too strongly on specific other neurons, which reduces co-adaptation.
 
-During inference, dropout is disabled, and the full network is used.
+During inference, dropout is disabled, and the full network is used without additional scaling.
 
 ##### Early stopping
 
@@ -632,6 +639,8 @@ $$
 \frac{m}{B}
 \right\rceil
 $$
+
+This assumes that the last incomplete mini-batch is kept. If it is dropped, the number is $\left\lfloor m/B \right\rfloor$.
 
 ### Activation Functions
 
@@ -771,6 +780,6 @@ $$
 \end{cases}
 $$
 
-where $\alpha$ is usually a small positive constant.
+where $0<\alpha<1$ is usually a small constant.
 
 Leaky ReLU keeps most advantages of ReLU, while reducing the chance that neurons become permanently inactive.

@@ -5,14 +5,14 @@
 A **Convolutional Neural Network** is a neural network architecture designed for grid-like data, such as images. 
 Compared with fully connected layers, convolutional layers introduce two important inductive biases
 
-- translation invariance
+- translation equivariance through weight sharing
 - locality
 
-These assumptions greatly reduce the number of learnable parameters and allow the network to extract spatial features efficiently.
+These structural assumptions greatly reduce the number of learnable parameters and allow the network to extract spatial features efficiently.
 
 ### Convolutional Layer
 
-A convolutional layer can be derived from a fully connected layer by reshaping the input and output into matrices.
+A convolutional layer can be viewed as a structured fully connected layer with local connectivity and parameter sharing.
 
 Let the input be $X$ and the output be $H$. For a general fully connected layer, each output element depends on all input elements
 
@@ -34,9 +34,9 @@ $$
 
 where $i,j$ specify the output position, and $a,b$ specify the relative spatial offset.
 
-##### Translation Invariance
+##### Translation Equivariance
 
-Translation invariance assumes that the same feature detector is used at different spatial positions. Therefore, the parameter no longer depends on the output location
+Translation equivariance is obtained by using the same feature detector at different spatial positions. Therefore, the parameter no longer depends on the output location
 
 $$
 v_{i,j,a,b}
@@ -125,61 +125,51 @@ The kernel size $k_h\times k_w$ is a hyperparameter.
 
 ##### Padding
 
-Padding adds extra rows and columns around the input. If the padding size is $p_h$ in height and $p_w$ in width, the output shape becomes
+Padding adds extra rows and columns around the input. If $p_h$ rows are padded on each side in height and $p_w$ columns are padded on each side in width, the output shape becomes
 
 $$
-(n_h-k_h+p_h+1)
+(n_h+2p_h-k_h+1)
 \times
-(n_w-k_w+p_w+1)
+(n_w+2p_w-k_w+1)
 $$
 
 Padding is commonly used to control the spatial size of the output.
 
-To keep the input and output shapes unchanged, a common choice is
+To keep the input and output shapes unchanged, when $k_h$ and $k_w$ are odd, a common choice is
 
 $$
-p_h=k_h-1
-$$
-
-$$
-p_w=k_w-1
-$$
-
-When $k_h$ and $k_w$ are odd, the padding is usually distributed symmetrically on both sides:
-
-$$
-\frac{p_h}{2}
-=
-\frac{k_h-1}{2}
+p_h=\frac{k_h-1}{2}
 $$
 
 $$
-\frac{p_w}{2}
-=
-\frac{k_w-1}{2}
+p_w=\frac{k_w-1}{2}
 $$
 
 ##### Stride
 
 Stride specifies the step size of the sliding kernel.
 
-Let the stride be $s_h$ in height and $s_w$ in width. The output shape is
+Let the stride be $s_h$ in height and $s_w$ in width. With per-side padding $p_h$ and $p_w$, the output shape is
 
 $$
+\left(
 \left\lfloor
-\frac{n_h-k_h+p_h+s_h}{s_h}
-\right\rfloor
+\frac{n_h+2p_h-k_h}{s_h}
+\right\rfloor+1
+\right)
 \times
+\left(
 \left\lfloor
-\frac{n_w-k_w+p_w+s_w}{s_w}
-\right\rfloor
+\frac{n_w+2p_w-k_w}{s_w}
+\right\rfloor+1
+\right)
 $$
 
 A larger stride reduces the output spatial size more aggressively.
 
 ##### Multiple Input Channels
 
-For inputs with multiple channels, each input channel has its own 2D convolution kernel.
+For one output channel, each input channel is associated with one 2D kernel.
 
 Let
 
@@ -191,6 +181,10 @@ $$
 W\in\mathbb{R}^{c_i\times k_h\times k_w}
 $$
 
+$$
+b\in\mathbb{R}
+$$
+
 The output is obtained by summing the convolution results over all input channels:
 
 $$
@@ -198,6 +192,8 @@ Y
 =
 \sum_{i=1}^{c_i}
 X_{i,:,:}*W_{i,:,:}
++
+b
 $$
 
 The output has one channel.
@@ -216,6 +212,10 @@ $$
 W\in\mathbb{R}^{c_o\times c_i\times k_h\times k_w}
 $$
 
+$$
+B\in\mathbb{R}^{c_o}
+$$
+
 Then the output is
 
 $$
@@ -229,6 +229,8 @@ Y_{o,:,:}
 =
 \sum_{i=1}^{c_i}
 X_{i,:,:}*W_{o,i,:,:}
++
+B_o
 \qquad
 o=1,2,\dots,c_o
 $$
@@ -312,6 +314,8 @@ Y
 =
 X*W+B
 $$
+
+where $B$ is broadcast over the spatial dimensions.
 
 The computational complexity is
 
