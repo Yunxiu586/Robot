@@ -148,7 +148,7 @@ $$
 \det\mathbf{A}=\det\mathbf{U}=u_{11}u_{22}\cdots u_{nn}
 $$
 
-If $s$ row exchanges are used
+If $s$ row exchanges are used and no row scalings are used
 
 $$
 \det\mathbf{A}=(-1)^{s}u_{11}u_{22}\cdots u_{nn}
@@ -240,7 +240,7 @@ $$
 
 ##### Similar matrices
 
-Similar matrices have the same determinant
+If $\mathbf{S}$ is invertible, similar matrices have the same determinant
 
 $$
 \det(\mathbf{S}^{-1}\mathbf{A}\mathbf{S})=

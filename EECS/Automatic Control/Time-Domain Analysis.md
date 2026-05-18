@@ -141,7 +141,7 @@ $$
 c(T)=0.632K
 $$
 
-For a first-order system, there is no overshoot.
+For a stable first-order system with $K>0$ and $T>0$, the unit-step response is monotonic, so there is no overshoot.
 
 $$
 M_p=0
@@ -253,6 +253,14 @@ $$
 $$
 E(s)=\frac{R(s)}{1+G(s)H(s)}
 $$
+
+For non-unity feedback, this steady-state error is the actuating error
+
+$$
+e(t)=r(t)-y_m(t)=r(t)-h(t)\ast y(t)
+$$
+
+It is not necessarily the same as the output tracking error $r(t)-y(t)$.
 
 If the closed-loop system is stable, the steady-state error due to the reference input is
 

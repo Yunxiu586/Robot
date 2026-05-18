@@ -337,15 +337,23 @@ $$
 
 ##### Rank one matrices
 
-A rank one matrix is an outer product
+A nonzero rank one matrix is an outer product
 
 $$
 \mathbf{A}=\boldsymbol{u}\boldsymbol{v}^{T}
 $$
 
-All columns are multiples of one vector $\boldsymbol{u}$
+where
 
-All rows are multiples of one vector $\boldsymbol{v}^{T}$
+$$
+\boldsymbol{u}\ne\boldsymbol{0}
+\qquad
+\boldsymbol{v}\ne\boldsymbol{0}
+$$
+
+All columns are multiples of $\boldsymbol{u}$
+
+All rows are multiples of $\boldsymbol{v}^{T}$
 
 ##### Rank of products
 

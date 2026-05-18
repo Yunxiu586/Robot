@@ -88,7 +88,7 @@ $$
 
 ##### Upper triangular form
 
-Elimination changes $\mathbf{A}\boldsymbol{x}=\boldsymbol{b}$ into
+For a square nonsingular system, elimination changes $\mathbf{A}\boldsymbol{x}=\boldsymbol{b}$ into
 
 $$
 \mathbf{U}\boldsymbol{x}=\boldsymbol{c}
@@ -157,7 +157,7 @@ The inverse of subtracting $\ell$ times row $k$ is adding $\ell$ times row $k$
 
 ##### LU factorization
 
-When no row exchanges are needed, elimination gives
+For a square matrix, when no row exchanges are needed, elimination gives
 
 $$
 \mathbf{A}=\mathbf{L}\mathbf{U}
@@ -244,7 +244,7 @@ $$
 
 The system $\mathbf{A}\boldsymbol{x}=\boldsymbol{b}$ is consistent when at least one solution exists
 
-An inconsistent system has a zero row in $\mathbf{A}$ with a nonzero entry in the augmented column
+An inconsistent system has a zero row in the row-reduced augmented matrix with a nonzero entry in the augmented column
 
 $$
 \begin{bmatrix}
@@ -262,7 +262,7 @@ $$
 
 ##### Unique solution
 
-A unique solution occurs when every variable is a pivot variable
+For a consistent system, a unique solution occurs when every variable is a pivot variable
 
 For a square matrix this means
 

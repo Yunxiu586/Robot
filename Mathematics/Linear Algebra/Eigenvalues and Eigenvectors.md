@@ -450,7 +450,11 @@ where $\mathbf{A}_k$ is the leading $k\times k$ submatrix
 
 ##### Steady state
 
-For a Markov matrix, columns add to one
+For a column-stochastic Markov matrix, entries are nonnegative and columns add to one
+
+$$
+a_{ij}\ge0
+$$
 
 $$
 \sum_{i=1}^{n}a_{ij}=1

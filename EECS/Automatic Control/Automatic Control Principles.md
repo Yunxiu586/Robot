@@ -143,11 +143,13 @@ $$
 G(s)=\frac{N(s)}{D(s)}
 $$
 
-then $D(s)$ is the characteristic polynomial, and
+is the transfer function of the system under consideration and there is no pole-zero cancellation, the poles are the roots of
 
 $$
 D(s)=0
 $$
+
+For a closed-loop system, the characteristic polynomial is the denominator of the closed-loop transfer function.
 
 ##### Pole-Zero Form
 

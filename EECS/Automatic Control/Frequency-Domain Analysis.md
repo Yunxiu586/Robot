@@ -90,6 +90,8 @@ $$
 G(s)=K
 $$
 
+If $K>0$,
+
 $$
 G(j\omega)=K=Ke^{j0}
 $$
@@ -104,6 +106,12 @@ $$
 
 $$
 L(\omega)=20\log_{10}K
+$$
+
+In general,
+
+$$
+A(\omega)=|K|
 $$
 
 ##### Integral and Derivative Factors
@@ -386,7 +394,9 @@ $$
 G_o(s)=G(s)H(s)
 $$
 
-The Nyquist plot is the polar plot of $G_o(j\omega)$ as $\omega$ varies. If
+The positive-frequency branch of the Nyquist plot is the polar plot of $G_o(j\omega)$ as $\omega$ varies from $0$ to $\infty$. For stability analysis, the complete Nyquist plot is the mapping of the complete Nyquist contour, including the negative-frequency branch and any required small indentations around imaginary-axis poles.
+
+If
 
 $$
 G_o(s)=\frac{K\prod_{j=1}^{m}(\tau_js+1)}{s^\nu\prod_{i=1}^{n-\nu}(T_is+1)}
@@ -444,9 +454,11 @@ For a type-$\nu$ system, the low-frequency Bode magnitude slope is $-20\nu\ \mat
 
 ### Minimum-Phase Systems
 
-A minimum-phase transfer function has no zeros or poles in the right-half $s$-plane and has no pure time delay. A system with such a transfer function is called a minimum-phase system.
+A minimum-phase transfer function is stable and has no right-half-plane zeros and no pure time delay. A system with such a transfer function is called a minimum-phase system.
 
-A nonminimum-phase transfer function has at least one right-half-plane zero, right-half-plane pole, or time-delay factor. Nonminimum-phase factors can have the same magnitude curve as corresponding minimum-phase factors, but they introduce additional phase lag.
+A nonminimum-phase transfer function usually refers to a stable transfer function with at least one right-half-plane zero or a time-delay factor. These factors may have the same magnitude curve as corresponding minimum-phase factors, but they introduce additional phase lag.
+
+A right-half-plane pole makes the system unstable. It also prevents the system from being minimum phase, but it should be distinguished from nonminimum-phase zeros.
 
 ### Nyquist Stability Criterion
 
@@ -474,7 +486,7 @@ The zeros of $F(s)$ are the closed-loop poles. The poles of $F(s)$ are the open-
 
 ##### Criterion
 
-Let $P$ be the number of open-loop poles of $G_o(s)$ in the right-half $s$-plane. Let $N$ be the number of counterclockwise encirclements of $(-1,j0)$ by the Nyquist plot of $G_o(j\omega)$.
+Let $P$ be the number of open-loop poles of $G_o(s)$ in the right-half $s$-plane. Let $N$ be the number of counterclockwise encirclements of $(-1,j0)$ by the complete Nyquist plot of $G_o(s)$.
 
 Then the number of closed-loop poles in the right-half plane is
 
@@ -489,6 +501,12 @@ Z=0
 $$
 
 Equivalently, the Nyquist plot must encircle $(-1,j0)$ counterclockwise exactly $P$ times.
+
+Here $N$ is defined as the number of counterclockwise encirclements of $(-1,j0)$. With the opposite convention, where clockwise encirclements are positive, the relation is written as
+
+$$
+Z=P+N
+$$
 
 If the open-loop system is stable, then $P=0$. The closed-loop system is stable if the Nyquist plot does not encircle $(-1,j0)$. If the plot passes through $(-1,j0)$, the closed-loop system is marginally stable.
 

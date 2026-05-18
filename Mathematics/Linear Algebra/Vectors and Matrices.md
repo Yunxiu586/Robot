@@ -61,7 +61,7 @@ $$
 \sqrt{\boldsymbol{x}^{T}\boldsymbol{x}}
 $$
 
-A unit vector has length one
+For $\boldsymbol{x}\ne\boldsymbol{0}$, a unit vector has length one
 
 $$
 \boldsymbol{u}
@@ -103,7 +103,7 @@ $$
 
 ##### Angle
 
-The dot product measures the angle between $\boldsymbol{a}$ and $\boldsymbol{b}$
+For nonzero vectors, the dot product measures the angle between $\boldsymbol{a}$ and $\boldsymbol{b}$
 
 $$
 \boldsymbol{a}^{T}\boldsymbol{b}

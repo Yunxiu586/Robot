@@ -134,13 +134,13 @@ $$
 
 Only the solutions that lie on the root locus and give $k>0$ are valid.
 
-If $r$ branches meet at the same point, the angles of departure from the point are
+For a real-axis breakaway or break-in point where $r$ branches meet, the local departure directions are separated by $2\pi/r$. In the common real-axis case,
 
 $$
 \theta_q=\frac{(2q+1)\pi}{r},\qquad q=0,1,\ldots,r-1
 $$
 
-For $r=2$, the branches leave or enter at right angles.
+For $r=2$, the branches leave or enter the real axis at right angles.
 
 ##### Asymptotes
 
@@ -163,7 +163,7 @@ Only the real parts of complex-conjugate poles and zeros affect the centroid.
 For a complex open-loop pole $p_k$, the departure angle is found from the angle condition by letting $s$ approach $p_k$.
 
 $$
-\theta_{d,k}=(2\ell+1)\pi+\sum_{\substack{i=1\\i\ne k}}^{n}\angle(p_k-p_i)-\sum_{j=1}^{m}\angle(p_k-z_j)
+\theta_{d,k}=(2\ell+1)\pi+\sum_{j=1}^{m}\angle(p_k-z_j)-\sum_{\substack{i=1\\i\ne k}}^{n}\angle(p_k-p_i)
 $$
 
 For a complex open-loop zero $z_k$, the arrival angle is

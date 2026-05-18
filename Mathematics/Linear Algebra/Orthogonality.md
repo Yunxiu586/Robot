@@ -82,7 +82,7 @@ $$
 
 ##### Projection vector
 
-Project $\boldsymbol{b}$ onto the line through $\boldsymbol{a}$
+Project $\boldsymbol{b}$ onto the line through $\boldsymbol{a}\ne\boldsymbol{0}$
 
 $$
 \boldsymbol{p}=\hat{x}\boldsymbol{a}
@@ -112,7 +112,7 @@ $$
 
 ##### Projection matrix
 
-Projection onto the line through $\boldsymbol{a}$ is
+Projection onto the line through $\boldsymbol{a}\ne\boldsymbol{0}$ is
 
 $$
 \boldsymbol{p}=\mathbf{P}\boldsymbol{b}
@@ -176,7 +176,7 @@ $$
 
 ##### Projection matrix onto a column space
 
-The projection matrix onto $C(\mathbf{A})$ is
+If the columns of $\mathbf{A}$ are independent, the projection matrix onto $C(\mathbf{A})$ is
 
 $$
 \mathbf{P}
@@ -391,7 +391,7 @@ $$
 
 ##### Least squares by QR
 
-If $\mathbf{A}=\mathbf{Q}\mathbf{R}$, the least squares problem becomes
+If $\mathbf{A}$ has full column rank and $\mathbf{A}=\mathbf{Q}\mathbf{R}$, the least squares problem becomes
 
 $$
 \mathbf{R}\hat{\boldsymbol{x}}
