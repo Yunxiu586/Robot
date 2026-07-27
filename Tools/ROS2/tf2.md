@@ -4,27 +4,27 @@
 
 ### Introduce `tf2`
 
-`tf2` is the **transform library**, which lets the user keep track of multiple **coordinate frames** over time. `tf2` maintains the relationship between coordinate frames in a **tree structure** buffered in time and lets the user **transform points, vectors, etc. **between any two coordinate frames at any desired point in time.
+`tf2` is the **transform library**, which lets the user keep track of multiple **coordinate frames** over time. `tf2` maintains the relationship between coordinate frames in a **tree structure** buffered in time and lets the user **transform points, vectors, etc.** between any two coordinate frames at any desired point in time.
 
 #### Transforms
 
-Published transform $_BT_A^{frame}$ means moving frame A to coincide with frame B, i.e., transforming the frame itself.
+A transform lookup specifies a target frame and a source frame. The target frame is the frame to which data should be transformed, and the source frame is the frame where the data originated.
 
-While $_BT_A^{data}$ （$_BT_A$） means converting a point/vector from representation in frame A to representation in frame B, i.e., transforming data represented in a frame.
+${}^{B}T_A$ transforms data from source frame A to target frame B. Therefore,
 
-$_BT_A^{data}=(_BT_A^{frame})^{-1}$
+${}^{B}T_A P_A=P_B$
 
 #### Position
 
 If $A$ observes something and a person on the ground wants to know its position relative to the ground, transform the observation from the source frame to the target frame.
 
-$_ET_A*P_A^{Obs}=P_E^{Obs}$
+${}^{E}T_A P_A^{Obs}=P_E^{Obs}$
 
 If $B$ wants to know where it is too, you can compute the net transform. 
 
-$_BT_E*_ET_A*P_A^{Obs}=_BT_A*P_A^{Obs}=P_B^{Obs}$
+${}^{B}T_E\,{}^{E}T_A P_A^{Obs}={}^{B}T_A P_A^{Obs}=P_B^{Obs}$
 
-$_BT_A$: $A$ is the source `frame_id` and $B$ is the target `frame_id`.
+${}^{B}T_A$: $A$ is the source `frame_id` and $B$ is the target `frame_id`.
 
 $P_A^{Obs}$: If $P$ is a `Stamped` datatype then $A$ is its `frame_id`.
 
@@ -32,11 +32,11 @@ $P_A^{Obs}$: If $P$ is a `Stamped` datatype then $A$ is its `frame_id`.
 
 $V_{observing\_frame}^{moving\_frame-reference\_frame}$ represents the velocity between the moving frame and the reference frame in the observing frame.
 
-The car A is driving forward (observed in A) at 1m/s (relative to earth). This velocity is expressed as $V_{A}^{A-E} = (1, 0, 0)$. Whereas that same velocity could be observed from the view point of the earth (assume the car is driving east and Earth is NED) , it would be $V_{E}^{A-E} = (0, 1, 0)$.
+The car A is driving forward (observed in A) at 1m/s (relative to earth). This velocity is expressed as $V_{A}^{A-E} = (1, 0, 0)$. Whereas that same velocity could be observed from the viewpoint of the earth (assume the car is driving east and Earth is NED) , it would be $V_{E}^{A-E} = (0, 1, 0)$.
 
-Same velocity could be observed from different view point:
+The same velocity can be observed from a different viewpoint:
 
-$_ET_A*V_A^{A-E}=V_E^{A-E}$
+${}^{E}T_A V_A^{A-E}=V_E^{A-E}$
 
 Velocities can be directly added or subtracted if they are observed in the **same frame**:
 
@@ -62,7 +62,7 @@ Listening to tf data during 5 seconds...
 Generating graph in frames.pdf file...
 ```
 
-![tf2_view_frames](../../Figures/tf2_view_frames.png)
+The command writes the current transform tree to `frames.pdf`.
 
 Here we can see three frames that are broadcast by tf2: `world`, `turtle1`, and `turtle2`. The `world` frame is the parent of the `turtle1` and `turtle2` frames. `view_frames` also reports some diagnostic information about when the oldest and most recent frame transforms were received and how fast the tf2 frame is published to tf2 for debugging purposes.
 
@@ -112,7 +112,7 @@ ros2 pkg create --build-type ament_python --license Apache-2.0 -- learning_tf2_p
 Inside the `src/learning_tf2_py/learning_tf2_py` directory download the example static broadcaster code 
 
 ```
-wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2_py/turtle_tf2_py/static_turtle_tf2_broadcaster.py
+wget https://raw.githubusercontent.com/ros/geometry_tutorials/jazzy/turtle_tf2_py/turtle_tf2_py/static_turtle_tf2_broadcaster.py
 ```
 
 Open the file called `static_turtle_tf2_broadcaster.py`:
@@ -126,7 +126,6 @@ from geometry_msgs.msg import TransformStamped
 import numpy as np
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
@@ -161,7 +160,8 @@ class StaticFramePublisher(Node):
     Broadcast transforms that never change.
 
     This example publishes transforms from `world` to a static turtle frame.
-    The transforms are only published once at startup, and are constant for all time.
+    The transforms are only published once at startup, and are constant for all
+    time.
     """
 
     def __init__(self, transformation):
@@ -174,15 +174,15 @@ class StaticFramePublisher(Node):
 
     def make_transforms(self, transformation):
         t = TransformStamped()
-		
-        # stamp the transform being published with the current time
+
+        # Stamp the transform with the current time
         t.header.stamp = self.get_clock().now().to_msg()
-        # set the name of the parent frame of the link
+        # Set the parent frame name
         t.header.frame_id = 'world'
-        # set the name of the child frame of the link
+        # Set the child frame name
         t.child_frame_id = transformation[1]
 
-        # populate the 6D pose (translation and rotation) of the turtl
+        # Populate the 6D pose of the static turtle frame
         t.transform.translation.x = float(transformation[2])
         t.transform.translation.y = float(transformation[3])
         t.transform.translation.z = float(transformation[4])
@@ -193,31 +193,33 @@ class StaticFramePublisher(Node):
         t.transform.rotation.z = quat[2]
         t.transform.rotation.w = quat[3]
 
-        # broadcast static transform using the sendTransform() function
+        # Broadcast the static transform
         self.tf_static_broadcaster.sendTransform(t)
 
 
 def main():
+    logger = rclpy.logging.get_logger('logger')
+
+    # obtain parameters from command line arguments
+    if len(sys.argv) != 8:
+        logger.info('Invalid number of parameters. Usage: \n'
+                    '$ ros2 run learning_tf2_py static_turtle_tf2_broadcaster '
+                    'child_frame_name x y z roll pitch yaw')
+        sys.exit(1)
+
+    if sys.argv[1] == 'world':
+        logger.info('Your static turtle name cannot be "world"')
+        sys.exit(2)
+
+    # pass parameters and initialize node
+    rclpy.init()
+    node = StaticFramePublisher(sys.argv)
     try:
-        logger = rclpy.logging.get_logger('logger')
-
-        # obtain parameters from command line arguments
-        if len(sys.argv) != 8:
-            logger.info('Invalid number of parameters. Usage: \n'
-                        '$ ros2 run learning_tf2_py static_turtle_tf2_broadcaster'
-                        'child_frame_name x y z roll pitch yaw')
-            sys.exit(1)
-
-        if sys.argv[1] == 'world':
-            logger.info('Your static turtle name cannot be "world"')
-            sys.exit(2)
-
-        # pass parameters and initialize node
-        with rclpy.init():
-            node = StaticFramePublisher(sys.argv)
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
+        rclpy.spin(node)
+    except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
 ```
 
 **Update `package.xml`**
@@ -235,7 +237,7 @@ Navigate back to the `src/learning_tf2_py` directory. Open `package.xml`.
 <exec_depend>python3-numpy</exec_depend>
 <exec_depend>rclpy</exec_depend>
 <exec_depend>tf2_ros_py</exec_depend>
-<exec_depend>turtlesim_msgs</exec_depend>
+<exec_depend>turtlesim</exec_depend>
 ```
 
 **Add an entry point**
@@ -250,7 +252,7 @@ Add the entry point to `setup.py`:
 
 ```
 cd ~/ros2_ws
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 colcon build --packages-select learning_tf2_py
 ```
 
@@ -305,7 +307,7 @@ def generate_launch_description():
     ])
 ```
 
-Check that the static transform:
+We can now check that the static transform has been published by echoing the `/tf_static` topic:
 
 ```
 ros2 topic echo /tf_static
@@ -338,7 +340,7 @@ transforms:
 Inside the `src/learning_tf2_py/learning_tf2_py `directory download the example broadcaster code
 
 ```
-wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2_py/turtle_tf2_py/turtle_tf2_broadcaster.py
+wget https://raw.githubusercontent.com/ros/geometry_tutorials/jazzy/turtle_tf2_py/turtle_tf2_py/turtle_tf2_broadcaster.py
 ```
 
 `turtle_tf2_broadcaster.py`
@@ -346,19 +348,17 @@ wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2
 ```python
 import math
 
-# TransformStamped provides us a template for the message 
-# that we will publish to the transformation tree
+# TransformStamped provides the message structure published to the transform tree
 from geometry_msgs.msg import TransformStamped
 
 import numpy as np
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from tf2_ros import TransformBroadcaster
 
-from turtlesim_msgs.msg import Pose
+from turtlesim.msg import Pose
 
 
 def quaternion_from_euler(ai, aj, ak):
@@ -397,8 +397,8 @@ class FramePublisher(Node):
         # Initialize the transform broadcaster
         self.tf_broadcaster = TransformBroadcaster(self)
 
-		# Subscribe to topic {self.turtlename}/pose
-        # runs function handle_turtle_pose on every incoming message
+        # Subscribe to a turtle{1}{2}/pose topic and call handle_turtle_pose
+        # callback function on each message
         self.subscription = self.create_subscription(
             Pose,
             f'/{self.turtlename}/pose',
@@ -409,38 +409,41 @@ class FramePublisher(Node):
     def handle_turtle_pose(self, msg):
         t = TransformStamped()
 
-        # Read message content and assign it to corresponding tf variables
+        # Read message content and assign it to
+        # corresponding tf variables
         t.header.stamp = self.get_clock().now().to_msg()
         t.header.frame_id = 'world'
         t.child_frame_id = self.turtlename
 
-        # Turtle only exists in 2D, thus we get x and y translation 
+        # Turtle only exists in 2D, thus we get x and y translation
         # coordinates from the message and set the z coordinate to 0
         t.transform.translation.x = msg.x
         t.transform.translation.y = msg.y
         t.transform.translation.z = 0.0
 
-        # For the same reason, turtle can only rotate around one axis 
-        # and this why we set rotation in x and y to 0 
-        # and obtain rotation in z axis from the message
+        # For the same reason, turtle can only rotate around one axis
+        # and this why we set rotation in x and y to 0 and obtain
+        # rotation in z axis from the message
         q = quaternion_from_euler(0, 0, msg.theta)
         t.transform.rotation.x = q[0]
         t.transform.rotation.y = q[1]
         t.transform.rotation.z = q[2]
         t.transform.rotation.w = q[3]
 
-        # Broadcast a transform from parent frame to child frame
+        # Broadcast a transform from the parent frame to the child frame
         # Describe the pose of the child frame relative to the parent frame
         self.tf_broadcaster.sendTransform(t)
 
 
 def main():
+    rclpy.init()
+    node = FramePublisher()
     try:
-        with rclpy.init():
-            node = FramePublisher()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
+        rclpy.spin(node)
+    except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
 ```
 
 $_{world}T_{turtle1}^{data}$
@@ -511,7 +514,7 @@ data_files=[
 
 ```
 cd ~/ros2_ws
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 colcon build --packages-select learning_tf2_py
 ```
 
@@ -558,7 +561,7 @@ At time 1773561778.397856073
 Inside the `src/learning_tf2_py/learning_tf2_py` directory download the example listener code
 
 ```
-wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2_py/turtle_tf2_py/turtle_tf2_listener.py
+wget https://raw.githubusercontent.com/ros/geometry_tutorials/jazzy/turtle_tf2_py/turtle_tf2_py/turtle_tf2_listener.py
 ```
 
 `turtle_tf2_listener.py`: Command `turtle2` to follow `turtle1` using `tf2` transforms.
@@ -569,14 +572,13 @@ import math
 from geometry_msgs.msg import Twist
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
-from turtlesim_msgs.srv import Spawn
+from turtlesim.srv import Spawn
 
 
 class FrameListener(Node):
@@ -588,8 +590,8 @@ class FrameListener(Node):
         self.target_frame = self.declare_parameter(
           'target_frame', 'turtle1').get_parameter_value().string_value
 
-        # Once the listener is created, it starts receiving tf2 transformations
-        # and buffers them for up to 10 seconds
+        # The listener receives tf2 transforms and stores them in this buffer
+        # The default buffer cache duration is 10 seconds
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
@@ -608,13 +610,14 @@ class FrameListener(Node):
         self.timer = self.create_timer(1.0, self.on_timer)
 
     def on_timer(self):
-        # Store frame names in variables that will be used to compute transformations
+        # Store frame names in variables that will be used to
+        # compute transformations
         from_frame_rel = self.target_frame
         to_frame_rel = 'turtle2'
 
         if self.turtle_spawning_service_ready:
             if self.turtle_spawned:
-                # Look up the transform from source frame to turtle2 (target) frame.
+                # Look up for the transformation between target_frame and turtle2 frames
                 # and send velocity commands for turtle2 to reach target_frame
                 try:
                     t = self.tf_buffer.lookup_transform(
@@ -648,12 +651,12 @@ class FrameListener(Node):
         else:
             if self.spawner.service_is_ready():
                 # Initialize request with turtle name and coordinates
-                # x, y and theta are defined as floats in turtlesim_msgs/srv/Spawn
+                # Note that x, y and theta are defined as floats in turtlesim/srv/Spawn
                 request = Spawn.Request()
                 request.name = 'turtle2'
-                request.x = float(4)	# 4.0
-                request.y = float(2)	# 2.0
-                request.theta = float(0)# 0.0
+                request.x = float(4)  # 4.0
+                request.y = float(2)  # 2.0
+                request.theta = float(0)  # 0.0
                 # Call request
                 self.result = self.spawner.call_async(request)
                 self.turtle_spawning_service_ready = True
@@ -663,21 +666,23 @@ class FrameListener(Node):
 
 
 def main():
+    rclpy.init()
+    node = FrameListener()
     try:
-        with rclpy.init():
-            node = FrameListener()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
+        rclpy.spin(node)
+    except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
 ```
 
 $_{turtle2}T_{turtle1}^{data}$: Transform a representation from source frame to the target frame.
 
 ```python
 t = self.tf_buffer.lookup_transform(
-    to_frame_rel,		# target frame
-    from_frame_rel,		# source frame
-    rclpy.time.Time())	# the time at which we want to transform
+    to_frame_rel,       # target frame
+    from_frame_rel,     # source frame
+    rclpy.time.Time())  # latest available transform
 ```
 
 **Add an entry point**
@@ -702,6 +707,10 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'target_frame', default_value='turtle1',
+            description='Target frame name.'
+        ),
         Node(
             package='turtlesim',
             executable='turtlesim_node',
@@ -714,10 +723,6 @@ def generate_launch_description():
             parameters=[
                 {'turtlename': 'turtle1'}
             ]
-        ),
-        DeclareLaunchArgument(
-            'target_frame', default_value='turtle1',
-            description='Target frame name.'
         ),
         Node(
             package='learning_tf2_py',
@@ -742,7 +747,7 @@ def generate_launch_description():
 
 ```
 cd ~/ros2_ws
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 colcon build --packages-select learning_tf2_py
 ```
 
@@ -765,14 +770,14 @@ ros2 run turtlesim turtle_teleop_key
 
 tf2 builds up a tree structure of frames and doesn't allow a closed loop in the frame structure. This means that a frame only has one single parent, but it can have multiple children.
 
-If we want to add a new frame to tf2, one of the existing frames needs to be the parent frame, and the new one will become its child  frame.
+If we want to add a new frame to tf2, one of the existing frames needs to be the parent frame, and the new one will become its child frame.
 
 #### Write the fixed frame broadcaster
 
 Inside the `src/learning_tf2_py/learning_tf2_py` directory download the fixed frame broadcaster code
 
 ```
-wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2_py/turtle_tf2_py/fixed_frame_tf2_broadcaster.py
+wget https://raw.githubusercontent.com/ros/geometry_tutorials/jazzy/turtle_tf2_py/turtle_tf2_py/fixed_frame_tf2_broadcaster.py
 ```
 
 `fixed_frame_tf2_broadcaster.py`
@@ -781,7 +786,6 @@ wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2
 from geometry_msgs.msg import TransformStamped
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from tf2_ros import TransformBroadcaster
@@ -798,10 +802,10 @@ class FixedFrameBroadcaster(Node):
        t = TransformStamped()
 
        t.header.stamp = self.get_clock().now().to_msg()
-       # Create a new transform from the parent turtle1 to the new child carrot1
+       # Create a transform from parent frame `turtle1` to child frame `carrot1`
        t.header.frame_id = 'turtle1'
        t.child_frame_id = 'carrot1'
-       # carrot1 frame is 2 meters offset in y axis in terms of the turtle1 frame
+       # Offset `carrot1` by 2 meters along the y-axis of `turtle1`
        t.transform.translation.x = 0.0
        t.transform.translation.y = 2.0
        t.transform.translation.z = 0.0
@@ -814,12 +818,14 @@ class FixedFrameBroadcaster(Node):
 
 
 def main():
+    rclpy.init()
+    node = FixedFrameBroadcaster()
     try:
-        with rclpy.init():
-            node = FixedFrameBroadcaster()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
+        rclpy.spin(node)
+    except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
 ```
 
 The code is very similar to the tf2 broadcaster tutorial example and the only difference is that the transform here does not change over time.
@@ -846,12 +852,12 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     return LaunchDescription([
-        # Include launch file turtle_tf2_demo_launch.py
+        # Include `turtle_tf2_demo_launch.py`
         IncludeLaunchDescription(
             PathJoinSubstitution([
                 FindPackageShare('learning_tf2_py'), 'launch', 'turtle_tf2_demo_launch.py'])
         ),
-        # Add our fixed carrot1 frame to the turtlesim world
+        # Add the fixed `carrot1` frame to the turtlesim world
         Node(
             package='learning_tf2_py',
             executable='fixed_frame_tf2_broadcaster',
@@ -864,7 +870,7 @@ def generate_launch_description():
 
 ```
 cd ~/ros2_ws
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 colcon build --packages-select learning_tf2_py
 ```
 
@@ -908,7 +914,7 @@ Now rebuild the package, restart the `turtle_tf2_fixed_frame_demo_launch.py`, an
 Inside the `src/learning_tf2_py/learning_tf2_py` directory download the dynamic frame broadcaster code
 
 ```
-wget https://raw.githubusercontent.com/ros/geometry_tutorials/rolling/turtle_tf2_py/turtle_tf2_py/dynamic_frame_tf2_broadcaster.py
+wget https://raw.githubusercontent.com/ros/geometry_tutorials/jazzy/turtle_tf2_py/turtle_tf2_py/dynamic_frame_tf2_broadcaster.py
 ```
 
 `dynamic_frame_tf2_broadcaster.py`:
@@ -919,7 +925,6 @@ import math
 from geometry_msgs.msg import TransformStamped
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from tf2_ros import TransformBroadcaster
@@ -940,7 +945,7 @@ class DynamicFrameBroadcaster(Node):
         t.header.stamp = self.get_clock().now().to_msg()
         t.header.frame_id = 'turtle1'
         t.child_frame_id = 'carrot1'
-        # The offset of carrot1 is constantly changing
+        # The offset of `carrot1` changes continuously
         t.transform.translation.x = 10 * math.sin(x)
         t.transform.translation.y = 10 * math.cos(x)
         t.transform.translation.z = 0.0
@@ -953,12 +958,14 @@ class DynamicFrameBroadcaster(Node):
 
 
 def main():
+    rclpy.init()
+    node = DynamicFrameBroadcaster()
     try:
-        with rclpy.init():
-            node = DynamicFrameBroadcaster()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
+        rclpy.spin(node)
+    except KeyboardInterrupt:
         pass
+
+    rclpy.shutdown()
 ```
 
 **Add an entry point**
@@ -1000,7 +1007,7 @@ def generate_launch_description():
 
 ```
 cd ~/ros2_ws
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 colcon build --packages-select learning_tf2_py
 ```
 
@@ -1021,7 +1028,7 @@ ros2 run turtlesim turtle_teleop_key
 
 The second turtle is following the carrot’s position that is constantly changing
 
-The builtin `list` is used in Python
+The built-in `list` type is used in Python
 
 ```python
 from geometry_msgs.msg import Quaternion
@@ -1039,13 +1046,13 @@ msg_quat = Quaternion(x=quat_tf[0], y=quat_tf[1], z=quat_tf[2], w=quat_tf[3])
 
 ### Quaternion fundamentals
 
-A quaternion is a 4-tuple representation of orientation. 
+A quaternion is a 4-tuple representation of orientation, which is more concise than a rotation matrix. ROS 2 uses the component order `(x, y, z, w)`. 
 
 The magnitude of a quaternion should always be one.
 
 **Quaternion operations**
 
-**Think in PRY then convert to quaternion**
+**Think in RPY then convert to quaternion**
 
 ```python
 q = quaternion_from_euler(1.5707, 0, -1.5707)
@@ -1097,7 +1104,7 @@ def quaternion_multiply(q0, q1):
     :param q1: A 4 element array containing the second quaternion (q02, q12, q22, q32)
 
     Output
-    :return: A 4 element array containing the final quaternion (q03,q13,q23,q33)
+    :return: A 4 element array containing the final quaternion in (x, y, z, w) order
 
     """
     # Extract the values from q0
@@ -1119,9 +1126,9 @@ def quaternion_multiply(q0, q1):
     q0q1_z = w0 * z1 + x0 * y1 - y0 * x1 + z0 * w1
 
     # Create a 4 element array containing the final quaternion
-    final_quaternion = np.array([q0q1_w, q0q1_x, q0q1_y, q0q1_z])
+    final_quaternion = np.array([q0q1_x, q0q1_y, q0q1_z, q0q1_w])
 
-    # Return a 4 element array containing the final quaternion (q02,q12,q22,q32)
+    # Return the final quaternion in ROS 2 component order (x, y, z, w)
     return final_quaternion
 
 q1_inv[0] = -prev_pose.pose.orientation.x   # Negate for inverse
@@ -1136,4 +1143,3 @@ q2[3] = current_pose.pose.orientation.w
 
 qr = quaternion_multiply(q2, q1_inv)
 ```
-

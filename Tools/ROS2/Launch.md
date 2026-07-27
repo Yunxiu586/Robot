@@ -14,7 +14,7 @@
   - `ExecuteProcess`: Run a system process/command.
   - `LogInfo`: Log an informational message.
   - `RegisterEventHandler`: Register an event handler.
-  - `TimerAction`: Execute an action after a delay or at regular intervals.
+  - `TimerAction`: Execute one or more actions once after a specified delay.
   - `GroupAction`: Group actions together to apply conditions or namespaces to them as a whole.
 - `launch.conditions`
   - `IfCondition`: Decide whether to execute a group of actions based on a conditional expression.
@@ -187,7 +187,7 @@ The first two actions launch the two turtlesim windows with different argument p
 The final action launches the mimic node with the remaps.
 
 + The final node is also from the `turtlesim` package, but a different executable: `mimic`.
-+ `mimic`’s `/input/pose` topic is remapped to `/turtlesim1/turtle1/pose` and it’s `/output/cmd_vel` topic to `/turtlesim2/turtle1/cmd_vel`.
++ `mimic`’s `/input/pose` topic is remapped to `/turtlesim1/turtle1/pose` and its `/output/cmd_vel` topic to `/turtlesim2/turtle1/cmd_vel`.
 + `mimic` will subscribe to `/turtlesim1/sim`’s pose topic and republish it for `/turtlesim2/sim`’s velocity command topic to subscribe to.
 
  **ros2 launch**
@@ -215,7 +215,7 @@ To see the system in action, open a new terminal and run the `ros2 topic pub` co
 ros2 topic pub -r 1 /turtlesim1/turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -1.8}}"
 ```
 
-The second turtle will mimic the movements of the it.
+The second turtle will mimic the movements of the first turtle.
 
 **Note**
 
@@ -235,7 +235,7 @@ While the system is still running, open a new terminal and run `rqt_graph` to ge
 ros2 run rqt_graph rqt_graph
 ```
 
-![Launch_rqt_graph](../../Figures/Launch_rqt_graph.png)
+`rqt_graph` shows the publisher, turtlesim nodes, and remapped command topics described below.
 
 A hidden node (the `ros2 topic pub`) is publishing data to the `/turtlesim1/turtle1/cmd_vel` topic on the left, which the `/turtlesim1/sim` node is subscribed to.
 
@@ -331,15 +331,7 @@ Run the launch file:
 ros2 launch py_launch_example my_script_launch.py
 ```
 
-```
-[INFO] [launch]: All log files can be found below /home/yunxiu/.ros/log/2026-03-12-10-17-48-998887-yunxiu-OMEN-by-HP-Gaming-Laptop-16-xf0xxx-8316
-[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [talker-1]: process started with pid [8319]
-[talker-1] [INFO] [1773281870.069526800] [talker]: Publishing: 'Hello World: 1'
-[talker-1] [INFO] [1773281871.069480131] [talker]: Publishing: 'Hello World: 2'
-[talker-1] [INFO] [1773281872.069518117] [talker]: Publishing: 'Hello World: 3'
-...
-```
+The `talker` node starts and begins publishing messages.
 
 
 
@@ -494,7 +486,7 @@ def generate_launch_description():
                 'ros2 service call ',
                 turtlesim_ns,
                 '/spawn ',
-                'turtlesim_msgs/srv/Spawn ',
+                'turtlesim/srv/Spawn ',
                 '"{x: 2, y: 2, theta: 0.2}"'
             ]],
             shell=True
@@ -571,7 +563,7 @@ The `turtlesim_node` node with the `namespace` set to `turtlesim_ns` `LaunchConf
                 'ros2 service call ',
                 turtlesim_ns,
                 '/spawn ',
-                'turtlesim_msgs/srv/Spawn ',
+                'turtlesim/srv/Spawn ',
                 '"{x: 2, y: 2, theta: 0.2}"'
             ]],
             shell=True
@@ -735,7 +727,7 @@ def generate_launch_description():
             ' service call ',
             turtlesim_ns,
             '/spawn ',
-            'turtlesim_msgs/srv/Spawn ',
+            'turtlesim/srv/Spawn ',
             '"{x: 2, y: 2, theta: 0.2}"'
         ]],
         shell=True
@@ -1091,7 +1083,7 @@ Loading the same YAML file, however, will not affect the appearance of the third
 /turtlesim3/sim:
    background_b
    background_g
-   background_
+   background_r
 ```
 
 Therefore, instead of creating a new configuration for the same node that use the same parameters, we can use wildcards syntax. `/**` will assign all the parameters in every node, despite differences in node names and namespaces.
@@ -1108,7 +1100,7 @@ Using that configuration file in our launch descriptions will assign `background
 
 #### Namespaces
 
-We have defined the namespace for the turlesim world in the `turtlesim_world_2_launch` file. Unique namespaces allow the system to start two similar nodes without node name or topic name conflicts.
+We have defined the namespace for the turtlesim world in the `turtlesim_world_2_launch` file. Unique namespaces allow the system to start two similar nodes without node name or topic name conflicts.
 
 ```python
 namespace='turtlesim2',

@@ -2,7 +2,7 @@
 
 **Robot Operating System 2**
 
-ROS 2 relies on the notion of combining workspaces using the shell environment. The core ROS 2 workspace is called the **underlay**. Subsequent local workspaces are called **overlays**. When developing with ROS 2, you will typically have several workspaces active concurrently.
+ROS 2 relies on the notion of combining workspaces using the shell environment. In a typical ROS 2 setup, the core ROS 2 installation is the **underlay**. A local workspace sourced after that installation is an **overlay** because it is layered on top of the underlay. The same workspace can act as an underlay for another workspace that is sourced later. When developing with ROS 2, you will typically have several workspaces active concurrently.
 
 
 
@@ -18,7 +18,7 @@ A node is a fundamental ROS 2 element that serves a single, modular purpose in a
 
 Each node can send and receive data from other nodes via topics, services, actions, or parameters. 
 
-Nodes are often a complex combination of publishers, subscribers,  service servers, service clients, action servers, and action clients,  all at the same time.
+A full robotic system is comprised of many nodes working in concert. In ROS 2, a single executable (C++ program, Python program, etc.) can contain one or more nodes.
 
 **ros2 run**
 
@@ -89,13 +89,13 @@ ros2 node info /turtlesim
 
 ### Interfaces
 
-ROS applications typically communicate through interfaces of one of three types: **topics**, **services**, or **actions**. ROS 2 uses a simplified description language, the interface definition language (IDL), to describe these interfaces. This description makes it easy for ROS tools to automatically generate  source code for the interface type in several target languages.
+ROS applications communicate through **topics**, **services**, and **actions**. The data structures used by these communication mechanisms are defined by ROS 2 interfaces: messages (`msg`), services (`srv`), and actions (`action`). ROS 2 uses an interface definition language (IDL) so that tools can generate source code for multiple target languages.
 
-+ msg: `.msg` files are simple text files that describe the fields of a ROS message. They are used to generate source code for messages in different languages.
++ msg: `.msg` files describe the fields of ROS messages and are used to generate message source code in different languages.
 
-+ srv: `.srv` files describe a service. They are composed of two parts: a request and a response. The request and response are message declarations.
++ srv: `.srv` files describe a service interface with two message definitions: a request and a response.
 
-+ action: `.action` files describe actions. They are composed of three parts: a goal, a result, and feedback. Each part is a message declaration itself.
++ action: `.action` files describe an action interface with three message definitions: a goal, a result, and feedback.
 
 #### Messages
 
@@ -153,9 +153,9 @@ string str
 Action definitions have the following form:
 
 ```
-<request_type> <request_fieldname>
+<goal_type> <goal_fieldname>
 ---
-<response_type> <response_fieldname>
+<result_type> <result_fieldname>
 ---
 <feedback_type> <feedback_fieldname>
 ```
@@ -167,7 +167,7 @@ int32 order
 ---
 int32[] sequence
 ---
-int32[] sequence
+int32[] partial_sequence
 ```
 
 
@@ -210,8 +210,8 @@ ros2 topic list -t
 /parameter_events [rcl_interfaces/msg/ParameterEvent]
 /rosout [rcl_interfaces/msg/Log]
 /turtle1/cmd_vel [geometry_msgs/msg/Twist]
-/turtle1/color_sensor [turtlesim_msgs/msg/Color]
-/turtle1/pose [turtlesim_msgs/msg/Pose]
+/turtle1/color_sensor [turtlesim/msg/Color]
+/turtle1/pose [turtlesim/msg/Pose]
 ```
 
 ```
@@ -252,7 +252,7 @@ angular:
 ros2 topic info /turtle1/cmd_vel
 Type: geometry_msgs/msg/Twist
 Publisher count: 1
-Subscription count: 1
+Subscription count: 2
 ```
 
 For more detailed information about a topic
@@ -273,7 +273,7 @@ geometry_msgs/msg/Twist
 
 This means that in the package `geometry_msgs` there is a `msg` called `Twist`.
 
-Run `ros2 interface show <msg_type>` on this type to learn what **message type** is used on each topic, in another words, **what structure of data the message expects**.
+Run `ros2 interface show <msg_type>` on this type to inspect the message fields and determine **what data structure the topic uses**.
 
 ```
 ros2 interface show geometry_msgs/msg/Twist
@@ -368,7 +368,7 @@ The rate/bandwidth reflects the receiving rate on the subscription created by th
 
 **ros2 topic find**
 
-To list a list of available topics of a given type
+To list available topics of a given type
 
 ```
 ros2 topic find <topic_type>
@@ -383,7 +383,7 @@ ros2 topic find geometry_msgs/msg/Twist
 
 ### services
 
-A service is a **request/response pattern** where a client makes a request to a node providing the service and the service processes the request and generates a response. There can be many service clients using same service. But there can **only be one service server** for a service. 
+A service is a **request/response pattern** where a client makes a request to a node providing the service, and the server processes the request and returns a response. There can be many clients using the same service name. There should only be one service server per service name; if multiple servers use the same name, which one receives a request is undefined. 
 
 Services only provide data when they are specifically called by a client. We generally don’t want to use a service for continuous calls; topics or even actions would be better suited.
 
@@ -424,7 +424,7 @@ ros2 service type <service_name>
 In a new terminal:
 
 ```
-os2 service type /clear
+ros2 service type /clear
 std_srvs/srv/Empty
 ```
 
@@ -437,10 +437,10 @@ See the types of all the active services at the same time, append the `--show-ty
 ```
 ros2 service list -t
 /clear [std_srvs/srv/Empty]
-/kill [turtlesim_msgs/srv/Kill]
+/kill [turtlesim/srv/Kill]
 ...
-/turtle1/set_pen [turtlesim_msgs/srv/SetPen]
-/turtle1/teleport_absolute [turtlesim_msgs/srv/TeleportAbsolute]
+/turtle1/set_pen [turtlesim/srv/SetPen]
+/turtle1/teleport_absolute [turtlesim/srv/TeleportAbsolute]
 ...
 ```
 
@@ -456,14 +456,6 @@ Type: std_srvs/srv/Empty
 Clients count: 0
 Services count: 1
 ```
-
-**ros2 service info -verbose**
-
-```
-ros2 service info --verbose <service_name>
-```
-
-The `Endpoint count` will be 2 for DDS based ROS middleware interface (RMW) because DDS creates two endpoints (one for request and one for response) for each service server. Where as for non-DDS based RMW implementations will be 1 because it uses a single endpoint for both request and response.
 
 **ros2 service find**
 
@@ -488,7 +480,7 @@ ros2 interface show <type_name>
 To see the request and response arguments of the `/spawn` service:
 
 ```
-ros2 interface show turtlesim_msgs/srv/Spawn
+ros2 interface show turtlesim/srv/Spawn
 float32 x
 float32 y
 float32 theta
@@ -518,12 +510,12 @@ This command will clear the turtlesim window of any lines your turtle has drawn.
 Spawn a new turtle by calling `/spawn` and setting arguments,
 
 ```
-ros2 service call /spawn turtlesim_msgs/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: ''}"
+ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: ''}"
 waiting for service to become available...
-requester: making request: turtlesim_msgs.srv.Spawn_Request(x=2.0, y=2.0, theta=0.2, name='')
+requester: making request: turtlesim.srv.Spawn_Request(x=2.0, y=2.0, theta=0.2, name='')
 
 response:
-turtlesim_msgs.srv.Spawn_Response(name='turtle2')
+turtlesim.srv.Spawn_Response(name='turtle2')
 ```
 
 **ros2 service echo**
@@ -534,13 +526,32 @@ To see the data communication between a service client and a service server:
 ros2 service echo <service_name | service_type> <arguments>
 ```
 
-`ros2 service echo` depends on service **introspection** of a service client and server, that is disabled by default. To enable it, users must call `configure_introspection` after creating a service client or server.
+`ros2 service echo` depends on service **introspection** of a service client and server, which is disabled by default. To enable it, users must call `configure_introspection` after creating a service client or server.
+
+Start the `introspection_client` and `introspection_service` service introspection demo:
+
+```
+ros2 launch demo_nodes_cpp introspect_services_launch.py
+```
+
+Open another terminal and enable service introspection for both nodes:
+
+```
+ros2 param set /introspection_service service_configure_introspection contents
+ros2 param set /introspection_client client_configure_introspection contents
+```
+
+Now the service communication can be displayed with:
+
+```
+ros2 service echo --flow-style /add_two_ints
+```
 
 
 
 ### parameters
 
-Nodes have parameters to define their default configuration values.
+A parameter is a configuration value of a node. You can think of parameters as node settings. In ROS 2, each node maintains its own parameters.
 
 Open a new terminal and run:
 
@@ -570,9 +581,7 @@ ros2 param list
   ...
 ```
 
-Return the node namespaces, `/teleop_turtle` and `/turtlesim`, followed by each node’s parameters.
-
-The namespaces of the parameter and its name are separated using dots, for example, in `parameter_events.publisher.depth`. Every node has the parameter `use_sim_time`.
+You see the node namespaces, `/teleop_turtle` and `/turtlesim`, followed by each node’s parameters. Every node has the parameter `use_sim_time`; it is not unique to turtlesim.
 
 **ros2 param get**
 
@@ -619,7 +628,7 @@ To save your current configuration of `/turtlesim`’s parameters into the file 
 ros2 param dump /turtlesim > turtlesim.yaml
 ```
 
-**ros param load**
+**ros2 param load**
 
 Load parameters from a file to a currently running node.
 
@@ -690,7 +699,7 @@ ros2 node info /turtlesim
 /turtlesim
   ...
   Action Servers:
-    /turtle1/rotate_absolute: turtlesim_msgs/action/RotateAbsolute
+    /turtle1/rotate_absolute: turtlesim/action/RotateAbsolute
   Action Clients:
 ```
 
@@ -711,19 +720,19 @@ To find `/turtle1/rotate_absolute`’s type,
 
 ```
 ros2 action list -t
-/turtle1/rotate_absolute [turtlesim_msgs/action/RotateAbsolute]
+/turtle1/rotate_absolute [turtlesim/action/RotateAbsolute]
 ```
 
-**ros2  action type**
+**ros2 action type**
 
 To check the action type for the action,
 
 ```
 ros2 action type /turtle1/rotate_absolute
-turtlesim_msgs/action/RotateAbsolute
+turtlesim/action/RotateAbsolute
 ```
 
-**ros2  action info**
+**ros2 action info**
 
 Further introspect the `/turtle1/rotate_absolute` action 
 
@@ -741,7 +750,7 @@ The `/teleop_turtle` node has an action client and the `/turtlesim` node has an 
 **ros2 interface show**
 
 ```
-ros2 interface show turtlesim_msgs/action/RotateAbsolute
+ros2 interface show turtlesim/action/RotateAbsolute
 # The desired heading in radians
 float32 theta
 ---
@@ -754,7 +763,7 @@ float32 remaining
 
 The section of this message above the first `---` is the structure (data type and name) of the **goal request**. The next section is the structure of the **result**. The last section is the structure of the **feedback**.
 
-**ros2  action send_goal**
+**ros2 action send_goal**
 
 Send an action goal from the command line.
 
@@ -763,7 +772,7 @@ ros2 action send_goal <action_name> <action_type> <values>
 ```
 
 ```
-ros2 action send_goal /turtle1/rotate_absolute turtlesim_msgs/action/RotateAbsolute "{theta: 1.57}"
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: 1.57}"
 waiting for an action server to become available...
 Sending goal:
      theta: 1.57
@@ -781,19 +790,8 @@ All goals have a unique ID in the return message. The result, a field with the n
 To see the feedback of this goal, add `--feedback` to the `ros2 action send_goal` command
 
 ```
-ros2 action send_goal /turtle1/rotate_absolute turtlesim_msgs/action/RotateAbsolute "{theta: -1.57}" --feedback
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: -1.57}" --feedback
 ```
-
-**ros2 action echo**
-
-To see the data communication between an action client and an action server
-
-```
-ros2 action echo <action_name> <optional arguments/action_type>
-```
-
-`ros2 action echo` depends on action **introspection** of an action client and server, that is disabled by default. To enable it, users must call `configure_introspection` after creating an action client or server.
-
 
 
 ### Using `rqt_console` to view logs
@@ -818,7 +816,7 @@ ros2 run rqt_console rqt_console
 
 **Set the default logger level**
 
-Set the default logger level when you first run the `/turtlesim` node using remapping. 
+Set the default logger level when you first run the `/turtlesim` node using ROS arguments. 
 
 ```
 ros2 run turtlesim turtlesim_node --ros-args --log-level WARN
@@ -890,11 +888,11 @@ cd bag_files
 `ros2 bag` can record data from messages published to topics. Move into the `bag_files` directory. 
 
 ```
-ros2 bag record --topics <topic_name>
+ros2 bag record <topic_name>
 ```
 
 ```
-ros2 bag record --topics /turtle1/cmd_vel
+ros2 bag record /turtle1/cmd_vel
 ```
 
 Press Ctrl+C to stop recording.
@@ -906,13 +904,13 @@ The data will be accumulated in a new **bag directory** with a **name** in the p
 The `-o` or  `--output` option allows you to choose a unique name for your bag directory. The `subset` is the **bag directory name**.
 
 ```
-ros2 bag record -o subset --topics /turtle1/cmd_vel /turtle1/pose
+ros2 bag record -o subset /turtle1/cmd_vel /turtle1/pose
 ```
 
 Record all topics
 
 ```
-ros2 bag record -o all_topics_bag *
+ros2 bag record -a -o all_topics_bag
 ```
 
 **Split recording into multiple files**
@@ -920,7 +918,7 @@ ros2 bag record -o all_topics_bag *
 `-d <max_bag_duration>` ensures that each file only lasts `<max_bag_duration>` seconds before it starts writing to a new file, or `-b <max_bag_size>` ensures that each file does not exceed `<max_bag_size>` bytes in file size.
 
 ```
-ros2 bag record -o subset_split -d 5 --topics /turtle1/cmd_vel /turtle1/pose
+ros2 bag record -o subset_split -d 5 /turtle1/cmd_vel /turtle1/pose
 ```
 
 **Inspect topic data**
@@ -939,30 +937,28 @@ Before replaying the bag, enter Ctrl+C in the terminal where the teleop is runni
 ros2 bag play subset
 ```
 
-**Play multiple bags**
-As an example, we can record `/turtle1/cmd_vel` and `/turtle1/pose` each to their own bag.
-
-Create two terminal instances. In the first one, run the following:
-
-```
-ros2 bag record -o subset_cmd_vel --topics /turtle1/cmd_vel
-```
-
-In the second terminal, run this:
-
-```
-ros2 bag record -o subset_pose --topics /turtle1/pose
-```
-
-To have these two recordings play in parallel with correct timing, call `ros2 bag play` with `-i <bag_name>` for each bag you want to include.
-
-```
-ros2 bag play -i subset_cmd_vel -i subset_pose
-```
-
 #### Managing service data
 
 To record service data between service client and server, `Service Introspection` must be enabled on the node.
+
+Open a new terminal and run `introspection_service`, enabling Service Introspection:
+
+```
+ros2 run demo_nodes_cpp introspection_service --ros-args -p service_configure_introspection:=contents
+```
+
+Open another terminal and run `introspection_client`, enabling Service Introspection:
+
+```
+ros2 run demo_nodes_cpp introspection_client --ros-args -p client_configure_introspection:=contents
+```
+
+Check that the service is available and that Service Introspection is enabled:
+
+```
+ros2 service list
+ros2 service echo --flow-style /add_two_ints
+```
 
 **Record services**
 
@@ -989,74 +985,3 @@ ros2 bag info <bag_file_name>
 ```
 ros2 bag play --publish-service-requests <bag_file_name>
 ```
-
-#### Managing action data
-
-To record action data between action client and server, `Action Introspection` must be enabled on the nodes.
-
-Let’s start `fibonacci_action_client` and `fibonacci_action_server` nodes and enable `Action Introspection`.
-
-Open a new terminal and run `fibonacci_action_server`, enabling `Action Introspection`:
-
-```
-ros2 run action_tutorials_py fibonacci_action_server --ros-args -p action_server_configure_introspection:=contents
-```
-
-Open another terminal and run `fibonacci_action_client`, enabling `Action Introspection`:
-
-```
-ros2 run action_tutorials_cpp fibonacci_action_client --ros-args -p action_client_configure_introspection:=contents
-```
-
-**Check action availability**
-
-`ros2 bag` can only record data from available actions. Open a new terminal
-
-```
-ros2 action list
-/fibonacci
-```
-
-```
-ros2 action echo --flow-style /fibonacci
-interface: STATUS_TOPIC
-status_list: [{goal_info: {goal_id: {uuid: [28, 80, 233, 191, 140, 64, 198, 170, 52, 13, 52, 97, 17, 123, 62, 193]}, stamp: {sec: 1772676332, nanosec: 148579520}}, status: 4}]
----
-```
-
-**Record actions**
-
-To record specific actions:
-
-```
-ros2 bag record --action <action_names>
-```
-
-To record all actions:
-
-```
-ros2 bag record --all-actions
-```
-
-```
-ros2 bag record --action /fibonacci
-```
-
-Now `ros2 bag` is recording the action data for the `/fibonacci` action: goal, result, and feedback.
-
-The data will be accumulated in a new bag directory with a name in the pattern of `rosbag2_year_month_day-hour_minute_second`. This directory will contain a `metadata.yaml` along with the bag file in the recorded format.
-
-**Inspect action data**
-
-```
-ros2 bag info <bag_file_name>
-```
-
-**Play action bag**
-
-Before replaying the bag file, enter Ctrl+C in the terminal where `fibonacci_action_client` is running.
-
-```
-ros2 bag play --send-actions-as-client <bag_file_name>
-```
-

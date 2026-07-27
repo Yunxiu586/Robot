@@ -13,8 +13,8 @@ URDF (Unified Robot Description Format) is a file format for specifying the geom
 + `<link>`: Represent a rigid body part of the robot with a unique `name`.
   - `<visual>`: Define the visual appearance of a link.
     - `<geometry>`: Specify the shape of the visual element.
-      - `<cylinder>`: A cylinder shape defined by `length`and `radius`.
-      - `<box>`: A box shape defined by `size`(x, y, z).
+      - `<cylinder>`: A cylinder shape defined by `length` and `radius`.
+      - `<box>`: A box shape defined by `size` (x, y, z).
       - `<sphere>`: A sphere shape defined by `radius`.
       - `<mesh>`: Imports a 3D mesh from an external file by `filename`.
     - `<origin>`: Define the position (`xyz`) and orientation (`rpy`- roll, pitch, yaw) of the visual / collision geometry relative to that link's coordinate frame.
@@ -27,7 +27,7 @@ URDF (Unified Robot Description Format) is a file format for specifying the geom
   - `<inertial>`: Define the dynamic properties that a physics engine (like Gazebo) needs to compute the link's motion.
     - `<mass>`: Specify the mass of the link in kilograms.
     - `<inertia>`: Define the 3x3 rotational inertia matrix represented by six values (`ixx`, `ixy`, `ixz`, `iyy`, `iyz`, `izz`) due to symmetry. 
-      - This matrix describes how the mass is distributed relative to the link's center of mass. A reasonable default for a  mid-sized link is a value of `1e-3`or smaller for the diagonal elements (`ixx`, `iyy`, `izz`).
+      - This matrix describes how the mass is distributed relative to the link's center of mass. A reasonable default for a  mid-sized link is a value of `1e-3` or smaller for the diagonal elements (`ixx`, `iyy`, `izz`).
 
 
 + `<joint>`: Defines a connection between two links with a `type` and unique `name`.
@@ -42,10 +42,10 @@ URDF (Unified Robot Description Format) is a file format for specifying the geom
   - `<limit>`: Define the bounds of the motion.
   - `<parent>`: The parent `link` of the joint.
   - `<child>`: The child `link` of the joint.
-  - `<origin>`: Describes where the child link is attached relative to the parent link by `xyz` and `rpy`. If we don’t specify a `rpy` attribute, the child frame will be default have the same orientation as the parent frame.
+  - `<origin>`: Describes where the child link is attached relative to the parent link by `xyz` and `rpy`. If we don’t specify a `rpy` attribute, the child frame will have the same orientation as the parent frame.
   - `<dynamics>`: Define the physical properties governing how the joint moves. If not specified, the default value for both coefficients is 0.
     - `friction`: Specify the physical static friction. The unit is Newtons (N) for prismatic joints and Newton meters (N·m) for rotational joints.
-    - `damping`: Specify the physical damping value. The unit is N·s/m for prismatic joints and N·m·s/rad for revolving joints.
+    - `damping`: Specify the physical damping value. The unit is N·s/m for prismatic joints and N·m·s/rad for rotational joints.
 
 
 
@@ -73,49 +73,46 @@ The code for base link:
 </link>
 ```
 
-The code for left wheel link:
+The code for a continuous joint:
 
 ```xml
-<link name="left_wheel">
-  <visual>
-    <geometry>
-      <cylinder length="0.1" radius="0.15"/>
-    </geometry>
-    <material name="black">
-      <color rgba="0.1 0.1 0.1 1"/>
-    </material>
-  </visual>
-  <collision>
-    <geometry>
-      <cylinder length="0.1" radius="0.15"/>
-    </geometry>
-  </collision>
-  <inertial>
-    <mass value="2.0"/>
-    <inertia ixx="1e-2" ixy="0.0" ixz="0.0" iyy="1e-2" iyz="0.0" izz="2e-2"/>
-  </inertial>
-</link>
-```
-
-The code for the joint:
-
-```xml
-<joint name="left_wheel_joint" type="continuous">
+<joint name="head_swivel" type="continuous">
   <parent link="base_link"/>
-  <child link="left_wheel"/>
-  <origin xyz="0 0.25 -0.2" rpy="1.5708 0 0"/>
-  <axis xyz="0 1 0"/>
-  <dynamics damping="0.1" friction="0.5"/>
+  <child link="head"/>
+  <axis xyz="0 0 1"/>
+  <origin xyz="0 0 0.3"/>
 </joint>
 ```
 
+The code for a revolute joint:
+
+```xml
+<joint name="left_gripper_joint" type="revolute">
+  <axis xyz="0 0 1"/>
+  <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+  <origin rpy="0 0 0" xyz="0.2 0.01 0"/>
+  <parent link="gripper_pole"/>
+  <child link="left_gripper"/>
+</joint>
+```
+
+The code for a prismatic joint:
+
+```xml
+<joint name="gripper_extension" type="prismatic">
+  <parent link="base_link"/>
+  <child link="gripper_pole"/>
+  <limit effort="1000.0" lower="-0.38" upper="0" velocity="0.5"/>
+  <origin rpy="0 0 0" xyz="0.19 0 0.2"/>
+</joint>
+```
 
 
 ### Use Xacro to clean up your code
 
 The xacro is a macro language for XML. The xacro program runs all of the macros and outputs the result.
 
-#### Contants
+#### Constants
 
 Xacro allows you to specify properties which act as constants.
 
@@ -237,7 +234,7 @@ This macro defines a parameterized robot leg (link and joint). By calling it wit
 
 ### Use URDF with `robot_state_publisher`
 
-Model a walking robot, publish the state as a tf2 message and view the simulation in Rviz.
+This tutorial shows how to model a walking robot, publish the state as a tf2 message, and view the simulation in RViz. First, create the URDF model describing the robot assembly. Next, write a node that simulates the motion and publishes the JointState and transforms. Then use `robot_state_publisher` to publish the entire robot state.
 
 #### Create a package
 
@@ -257,11 +254,15 @@ cd urdf_tutorial_r2d2
 
 #### Create the URDF file
 
-Create the directory where we will store some assets:
+Create the directory where we will store the URDF and RViz assets:
 
 ```
 mkdir -p urdf
 ```
+
+Download the URDF file and save it as `second_ros2_ws/src/urdf_tutorial_r2d2/urdf/r2d2.urdf.xml`.
+
+Download the RViz configuration file and save it as `second_ros2_ws/src/urdf_tutorial_r2d2/urdf/r2d2.rviz`.
 
 #### Publish the state
 
@@ -270,75 +271,82 @@ mkdir -p urdf
 ```python
 from math import sin, cos, pi
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, TransformStamped
 
-
 class StatePublisher(Node):
 
     def __init__(self):
+        rclpy.init()
         super().__init__('state_publisher')
 
         qos_profile = QoSProfile(depth=10)
-        # Create a publisher for JointStatemessages on the 'joint_states' topic
+        # Create a publisher for JointState messages on the `joint_states` topic
         self.joint_pub = self.create_publisher(JointState, 'joint_states', qos_profile)
         self.broadcaster = TransformBroadcaster(self, qos=qos_profile)
-        # Create a timer to call the updatemethod at 30 Hz
-        self.timer = self.create_timer(1/30, self.update)
+        self.nodeName = self.get_name()
+        self.get_logger().info("{0} started".format(self.nodeName))
 
-        self.degree = pi / 180.0
+        degree = pi / 180.0
+        # Create a rate object to run the update loop at 30 Hz
+        loop_rate = self.create_rate(30)
 
         # robot state
-        self.tilt = 0.
-        self.tinc = self.degree	# Tilt angle increment per update
-        self.swivel = 0.
-        self.angle = 0.
-        self.height = 0.
-        self.hinc = 0.005		# Height increment per update
+        tilt = 0.
+        tinc = degree  # Tilt angle increment per update
+        swivel = 0.
+        angle = 0.
+        height = 0.
+        hinc = 0.005  # Height increment per update
 
         # message declarations
-        self.odom_trans = TransformStamped()
-        self.odom_trans.header.frame_id = 'odom'
-        self.odom_trans.child_frame_id = 'axis'
-        self.joint_state = JointState()	# Create a JointState message object
+        odom_trans = TransformStamped()
+        odom_trans.header.frame_id = 'odom'
+        odom_trans.child_frame_id = 'axis'
+        joint_state = JointState()  # Create a JointState message object
 
-        self.get_logger().info("{0} started".format(self.get_name()))
+        try:
+            while rclpy.ok():
+                rclpy.spin_once(self)
 
-    def update(self):
-        # update joint_state
-        now = self.get_clock().now()
-        self.joint_state.header.stamp = now.to_msg()
-        self.joint_state.name = ['swivel', 'tilt', 'periscope']
-        self.joint_state.position = [self.swivel, self.tilt, self.height]
+                # update joint_state
+                now = self.get_clock().now()
+                joint_state.header.stamp = now.to_msg()
+                joint_state.name = ['swivel', 'tilt', 'periscope']
+                joint_state.position = [swivel, tilt, height]
 
-        # update transform from 'odom' to 'axis'
-        # (moving in a circle with radius=2)
-        self.odom_trans.header.stamp = now.to_msg()
-        self.odom_trans.transform.translation.x = cos(self.angle)*2
-        self.odom_trans.transform.translation.y = sin(self.angle)*2
-        self.odom_trans.transform.translation.z = 0.7
-        # Make the robot's forward direction (x-axis) tangent to the circular path
-        self.odom_trans.transform.rotation = \
-            euler_to_quaternion(0, 0, self.angle + pi/2) # roll,pitch,yaw
+                # update transform from `odom` to `axis`
+                # (moving in a circle with radius=2)
+                odom_trans.header.stamp = now.to_msg()
+                odom_trans.transform.translation.x = cos(angle)*2
+                odom_trans.transform.translation.y = sin(angle)*2
+                odom_trans.transform.translation.z = 0.7
+                # Make the robot's forward direction (x-axis) tangent to the circular path
+                odom_trans.transform.rotation = \
+                    euler_to_quaternion(0, 0, angle + pi/2)  # roll, pitch, yaw
 
-        # send the joint state and transform
-        self.joint_pub.publish(self.joint_state)
-        self.broadcaster.sendTransform(self.odom_trans)
+                # send the joint state and transform
+                self.joint_pub.publish(joint_state)
+                self.broadcaster.sendTransform(odom_trans)
 
-        # Create new robot state
-        self.tilt += self.tinc
-        if self.tilt < -0.5 or self.tilt > 0.0:	# Reverse tilt direction at limits
-            self.tinc *= -1
-        self.height += self.hinc
-        if self.height > 0.2 or self.height < 0.0:	# Reverse height direction at limits
-            self.hinc *= -1
-        self.swivel += self.degree
-        self.angle += self.degree/4
+                # Create new robot state
+                tilt += tinc
+                if tilt < -0.5 or tilt > 0.0:  # Reverse tilt direction at limits
+                    tinc *= -1
+                height += hinc
+                if height > 0.2 or height < 0.0:  # Reverse height direction at limits
+                    hinc *= -1
+                swivel += degree
+                angle += degree/4
 
+                # This will adjust as needed per iteration
+                loop_rate.sleep()
+
+        except KeyboardInterrupt:
+            pass
 
 def euler_to_quaternion(roll, pitch, yaw):
     qx = sin(roll/2) * cos(pitch/2) * cos(yaw/2) - cos(roll/2) * sin(pitch/2) * sin(yaw/2)
@@ -347,15 +355,8 @@ def euler_to_quaternion(roll, pitch, yaw):
     qw = cos(roll/2) * cos(pitch/2) * cos(yaw/2) + sin(roll/2) * sin(pitch/2) * sin(yaw/2)
     return Quaternion(x=qx, y=qy, z=qz, w=qw)
 
-
 def main():
-    try:
-        with rclpy.init():
-            node = StatePublisher()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
-
+    node = StatePublisher()
 
 if __name__ == '__main__':
     main()
@@ -424,9 +425,9 @@ data_files=[
 #### Build and run
 
 ```
-cd ~/second_ros2_ws
+cd second_ros2_ws
 colcon build --symlink-install --packages-select urdf_tutorial_r2d2
-. install/setup.bash
+source install/setup.bash
 ```
 
 Launch the package
@@ -435,10 +436,10 @@ Launch the package
 ros2 launch urdf_tutorial_r2d2 demo_launch.py
 ```
 
-Open a new terminal, the run Rviz using
+Open a new terminal, source the workspace, and run RViz:
 
 ```
-. install/setup.bash
+source install/setup.bash
 rviz2 -d `ros2 pkg prefix urdf_tutorial_r2d2 --share`/r2d2.rviz
 ```
 
@@ -449,6 +450,5 @@ rviz2 -d `ros2 pkg prefix urdf_tutorial_r2d2 --share`/r2d2.rviz
 RViz is a 3D visualizer for the Robot Operating System (ROS) framework.
 
 ```
-ros2 run rviz2 rivz2
+ros2 run rviz2 rviz2
 ```
-

@@ -78,11 +78,11 @@ mkdir action
 Within the `action` directory, create a file called `Fibonacci.action`.
 
 ```
-int32 order			# Goal
+int32 order                 # Goal
 ---
-int32[] sequence	# Result
+int32[] sequence            # Result
 ---
-int32[] sequence	# Feedback
+int32[] partial_sequence    # Feedback
 ```
 
 **Build an action**
@@ -105,10 +105,11 @@ Add the required dependencies to our `package.xml`:
 <member_of_group>rosidl_interface_packages</member_of_group>
 ```
 
-Navigate into `ros2_ws/src`. Build the package containing the `Fibonacci` action definition:
+Navigate to the workspace root and build the package containing the `Fibonacci` action definition:
 
 ```
-colcon build --packages-select custom_action_interfaces
+cd ~/ros2_ws
+colcon build
 ```
 
 Source the workspace:
@@ -138,8 +139,8 @@ class: Fibonacci
 │   ├── __init__(self, sequence=None)
 │   └── attr: sequence # list[int]
 └── class: Feedback
-    ├── __init__(self, sequence=None)
-    └── attr: sequence # list[int]
+    ├── __init__(self, partial_sequence=None)
+    └── attr: partial_sequence # list[int]
 ```
 
 #### Write an action server
@@ -153,7 +154,6 @@ import time
 
 import rclpy
 from rclpy.action import ActionServer
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from custom_action_interfaces.action import Fibonacci
@@ -168,10 +168,10 @@ class FibonacciActionServer(Node):
         super().__init__('fibonacci_action_server')
         # Instantiate a new action server object
         self._action_server = ActionServer(
-            self,					# current node instance
-            Fibonacci,				# action type
-            'fibonacci',			# action name		
-            self.execute_callback)	# callback function
+            self,                   # current node instance
+            Fibonacci,              # action type
+            'fibonacci',            # action name
+            self.execute_callback)  # callback function
 
     # Receive a goal_handle object
     def execute_callback(self, goal_handle):
@@ -179,14 +179,14 @@ class FibonacciActionServer(Node):
 
         # Instantiate a feedback message object
         feedback_msg = Fibonacci.Feedback()
-        # Initialize the sequence field
-        feedback_msg.sequence = [0, 1]
+        # Initialize the partial_sequence field
+        feedback_msg.partial_sequence = [0, 1]
 
         # Publish feedback （order-1） times
         for i in range(1, goal_handle.request.order):
-            feedback_msg.sequence.append(
-                feedback_msg.sequence[i] + feedback_msg.sequence[i-1])
-            self.get_logger().info('Feedback: {0}'.format(feedback_msg.sequence))
+            feedback_msg.partial_sequence.append(
+                feedback_msg.partial_sequence[i] + feedback_msg.partial_sequence[i-1])
+            self.get_logger().info('Feedback: {0}'.format(feedback_msg.partial_sequence))
             goal_handle.publish_feedback(feedback_msg)
             time.sleep(1)
 
@@ -195,18 +195,16 @@ class FibonacciActionServer(Node):
 
         # Instantiate a result message object
         result = Fibonacci.Result()
-        result.sequence = feedback_msg.sequence
+        result.sequence = feedback_msg.partial_sequence
         return result
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            fibonacci_action_server = FibonacciActionServer()
+    rclpy.init(args=args)
 
-            rclpy.spin(fibonacci_action_server)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    fibonacci_action_server = FibonacciActionServer()
+
+    rclpy.spin(fibonacci_action_server)
 
 
 if __name__ == '__main__':
@@ -232,21 +230,6 @@ goal_handle => ServerGoalHandle
 └── method: abort()
 ```
 
-Hierarchy diagram of `execute_callback`
-
-```
-execute_callback(self, goal_handle)
-├── feedback_msg => Fibonacci.Feedback
-├── feedback_msg.sequence
-├── goal_handle => rclpy.action.server.ServerGoalHandle
-│	├── for i in range(1, goal_handle.request.order)
-│	│	└──goal_handle.request => Fibonacci.Goal
-│	├── goal_handle.publish_feedback(feedback_msg)
-│	└── goal_handle.succeed()
-├── result => Fibonacci.Result
-└── result.sequence = feedback_msg.sequence
-```
-
 **Comment-free code**:
 
 ```python
@@ -254,7 +237,6 @@ import time
 
 import rclpy
 from rclpy.action import ActionServer
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from custom_action_interfaces.action import Fibonacci
@@ -264,36 +246,38 @@ class FibonacciActionServer(Node):
 
     def __init__(self):
         super().__init__('fibonacci_action_server')
-        self._action_server = ActionServer(self, Fibonacci, 'fibonacci', self.execute_callback)
+        self._action_server = ActionServer(
+            self,
+            Fibonacci,
+            'fibonacci',
+            self.execute_callback)
 
     def execute_callback(self, goal_handle):
         self.get_logger().info('Executing goal...')
 
         feedback_msg = Fibonacci.Feedback()
-        feedback_msg.sequence = [0, 1]
+        feedback_msg.partial_sequence = [0, 1]
 
         for i in range(1, goal_handle.request.order):
-            feedback_msg.sequence.append(
-                feedback_msg.sequence[i] + feedback_msg.sequence[i-1])
-            self.get_logger().info('Feedback: {0}'.format(feedback_msg.sequence))
+            feedback_msg.partial_sequence.append(
+                feedback_msg.partial_sequence[i] + feedback_msg.partial_sequence[i-1])
+            self.get_logger().info('Feedback: {0}'.format(feedback_msg.partial_sequence))
             goal_handle.publish_feedback(feedback_msg)
             time.sleep(1)
 
         goal_handle.succeed()
 
         result = Fibonacci.Result()
-        result.sequence = feedback_msg.sequence
+        result.sequence = feedback_msg.partial_sequence
         return result
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            fibonacci_action_server = FibonacciActionServer()
+    rclpy.init(args=args)
 
-            rclpy.spin(fibonacci_action_server)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    fibonacci_action_server = FibonacciActionServer()
+
+    rclpy.spin(fibonacci_action_server)
 
 
 if __name__ == '__main__':
@@ -321,7 +305,6 @@ ros2 action send_goal --feedback fibonacci custom_action_interfaces/action/Fibon
 ```python
 import rclpy
 from rclpy.action import ActionClient
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from custom_action_interfaces.action import Fibonacci
@@ -341,9 +324,7 @@ class FibonacciActionClient(Node):
         self._action_client.wait_for_server()
 
         # ActionClient.send_goal_async() method returns a future object to a goal handle
-        self._send_goal_future = self._action_client.send_goal_async(
-            goal_msg, 
-            feedback_callback=self.feedback_callback)
+        self._send_goal_future = self._action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
 
         # Register a callback for when the future is complete
         self._send_goal_future.add_done_callback(self.goal_response_callback)
@@ -373,19 +354,17 @@ class FibonacciActionClient(Node):
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
-        self.get_logger().info('Received feedback: {0}'.format(feedback.sequence))
+        self.get_logger().info('Received feedback: {0}'.format(feedback.partial_sequence))
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            action_client = FibonacciActionClient()
+    rclpy.init(args=args)
 
-            action_client.send_goal(10)
+    action_client = FibonacciActionClient()
 
-            rclpy.spin(action_client)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    action_client.send_goal(10)
+
+    rclpy.spin(action_client)
 
 
 if __name__ == '__main__':
@@ -400,49 +379,11 @@ if __name__ == '__main__':
 
 + Facilitate Callback-Based Handling: You can attach a callback function (e.g., `goal_response_callback`) to the `Future` using `add_done_callback()`.
 
-```
-_action_client => ActionClient
-└── method: send_goal_async()
-	└── return: future => Future
-        ├── method: add_done_callback()
-        └── method: result()
-            └── return: goal_handle => ClientGoalHandle
-            	├── attr: accepted
-               	├── attr: result => Fibonacci.Result
-                │	└── attr： sequence
-				└── method： get_result_async()
-					└── return: future => Future
-```
-
-Hierarchy diagram of the `FibonacciActionClient` class methods:
-
-```
-send_goal(self, order)
-├── goal_msg => Fibonacci.Goal
-├── goal_msg.order = order
-├── self._action_client.wait_for_server()
-├── self._send_goal_future => Future = self._action_client.send_goal_async(
-│		goal_msg, feedback_callback=self.feedback_callback)
-│	└── feedback_callback(self, feedback_msg => FeedbackMessage)
-│		└── feedback => Fibonacci.Feedback = feedback_msg.feedback
-└── self._send_goal_future.add_done_callback(self.goal_response_callback)
-    └── goal_response_callback(self, future)
-        ├── goal_handle => rclpy.action.client.ClientGoalHandle = future.result()
-        ├── if not goal_handle.accepted
-        │   └── return
-        ├── self._get_result_future => Future = goal_handle.get_result_async()
-        └── self._get_result_future.add_done_callback(self.get_result_callback)
-            └── get_result_callback(self, future)
-                ├── result => Fibonacci.Result = future.result().result
-                └── rclpy.shutdown()
-```
-
 **Comment-free code**:
 
 ```python
 import rclpy
 from rclpy.action import ActionClient
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from custom_action_interfaces.action import Fibonacci
@@ -482,19 +423,17 @@ class FibonacciActionClient(Node):
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
-        self.get_logger().info('Received feedback: {0}'.format(feedback.sequence))
+        self.get_logger().info('Received feedback: {0}'.format(feedback.partial_sequence))
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            action_client = FibonacciActionClient()
+    rclpy.init(args=args)
 
-            action_client.send_goal(10)
+    action_client = FibonacciActionClient()
 
-            rclpy.spin(action_client)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    action_client.send_goal(10)
+
+    rclpy.spin(action_client)
 
 
 if __name__ == '__main__':
@@ -517,7 +456,7 @@ python3 fibonacci_action_server.py
 [INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5, 8, 13])
 [INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5, 8, 13, 21])
 [INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34])
-[INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+[INFO] [fibonacci_action_server]: Feedback: array('i', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 ```
 
 In another terminal, run the action client.
@@ -540,105 +479,10 @@ python3 fibonacci_action_client.py
 [INFO] [fibonacci_action_client]: Result: array('i', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 ```
 
-The server's **goal** is to compute a Fibonacci sequence of length **order + 1**(2+order-1), i.e., from F_0 to F_(order-1).  And the server sends feedback **order-1** times in this process.
+For the positive goal values used in this tutorial (`order >= 1`), the server computes a Fibonacci sequence of length **order + 1**, from `F_0` through `F_order`, and publishes feedback **order - 1** times.
 
 For example, an `action_client.send_goal(10)` requests the first 11 numbers.
 
-
-
-### Publishing messages using YAML files
-
-```
-ros2 run turtlesim turtlesim_node
-```
-
-```
-ros2 run turtlesim turtle_teleop_key
-```
-
-Use the `echo` verb to capture the message and save it in a YAML file `cmd_vel.yaml` using the output redirection operator `>`.
-
-```
-ros2 topic echo --once  turtle1/cmd_vel > cmd_vel.yaml
-```
-
-Use the arrows to move the turtle around. This creates a `cmd_vel.yaml` file with the following content in the directory the command was executed:
-
-```yaml
-linear:
-    x: 1.0
-    y: 0.0
-    z: 0.0
-angular:
-    x: 0.0
-    y: 0.0
-    z: 0.0
----
-```
-
-To publish a message, utilize the `--yaml-file` option available with the `pub` verb of the `ros2 topic` command.
-
-First, specify the target topic, `/cmd_vel`, followed by the message type `geometry_msgs/msg/Twist`.
-
- Lastly, specify the YAML file containing the message data. 
-
-The following command will publish the message contained in the `YAML` file to the designated `topic` once.
-
-```
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist --yaml-file cmd_vel.yaml
-```
-
-```
-publisher: beginning loop
-publishing #1: geometry_msgs.msg.Twist(linear=geometry_msgs.msg.Vector3(x=1.0, y=0.0, z=0.0), angular=geometry_msgs.msg.Vector3(x=0.0, y=0.0, z=0.0))
-```
-
-Publish more than once by adding more data to the YAML file.
-
-```yaml
-linear:
-    x: 1.0
-    y: 0.0
-    z: 0.0
-angular:
-    x: 0.0
-    y: 0.0
-    z: 0.0
----
-linear:
-    x: 2.0
-    y: 0.0
-    z: 0.0
-angular:
-    x: 0.0
-    y: 0.0
-    z: 0.0
----
-linear:
-    x: 3.0
-    y: 0.0
-    z: 0.0
-angular:
-    x: 0.0
-    y: 0.0
-    z: 0.0
----
-```
-
-Publish three different messages to the `/cmd_vel` topic.
-
-```
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist --yaml-file cmd_vel.yaml
-```
-
-```
-publisher: beginning loop
-publishing #1: geometry_msgs.msg.Twist(linear=geometry_msgs.msg.Vector3(x=1.0, y=0.0, z=0.0), angular=geometry_msgs.msg.Vector3(x=0.0, y=0.0, z=0.0))
-
-publishing #2: geometry_msgs.msg.Twist(linear=geometry_msgs.msg.Vector3(x=2.0, y=0.0, z=0.0), angular=geometry_msgs.msg.Vector3(x=0.0, y=0.0, z=0.0))
-
-publishing #3: geometry_msgs.msg.Twist(linear=geometry_msgs.msg.Vector3(x=3.0, y=0.0, z=0.0), angular=geometry_msgs.msg.Vector3(x=0.0, y=0.0, z=0.0))
-```
 
 
 
@@ -650,7 +494,7 @@ Navigate into `ros2_ws/src` and create the package.
 ros2 pkg create --build-type ament_python --license Apache-2.0 python_parameter_event_handler --dependencies rclpy
 ```
 
-Update `package.xlm`
+Update `package.xml`
 
 ```xml
 <description>Python parameter events client tutorial</description>
@@ -664,7 +508,6 @@ Inside the `ros2_ws/src/python_parameter_event_handler/python_parameter_event_ha
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 import rclpy.parameter
 
@@ -675,32 +518,30 @@ class SampleNodeWithParameters(Node):
     def __init__(self):
         super().__init__('node_with_parameters')
 
-        # Declare an integer parameter an_int_param, with a default value of 0
+        # Declare the integer parameter `an_int_param` with a default value of 0
         self.declare_parameter('an_int_param', 0)
 
-        # Create a ParameterEventHandler object to monitor changes to parameters
+        # Create a ParameterEventHandler object to monitor parameter changes
         self.handler = ParameterEventHandler(self)
 
-        # Register a callback to monitor changes in the parameter
-        # Return a callback handler(object) for the new callback
+        # Register a callback for changes to the parameter
+        # Store the returned callback handle to keep the callback active
         self.callback_handle = self.handler.add_parameter_callback(
             parameter_name="an_int_param",
             node_name="node_with_parameters",
             callback=self.callback,
         )
 
-    # Use the callback method of the SampleNodeWithParameters class
+    # Handle updates to the monitored parameter
     def callback(self, p: rclpy.parameter.Parameter) -> None:
         self.get_logger().info(f"Received an update to parameter: {p.name}: {rclpy.parameter.parameter_value_to_python(p.value)}")
 
 
 def main():
-    try:
-        with rclpy.init():
-            node = SampleNodeWithParameters()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    rclpy.init()
+    node = SampleNodeWithParameters()
+    rclpy.spin(node)
+    rclpy.shutdown()
 ```
 
 It is very important to save the handle that is returned by `add_parameter_callback`; otherwise, the callback will not be properly registered.
@@ -878,63 +719,6 @@ Since no single-parameter callback was added via `add_parameter_callback` for th
 [INFO] [1773226421.555357511] [node_with_parameters]: Inside event: another_double_param changed to: 4.4
 ```
 
-**Complete comment-free code:**
-
-```python
-import rclpy
-from rclpy.executors import ExternalShutdownException
-from rclpy.node import Node
-import rclpy.parameter
-
-from rclpy.parameter_event_handler import ParameterEventHandler
-
-
-class SampleNodeWithParameters(Node):
-    def __init__(self):
-        super().__init__('node_with_parameters')
-
-        self.declare_parameter('an_int_param', 0)
-        self.declare_parameter("another_double_param", 0.0)
-
-        self.handler = ParameterEventHandler(self)
-
-        self.callback_handle = self.handler.add_parameter_callback(
-            parameter_name="an_int_param",
-            node_name="node_with_parameters",
-            callback=self.callback,
-        )
-        
-        self.callback_handle2 = self.handler.add_parameter_callback(
-            parameter_name="a_double_param",
-            node_name="parameter_blackboard",
-            callback=self.callback,
-        )
-        
-        self.event_calback_handle = self.handler.add_parameter_event_callback(
-        callback=self.event_callback,
-    )
-
-    def callback(self, p: rclpy.parameter.Parameter) -> None:
-        self.get_logger().info(f"Received an update to parameter: {p.name}: {rclpy.parameter.parameter_value_to_python(p.value)}")
-
-    def event_callback(self, parameter_event):
-        self.get_logger().info(f"Received parameter event from node {parameter_event.node}")
-
-        for p in parameter_event.changed_parameters:
-            self.get_logger().info(
-                f"Inside event: {p.name} changed to: {rclpy.parameter.parameter_value_to_python(p.value)}"
-            )
-            
-            
-def main():
-    try:
-        with rclpy.init():
-            node = SampleNodeWithParameters()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
-```
-
 
 
 ### Domain ID
@@ -954,7 +738,7 @@ To just choose a safe number, simply choose a domain ID between 0 and 101, inclu
 To compile and run the tests, run the `test` verb from `colcon` at the root of your workspace.
 
 ```
-colcon test --ctest-args tests [package_selection_args]
+colcon test [package_selection_args]
 ```
 
 Where `package_selection_args` are optional package selection arguments for `colcon` to limit which packages are built and run.
@@ -1022,16 +806,7 @@ Where **unit tests** focus on validating a very specific piece of  functionality
 
 A key aspect of integration testing is to prevent nodes from different tests from communicating, even when run in parallel. This will be achieved here using a specific test runner that picks unique ROS domain IDs.
 
-Integration tests can be part of any ROS package. Create one or more packages solely for integration testing, or add the tests to the package of which they test the  functionality. The tutorial creates a new package to test the existing `turtlesim` node.
-
-```
-cd ~/ros2_ws/src
-ros2 pkg create --build-type ament_cmake test_turtlesim
-cd test_turtlesim
-mkdir -p test
-cd test
-touch test_integration.py
-```
+Integration tests can be part of any ROS package. One or more packages can be dedicated to integration testing, or tests can be added to the package whose functionality they test. The official tutorial uses a package named `app` and a test launch file named `test/test_integration.py` to test the existing `turtlesim` node.
 
 **Describe the test in the test launch file**
 
@@ -1053,7 +828,7 @@ import launch
 import launch_ros
 import launch_testing.actions
 import rclpy
-from turtlesim_msgs.msg import Pose
+from turtlesim.msg import Pose
 ```
 
 `generate_test_description` describes what to launch:
@@ -1165,24 +940,18 @@ Add the dependencies to your `package.xml`:
     <test_depend>launch_testing_ament_cmake</test_depend>
     <test_depend>rclpy</test_depend>
     <test_depend>turtlesim</test_depend>
-    <test_depend>turtlesim_msgs</test_depend>
 ```
 
-After following the above steps, your package ought to look as follows:
+After following the above steps, the package used by the tutorial is organized as follows:
 
 ```
-CMakeLists.txt
-package.xml
-tests/
-  test_integration.py
+app/
+  CMakeLists.txt
+  package.xml
+  test/
+    test_integration.py
 ```
 
-**Running test and report generation**
+**Running tests and report generation**
 
-```
-cd ~/ros2_ws
-colcon build --packages-select test_turtlesim
-colcon test --packages-select test_turtlesim
-colcon test-result --verbose
-```
-
+Run the integration test using the commands in the preceding “Running tests in ROS 2 from command line” section.

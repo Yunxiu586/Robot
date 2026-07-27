@@ -18,13 +18,13 @@ The ROS Client Library for Python (`rclpy`) builds on top of the `rcl` C API for
 
 ### Using `colcon` to build packages
 
-`colcon` stands for "Collective Construction," which is a build tool used in ROS 2.
+`colcon` is an iteration on the ROS build tools `catkin_make`, `catkin_make_isolated`, `catkin_tools`, and `ament_tools`.
 
-`colcon` supports build types `ament_cmake` and `ament_python`. Also supported are pure `cmake` packages.
+Package creation in ROS 2 uses `ament` as its build system and `colcon` as its build tool. You can create a package using either CMake or Python, which are officially supported, though other build types do exist.
 
 **workspace**
 
-A ROS workspace is a directory
+A ROS workspace is a directory with a particular structure.
 
 - Commonly there is a `src` subdirectory where the source code of ROS packages will be located.
 - The `build` directory will be where intermediate files are stored. For each package a subfolder will be created in which e.g. CMake is being invoked.
@@ -35,7 +35,7 @@ A ROS workspace is a directory
 
 After building your ROS 2 workspace with `colcon build`, a corresponding folder is generated for each package under the `install` directory. The `share/<package_name>` subdirectory within it is the **share path** of that package. For example: 
 
-`/home/yunxiu/launch_ws/install/launch_tutorial/share/launch_tutorial`.
+`<workspace>/install/<package_name>/share/<package_name>`.
 
 The share path is specifically used to store files that are not source code but are required at runtime, such as:
 
@@ -55,21 +55,14 @@ The `source` command activates the ROS 2 environment in your current terminal.
 Source your main ROS 2 installation:
 
 ```
-source /opt/ros/rolling/setup.bash
-```
-
-The `grep` command checks if it's automatically set to load in every new terminal by searching for that line in your `.bashrc` file.
-
-```
-grep -n "source /opt/ros/rolling/setup.bash" ~/.bashrc
-118:source /opt/ros/rolling/setup.bash
+source /opt/ros/jazzy/setup.bash
 ```
 
 **Create a new directory**
 
 ```
 mkdir -p ~/ros2_ws/src
-cd ~/ros2_ws
+cd ~/ros2_ws/src
 ```
 
 ```
@@ -84,7 +77,7 @@ Enter the `ros2_ws/src` directory.
 Clone the  `ros_tutorials` repository into the `src` directory.
 
 ```
-git clone https://github.com/ros/ros_tutorials.git -b rolling
+git clone https://github.com/ros/ros_tutorials.git -b jazzy
 ```
 
 ```
@@ -101,7 +94,7 @@ Move back up to the workspace `ros2_ws`.
 
 ```
 cd ..
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 ```
 
 ```
@@ -113,7 +106,6 @@ rosdep install -i --from-path src --rosdistro rolling -y
 From the root of your workspace (`ros2_ws`), build your packages
 
 ```
-cd ~/ros2_ws
 colcon build
 ```
 
@@ -146,7 +138,7 @@ Sourcing the `local_setup` of the overlay will only add the packages available i
 In the new terminal, source your main ROS 2 environment as the “underlay”, so you can build the overlay "on top of" it:
 
 ```
-source /opt/ros/rolling/setup.bash
+source /opt/ros/jazzy/setup.bash
 ```
 
 In the root, source your overlay:
@@ -170,7 +162,7 @@ The **overlay** of your `ros2_ws` environment **takes precedence over** the cont
 
 A single workspace can contain multiple packages, each in their own folder. You can also have packages of different build types in one workspace (CMake, Python, etc.). You cannot have nested packages.
 
-**Minimum required contents of a ROS 2 package**
+**Minimum required contents of an `ament_python` package**
 
 + `package.xml` file containing meta information about the package
 
@@ -256,19 +248,19 @@ From `ros2_ws/src/my_package`, open `package.xml`.
 
 ```xml
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format3.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>my_package</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="yunxiu@todo.todo">yunxiu</maintainer>
-  <license>Apache-2.0</license>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>TODO: License declaration</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_mypy</test_depend>
   <test_depend>ament_pep257</test_depend>
-  <test_depend>ament_xmllint</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>
@@ -293,45 +285,21 @@ Update the `license` line
 
 Below the license tag, you will see some tag names ending with `_depend`. This is where your `package.xml` would list its dependencies on other packages
 
-Open `setup.py `and edit the `maintainer`, `maintainer_email`, and `description` lines to match `package.xml`.
+Open `setup.py`. The relevant generated fields are:
 
 ```python
-from setuptools import find_packages, setup
-
-package_name = 'my_package'
-
-setup(
-    name=package_name,
-    version='0.0.0',
-    packages=find_packages(exclude=['test']),
-    data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml']),
-    ],
-    package_data={'': ['py.typed']},
-    install_requires=['setuptools'],
-    zip_safe=True,
-    maintainer='yunxiu',
-    maintainer_email='yunxiu@todo.todo',
-    description='Beginner client libraries tutorials practice package',
-    license='Apache-2.0',
-    extras_require={
-        'test': [
-            'pytest',
-        ],
-    },
-    entry_points={
-        'console_scripts': [
-            'my_node = my_package.my_node:main'
-        ],
-    },
-)
+maintainer='TODO',
+maintainer_email='TODO',
+description='TODO: Package description',
+license='TODO: License declaration',
 ```
 
 
 
-### Write a publisher and subscriber(Python)
+Edit the `maintainer`, `maintainer_email`, `description`, and `license` lines to match `package.xml`. The package name and version must also match in both files.
+
+
+### Write a publisher and subscriber (Python)
 
 **Create a package**
 
@@ -346,7 +314,7 @@ ros2 pkg create --build-type ament_python --license Apache-2.0 py_pubsub
 Navigate into `ros2_ws/src/py_pubsub/py_pubsub`
 
 ```
-wget https://raw.githubusercontent.com/ros2/examples/rolling/rclpy/topics/minimal_publisher/examples_rclpy_minimal_publisher/publisher_member_function.py
+wget https://raw.githubusercontent.com/ros2/examples/jazzy/rclpy/topics/minimal_publisher/examples_rclpy_minimal_publisher/publisher_member_function.py
 ```
 
 Now there will be a new file named `publisher_member_function.py` adjacent to `__init__.py`
@@ -357,7 +325,6 @@ Now there will be a new file named `publisher_member_function.py` adjacent to `_
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 ```
 
@@ -371,7 +338,7 @@ The `MinimalPublisher` class is created, which inherits from (or is a subclass o
 
 The `MinimalPublisher` class constructor initializes the node with the name `minimal_publisher`.
 
-The `timer_callback` creates a message with the counter value appended, and publishes it to the console with `get_logger().info`.
+The `timer_callback` creates a message with the counter value appended, publishes it on the topic with `self.publisher_.publish(msg)`, and logs the value to the console with `get_logger().info`.
 
 ```python
 class MinimalPublisher(Node):
@@ -379,7 +346,7 @@ class MinimalPublisher(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # message type, topic name, queue size
-        self.publisher_ = self.create_publisher(String, 'topic', 10) 
+        self.publisher_ = self.create_publisher(String, 'topic', 10)
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
@@ -396,13 +363,14 @@ First the `rclpy` is initialized, then the node is created, and then the `rclpy.
 
 ```python
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_publisher = MinimalPublisher()
+    rclpy.init(args=args)
 
-            rclpy.spin(minimal_publisher)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
 ```
 
 ```python
@@ -461,19 +429,18 @@ script_dir=$base/lib/py_pubsub
 install_scripts=$base/lib/py_pubsub
 ```
 
-#### Write the subcriber node
+#### Write the subscriber node
 
 Return to `ros2_ws/src/py_pubsub/py_pubsub`
 
 ```
-wget https://raw.githubusercontent.com/ros2/examples/rolling/rclpy/topics/minimal_subscriber/examples_rclpy_minimal_subscriber/subscriber_member_function.py
+wget https://raw.githubusercontent.com/ros2/examples/jazzy/rclpy/topics/minimal_subscriber/examples_rclpy_minimal_subscriber/subscriber_member_function.py
 ```
 
 **Examine the code**
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 from std_msgs.msg import String
@@ -484,7 +451,10 @@ class MinimalSubscriber(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
         self.subscription = self.create_subscription(
-            String, 'topic', self.listener_callback, 10)
+            String,
+            'topic',
+            self.listener_callback,
+            10)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
@@ -492,13 +462,14 @@ class MinimalSubscriber(Node):
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_subscriber = MinimalSubscriber()
+    rclpy.init(args=args)
 
-            rclpy.spin(minimal_subscriber)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    minimal_subscriber = MinimalSubscriber()
+
+    rclpy.spin(minimal_subscriber)
+
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -532,7 +503,7 @@ entry_points={
 Run `rosdep` in the root of your workspace (`ros2_ws`) to check for missing dependencies before building:
 
 ```
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 ```
 
 Still in the root of your workspace, `ros2_ws`, build your new package:
@@ -567,7 +538,7 @@ ros2 run py_pubsub listener
 
 
 
-### Write a service and client(Python)
+### Write a service and client (Python)
 
 Navigate into `ros2_ws/src` and create a new package `py_srvcli` :
 
@@ -611,16 +582,10 @@ license='Apache-2.0',
 
 Inside the `ros2_ws/src/py_srvcli/py_srvcli` directory, create a new file called `service_member_function.py` and paste the following code within:
 
-```
-cd ~/ros2_ws/src/py_srvcli/py_srvcli
-touch service_member_function.py
-```
-
 ```python
 from example_interfaces.srv import AddTwoInts
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 
@@ -639,13 +604,12 @@ class MinimalService(Node):
 
 
 def main():
-    try:
-        with rclpy.init():
-            minimal_service = MinimalService()
+    rclpy.init()
 
-            rclpy.spin(minimal_service)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    minimal_service = MinimalService()
+
+    rclpy.spin(minimal_service)
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -656,7 +620,7 @@ The `response` is an automatically generated object of the service response type
 
 **Add an entry point**
 
-Navigate into `ros2_ws/src/py_pubsub` and add the entry point to `setup.py`.
+Navigate into `ros2_ws/src/py_srvcli` and add the entry point to `setup.py`.
 
 Add the following line between the `'console_scripts':` brackets:
 
@@ -669,10 +633,10 @@ Add the following line between the `'console_scripts':` brackets:
 Inside the `ros2_ws/src/py_srvcli/py_srvcli` directory, create a new file called `client_member_function.py` and paste the following code within:
 
 ```python
-from example_interfaces.srv import AddTwoInts
+import sys
 
+from example_interfaces.srv import AddTwoInts
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 ```
 
@@ -690,27 +654,28 @@ class MinimalClientAsync(Node):
             self.get_logger().info('service not available, waiting again...')
         self.req = AddTwoInts.Request()
 
-    def send_request(self):
-        self.req.a = 41
-        self.req.b = 1
+    def send_request(self, a, b):
+        self.req.a = a
+        self.req.b = b
         return self.cli.call_async(self.req)
 ```
 
 The `main` method, which constructs a `MinimalClientAsync` object, sends the request using the passed-in command-line arguments, calls `rclpy.spin_until_future_complete` to wait for the result, and logs the results.
 
 ```python
-def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_client = MinimalClientAsync()
-            future = minimal_client.send_request()
-            rclpy.spin_until_future_complete(minimal_client, future)
-            response = future.result()
-            minimal_client.get_logger().info(
-                'Result of add_two_ints: for %d + %d = %d' %
-                (minimal_client.req.a, minimal_client.req.b, response.sum))
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+def main():
+    rclpy.init()
+
+    minimal_client = MinimalClientAsync()
+    future = minimal_client.send_request(int(sys.argv[1]), int(sys.argv[2]))
+    rclpy.spin_until_future_complete(minimal_client, future)
+    response = future.result()
+    minimal_client.get_logger().info(
+        'Result of add_two_ints: for %d + %d = %d' %
+        (int(sys.argv[1]), int(sys.argv[2]), response.sum))
+
+    minimal_client.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -733,7 +698,7 @@ entry_points={
 Run `rosdep` in the root of your workspace (`ros2_ws`) to check for missing dependencies before building:
 
 ```
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 ```
 
 Still in the root of your workspace, `ros2_ws`, build your new package:
@@ -748,7 +713,7 @@ Open a new terminal, navigate to `ros2_ws`, and source the setup files:
 source install/setup.bash
 ```
 
-Run the service node. The nocdde will wait for the client’s request.
+Run the service node. The node will wait for the client’s request.
 
 ```
 ros2 run py_srvcli service
@@ -763,15 +728,15 @@ source install/setup.bash
 Start the client node. The client sends the request to the service.
 
 ```
-ros2 run py_srvcli client
-[INFO] [1772878098.910672273] [minimal_client_async]: Result of add_two_ints: for 41 + 1 = 42
+ros2 run py_srvcli client 2 3
+[INFO] [minimal_client_async]: Result of add_two_ints: for 2 + 3 = 5
 ```
 
 Return to the terminal where your service node published log messages when it received the request:
 
 ```
-[INFO] [1772878098.899711810] [minimal_service]: Incoming request
-a: 41 b: 1
+[INFO] [minimal_service]: Incoming request
+a: 2 b: 3
 ```
 
 
@@ -786,7 +751,7 @@ Navigate into `ros2_ws/src`
 ros2 pkg create --build-type ament_cmake --license Apache-2.0 tutorial_interfaces
 ```
 
-`tutorial_interfaces` **can only be an `ament_cmake` package**, but it can be used in a C++ or Python node.
+Interfaces can currently only be defined in CMake packages, but they can be used in C++ or Python nodes.
 
 The `.msg` and `.srv` files are required to be placed in directories called `msg` and `srv` respectively. Create the directories in `ros2_ws/src/tutorial_interfaces`:
 
@@ -804,10 +769,6 @@ int64 num
 
 This is a custom message that transfers a single 64-bit integer called `num`.
 
-```
-touch Num.msg
-```
-
 Also in the `tutorial_interfaces/msg` directory, make a new file called `Sphere.msg` with the following content:
 
 ```
@@ -815,7 +776,7 @@ geometry_msgs/Point center
 float64 radius
 ```
 
-This custom message uses a message from `geometry_msgs/Point` package.
+This custom message uses the `geometry_msgs/Point` interface from the `geometry_msgs` package.
 
 **srv definition**
 
@@ -909,10 +870,9 @@ Define a custom interface and then use it in an external package.
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
-from tutorial_interfaces.msg import Num                            # CHANGE
+from tutorial_interfaces.msg import Num  # CHANGE
 
 
 class MinimalPublisher(Node):
@@ -925,21 +885,22 @@ class MinimalPublisher(Node):
         self.i = 0
 
     def timer_callback(self):
-        msg = Num()                                                # CHANGE
-        msg.num = self.i                                           # CHANGE
+        msg = Num()  # CHANGE
+        msg.num = self.i  # CHANGE
         self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%d"' % msg.num)       # CHANGE
+        self.get_logger().info('Publishing: "%d"' % msg.num)  # CHANGE
         self.i += 1
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_publisher = MinimalPublisher()
+    rclpy.init(args=args)
 
-            rclpy.spin(minimal_publisher)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -950,10 +911,9 @@ if __name__ == '__main__':
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
-from tutorial_interfaces.msg import Num                        # CHANGE
+from tutorial_interfaces.msg import Num  # CHANGE
 
 
 class MinimalSubscriber(Node):
@@ -961,7 +921,7 @@ class MinimalSubscriber(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
         self.subscription = self.create_subscription(
-            Num,                                               # CHANGE
+            Num,  # CHANGE
             'topic',
             self.listener_callback,
             10)
@@ -972,13 +932,14 @@ class MinimalSubscriber(Node):
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_subscriber = MinimalSubscriber()
+    rclpy.init(args=args)
 
-            rclpy.spin(minimal_subscriber)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    minimal_subscriber = MinimalSubscriber()
+
+    rclpy.spin(minimal_subscriber)
+
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -1012,10 +973,9 @@ ros2 run py_pubsub listener
 **Service**
 
 ```python
-from tutorial_interfaces.srv import AddThreeInts     		# CHANGE
+from tutorial_interfaces.srv import AddThreeInts  # CHANGE
 
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 
@@ -1023,22 +983,23 @@ class MinimalService(Node):
 
     def __init__(self):
         super().__init__('minimal_service')
-        self.srv = self.create_service(AddThreeInts, 'add_three_ints', self.add_three_ints_callback)       # CHANGE
+        self.srv = self.create_service(AddThreeInts, 'add_three_ints', self.add_three_ints_callback)  # CHANGE
 
     def add_three_ints_callback(self, request, response):
-        response.sum = request.a + request.b + request.c	# CHANGE
+        response.sum = request.a + request.b + request.c  # CHANGE
         self.get_logger().info('Incoming request\na: %d b: %d c: %d' % (request.a, request.b, request.c))  # CHANGE
 
         return response
 
-def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_service = MinimalService()
 
-            rclpy.spin(minimal_service)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_service = MinimalService()
+
+    rclpy.spin(minimal_service)
+
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -1048,10 +1009,9 @@ if __name__ == '__main__':
 **Client**
 
 ```python
-from tutorial_interfaces.srv import AddThreeInts                            # CHANGE
-
+from tutorial_interfaces.srv import AddThreeInts  # CHANGE
+import sys
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 
@@ -1059,30 +1019,40 @@ class MinimalClientAsync(Node):
 
     def __init__(self):
         super().__init__('minimal_client_async')
-        self.cli = self.create_client(AddThreeInts, 'add_three_ints')       # CHANGE
+        self.cli = self.create_client(AddThreeInts, 'add_three_ints')  # CHANGE
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
-        self.req = AddThreeInts.Request()                                   # CHANGE
+        self.req = AddThreeInts.Request()  # CHANGE
 
     def send_request(self):
-        self.req.a = 41
-        self.req.b = 1
-        self.req.c = 1                                                      # CHANGE
-        return self.cli.call_async(self.req)
+        self.req.a = int(sys.argv[1])
+        self.req.b = int(sys.argv[2])
+        self.req.c = int(sys.argv[3])  # CHANGE
+        self.future = self.cli.call_async(self.req)
 
 
 def main(args=None):
-    try:
-        with rclpy.init(args=args):
-            minimal_client = MinimalClientAsync()
-            future = minimal_client.send_request()
-            rclpy.spin_until_future_complete(minimal_client, future)
-            response = future.result()
-            minimal_client.get_logger().info(
-                'Result of add_three_ints: for %d + %d + %d = %d' %                                # CHANGE
-                (minimal_client.req.a, minimal_client.req.b, minimal_client.req.c, response.sum))  # CHANGE
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    rclpy.init(args=args)
+
+    minimal_client = MinimalClientAsync()
+    minimal_client.send_request()
+
+    while rclpy.ok():
+        rclpy.spin_once(minimal_client)
+        if minimal_client.future.done():
+            try:
+                response = minimal_client.future.result()
+            except Exception as e:
+                minimal_client.get_logger().info(
+                    'Service call failed %r' % (e,))
+            else:
+                minimal_client.get_logger().info(
+                    'Result of add_three_ints: for %d + %d + %d = %d' %  # CHANGE
+                    (minimal_client.req.a, minimal_client.req.b, minimal_client.req.c, response.sum))  # CHANGE
+            break
+
+    minimal_client.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
@@ -1105,31 +1075,32 @@ Open two new terminals, source `ros2_ws` in each, and run:
 
 ```
 ros2 run py_srvcli service
-[INFO] [1772940010.398837062] [minimal_service]: Incoming request
-a: 41 b: 1 c: 1
 ```
 
 ```
-ros2 run py_srvcli client
-[INFO] [1772940010.408050681] [minimal_client_async]: Result of add_three_ints: for 41 + 1 + 1 = 43
+ros2 run py_srvcli client 2 3 1
 ```
 
 
 
 ### Implementing custom interfaces
 
+While best practice is to declare interfaces in dedicated interface packages, sometimes it can be convenient to declare, create, and use an interface all in one package.
+
+Interfaces can currently only be defined in CMake packages. It is possible to have Python libraries and nodes in CMake packages using `ament_cmake_python`; this tutorial uses a CMake package and a C++ node.
+
 **Create a package**
 
-Navigate into `ros2_ws/src`
+In the workspace `src` directory, create the `more_interfaces` package and a directory for message files:
 
 ```
 ros2 pkg create --build-type ament_cmake --license Apache-2.0 more_interfaces
 mkdir more_interfaces/msg
 ```
 
-Create a msg file
+**Create a msg file**
 
-Inside `more_interfaces/msg`, create a new file `AddressBook.msg`
+Inside `more_interfaces/msg`, create `AddressBook.msg`:
 
 ```
 uint8 PHONE_TYPE_HOME=0
@@ -1142,11 +1113,11 @@ string phone_number
 uint8 phone_type
 ```
 
-Note that it’s possible to set default values for fields within a message definition.
+It is possible to set default values for fields within a message definition.
 
 **Build a msg file**
 
-Open `package.xml` and add the following lines:
+Open `package.xml` and add:
 
 ```xml
 <buildtool_depend>rosidl_default_generators</buildtool_depend>
@@ -1154,155 +1125,119 @@ Open `package.xml` and add the following lines:
 <member_of_group>rosidl_interface_packages</member_of_group>
 ```
 
-Open `CMakeLists.txt` and add the following lines:
+At build time, `rosidl_default_generators` is required; at runtime, only `rosidl_default_runtime` is required.
 
-Find the package that generates message code from msg/srv files:
+Open `CMakeLists.txt` and add:
 
 ```cmake
 find_package(rosidl_default_generators REQUIRED)
-```
 
-Declare the list of messages you want to generate
-
-```cmake
 set(msg_files
   "msg/AddressBook.msg"
 )
-```
 
-Generate the messages:
-
-```cmake
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
 )
-```
 
-Export the message runtime dependency:
-
-```cmake
 ament_export_dependencies(rosidl_default_runtime)
 ```
 
 #### Use an interface from the same package
 
-**Create a node**
+In `more_interfaces/src`, create `publish_address_book.cpp`:
 
-Create a `scripts/`directory under the `more_interfaces/`directory, and then create the `publish_address_book.py` file within it.
+```cpp
+#include <chrono>
+#include <memory>
 
-**Add Shebang**
+#include "rclcpp/rclcpp.hpp"
+#include "more_interfaces/msg/address_book.hpp"
 
-Ensure the **first line** of your `publish_address_book.py`source file is:
+using namespace std::chrono_literals;
 
-```python
-#!/usr/bin/env python3
+class AddressBookPublisher : public rclcpp::Node
+{
+public:
+  AddressBookPublisher()
+  : Node("address_book_publisher")
+  {
+    address_book_publisher_ =
+      this->create_publisher<more_interfaces::msg::AddressBook>("address_book", 10);
+
+    auto publish_msg = [this]() -> void {
+        auto message = more_interfaces::msg::AddressBook();
+        message.first_name = "John";
+        message.last_name = "Doe";
+        message.phone_number = "1234567890";
+        message.phone_type = message.PHONE_TYPE_MOBILE;
+
+        std::cout << "Publishing Contact\nFirst:" << message.first_name <<
+          "  Last:" << message.last_name << std::endl;
+
+        this->address_book_publisher_->publish(message);
+      };
+    timer_ = this->create_wall_timer(1s, publish_msg);
+  }
+
+private:
+  rclcpp::Publisher<more_interfaces::msg::AddressBook>::SharedPtr address_book_publisher_;
+  rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<AddressBookPublisher>());
+  rclcpp::shutdown();
+  return 0;
+}
 ```
 
-```python
-#!/usr/bin/env python3
-
-import rclpy
-from rclpy.node import Node
-from more_interfaces.msg import AddressBook
-import time
-
-class AddressBookPublisher(Node):
-    def __init__(self):
-        super().__init__('address_book_publisher')
-        
-        self.address_book_publisher_ = self.create_publisher(
-            AddressBook, 
-            'address_book', 
-            10
-        )
-        
-        # Create a 1 second timer to call publish_msg function every second
-        self.timer_ = self.create_timer(1.0, self.publish_msg)
-        
-    def publish_msg(self):
-        message = AddressBook()
-        
-        # Populate AddressBook fields
-        message.first_name = "John"
-        message.last_name = "Doe"
-        message.phone_number = "1234567890"
-        message.phone_type = AddressBook.PHONE_TYPE_MOBILE
-        
-        # Print to console
-        print(f"Publishing Contact\nFirst:{message.first_name}  Last:{message.last_name}")
-        
-        # Publish the message
-        self.address_book_publisher_.publish(message)
-
-
-def main(args=None):
-    rclpy.init(args=args)
-    address_book_publisher = AddressBookPublisher()
-    rclpy.spin(address_book_publisher)
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
-```
-
-**Build the publisher**
-
-Add Python node installation configuration in `CMakeLists.txt`.
+Add the publisher target to `CMakeLists.txt`:
 
 ```cmake
-install(PROGRAMS
-  scripts/publish_address_book.py
-  DESTINATION lib/${PROJECT_NAME}
-)
+find_package(rclcpp REQUIRED)
+
+add_executable(publish_address_book src/publish_address_book.cpp)
+ament_target_dependencies(publish_address_book rclcpp)
+
+install(TARGETS
+  publish_address_book
+  DESTINATION lib/${PROJECT_NAME})
 ```
 
-In the `ament_python` package environment, executable nodes are typically declared via the `entry_points` parameter in the `setup.py` file.
+To use an interface generated in the same package, link the target against the generated C++ typesupport:
 
-In the `ament_cmake`package environment, installing a Python script as a standalone program requires adding a shebang and granting executable permissions, just like handling other Shell scripts.
-
-Navigated into `ros2_ws/src/more_interfaces/scripts` and run:
-
-```
-chmod +x publish_address_book.py
+```cmake
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+target_link_libraries(publish_address_book "${cpp_typesupport_target}")
 ```
 
-This grants the file executable permission.
+This CMake code is required when interfaces are used in the same package in which they are defined.
 
 **Build and run**
 
-In the root of your workspace, build the package:
+Return to the workspace root and build the package:
 
 ```
-colcon build --packages-select more_interfaces
+colcon build --packages-up-to more_interfaces
 ```
 
-Open two new terminals, source `ros2_ws` in each, and run:
+Source the workspace and run the publisher:
 
 ```
-source install/setup.bash
-ros2 run more_interfaces publish_address_book.py
+source install/local_setup.bash
+ros2 run more_interfaces publish_address_book
 ```
 
-```
-Publishing Contact
-First:John  Last:Doe
-```
+Open another terminal, source the workspace, and display the message:
 
 ```
 source install/setup.bash
 ros2 topic echo /address_book
 ```
-
-```
-first_name: John
-last_name: Doe
-phone_number: '1234567890'
-phone_type: 2
----
-```
-
-
 
 ### Using parameters in a class(Python)
 
@@ -1330,24 +1265,19 @@ Inside the `ros2_ws/src/python_parameters/python_parameters` directory, create a
 
 ```python
 import rclpy
-from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 
 class MinimalParam(Node):
     def __init__(self):
         super().__init__('minimal_param_node')
 
-        # Create a parameter with the name `my_parameter`, a default value of `world` and string type.
+        # Create a parameter named `my_parameter` with the default string value `world`
         self.declare_parameter('my_parameter', 'world')
-        
-        # [Option]Set a descriptor for the parameter to specify a text description of the parameter and its constraints, like making it read-only, specifying a range, etc.
-        from rcl_interfaces.msg import ParameterDescriptor
-        my_parameter_descriptor = ParameterDescriptor(description='This parameter is mine!')
 
         self.timer = self.create_timer(1, self.timer_callback)
 
     def timer_callback(self):
-        # Get the parameter 'my_parameter' from the node, and store it in my_param
+        # Get `my_parameter` from the node and store its string value in `my_param`
         my_param = self.get_parameter('my_parameter').get_parameter_value().string_value
 
         self.get_logger().info('Hello %s!' % my_param)
@@ -1358,24 +1288,40 @@ class MinimalParam(Node):
             'world'
         )
         all_new_parameters = [my_new_param]
-        # Set the parameter 'my_parameter' back to the default string value 'world'
+        # Set `my_parameter` back to its default string value `world`
         self.set_parameters(all_new_parameters)
 
+
 def main():
-    try:
-        with rclpy.init():
-            node = MinimalParam()
-            rclpy.spin(node)
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
+    rclpy.init()
+    node = MinimalParam()
+    rclpy.spin(node)
+
 
 if __name__ == '__main__':
     main()
 ```
 
-Add the dependency to `package.xml`
+Optionally, set a descriptor for the parameter by changing the constructor to:
+
+```python
+# ...
+class MinimalParam(Node):
+    def __init__(self):
+        super().__init__('minimal_param_node')
+
+        from rcl_interfaces.msg import ParameterDescriptor
+        my_parameter_descriptor = ParameterDescriptor(description='This parameter is mine!')
+
+        self.declare_parameter('my_parameter', 'world', my_parameter_descriptor)
+
+        self.timer = self.create_timer(1, self.timer_callback)
+```
+
+When using `ParameterDescriptor`, add the dependencies to `package.xml`:
 
 ```xml
+# ...
 <depend>rclpy</depend>
 <depend>rcl_interfaces</depend>
 ```
@@ -1404,7 +1350,7 @@ entry_points={
 Run `rosdep` in the root of your workspace (`ros2_ws`) to check for missing dependencies before building:
 
 ```
-rosdep install -i --from-path src --rosdistro rolling -y
+rosdep install -i --from-path src --rosdistro jazzy -y
 ```
 
 In the root of your workspace, `ros2_ws`, build your new package:
@@ -1472,10 +1418,10 @@ def generate_launch_description():
             package='python_parameters',
             executable='minimal_param_node',
             name='custom_minimal_param_node',
-            output='screen',	# ensure output is printed in console
+            output='screen',  # ensure output is printed in the console
             emulate_tty=True,
             parameters=[
-                {'my_parameter': 'earth'}	# set 'my_parameter' to 'earth'
+                {'my_parameter': 'earth'}  # set `my_parameter` to `earth`
             ]
         )
     ])
@@ -1516,7 +1462,7 @@ ros2 launch python_parameters python_parameters_launch.py
 [minimal_param_node-1] [INFO] [1773016691.568141199] [custom_minimal_param_node]: Hello earth!
 ```
 
-Further outputs should show  `[INFO] [minimal_param_node]: Hello world!` every second.
+Further outputs should show `[INFO] [custom_minimal_param_node]: Hello world!` every second.
 
 
 
@@ -1529,16 +1475,11 @@ Further outputs should show  `[INFO] [minimal_param_node]: Hello world!` every s
 A `UserWarning` doesn’t mean your setup is unusable; it’s more likely just an  indication that something is configured in a way that’s not ideal. If `ros2doctor` only finds warnings in your system, you will still receive the `All <n> checks passed` message.
 
 ```
-ros2 doctor 
-/opt/ros/rolling/lib/python3.12/site-packages/ros2doctor/api/__init__.py: 219: UserWarning: Fail to call PackageCheck class functions.
-/opt/ros/rolling/lib/python3.12/site-packages/ros2doctor/api/__init__.py: 219: UserWarning: Fail to call PlatformCheck class functions.
-
-All 3 checks passed
+ros2 doctor
 ```
 
-To get a full report
+For a complete diagnostic report, run:
 
 ```
 ros2 doctor --report
 ```
-
