@@ -1,57 +1,57 @@
 # Linux Operating System
 
-An operating system (Operating System, OS) is the most fundamental **system software** in a computer system. It is a collection of programs that manage computer hardware and software resources and provide services to users and other software. 
+[toc]
 
-The operating system kernel must be **compiled** for a CPU's instruction set before it can run on that CPU. A CPU defines the basic operational commands it can understand and execute through its instruction set.
+An operating system (OS) is fundamental **system software** in a computer system. It is a collection of programs that manage computer hardware and software resources and provide services to users and other software.
 
-| Operating System | Category | Vendor / Nature |
-| ---------------- | -------- | --------------- |
-| Windows          | Desktop Operating System | Microsoft |
-| macOS            | Desktop Operating System | Apple |
-| Linux            | Server Operating System | Open Source |
-| Android          | Mobile Operating System | Google |
-| iOS              | Mobile Operating System | Apple |
-| HarmonyOS        | Mobile Operating System | Huawei |
+An operating-system kernel must be built for a compatible CPU architecture before it can run natively on that CPU. A CPU architecture defines the machine instructions the processor can understand and execute.
 
-The **Linux kernel** provides core Linux system capabilities such as hardware scheduling and management, and it is free and open source. 
+| System | Common Use | Vendor / Nature |
+| ------ | ---------- | --------------- |
+| Windows | Desktop and server operating systems | Microsoft |
+| macOS | Desktop operating system | Apple |
+| GNU/Linux distributions | Desktop, server, embedded, and other systems | Open source |
+| Android | Mobile operating system | Google-led open-source ecosystem (AOSP) |
+| iOS | Mobile operating system | Apple |
+| HarmonyOS | Mobile and embedded operating system family | Huawei |
 
-On top of the Linux kernel, system-level applications are packaged together; these combined packages are referred to as Linux distributions, such as Ubuntu and CentOS.
+The **Linux kernel** provides core capabilities such as process scheduling, memory management, device management, file-system support, and networking, and it is free and open source.
 
-The Linux directory structure is a **tree structure** with only one **root directory `/`**, and all files reside under this root directory. The slash `/` is used to represent hierarchical relationships in a path.
+A Linux distribution combines the Linux kernel with system libraries, command-line tools, package-management software, and other applications. Examples include Ubuntu and CentOS Stream.
+
+The Linux directory structure is a **tree structure** with only one **root directory `/`**, and all files reside under this root directory. The slash `/` separates components in a path.
 
 ```bash
 # The first / in a path represents the root directory
 # subsequent / characters indicate hierarchy
-/user/local/hello.txt
+/usr/local/hello.txt
 ```
-
-
 
 ### Linux Commands
 
-A Linux command is essentially a Linux program; each command is a Linux program. The command line refers to the Linux terminal (Terminal).
+A shell command may be a shell builtin, function, alias, script, or external executable. A terminal is the interface used to interact with a shell, while the command line is the text-based interface provided by the shell.
 
-Press `Ctrl+Alt+T` to open the terminal.
+On many Ubuntu desktop environments, press `Ctrl+Alt+T` to open a terminal. This shortcut is desktop-environment dependent.
 
 ```bash
-command [-options] [parameter]
+command [options] [arguments]
 # options control command behavior details
-# parameter specifies the target operated on by the command
+# arguments specify the targets operated on by the command
 ```
 
-`ls` 
+`ls`
 
 ```bash
-ls [-a -l -h] [LinuxPath]
+ls [OPTION]... [FILE]...
 ```
 
 ```bash
 ls # List the contents of the current working directory
 ```
 
-When the Linux command-line terminal starts, it loads the **HOME directory** of the currently logged-in user as the current working directory by default. 
+A newly opened terminal usually starts the shell in the current user's **HOME directory**, although terminal settings or the launching application may choose another directory.
 
-Therefore, the `ls` command lists the contents of the HOME directory, which is the personal account directory of each Linux user. Its path is `/home/username`.
+Therefore, when the current directory is HOME, `ls` lists the contents of HOME. A regular user's HOME is commonly `/home/username`; the `root` user's HOME is usually `/root`, and administrators may configure other locations.
 
 ```bash
 /home/yunxiu
@@ -62,7 +62,7 @@ Therefore, the `ls` command lists the contents of the HOME directory, which is t
 | `-a` | **all** files: list all files, including hidden files or directories (those beginning with `.`) |
 | `-l` | **long** listing format: display items vertically with more details |
 | `-h` | **human-readable** file sizes: display file sizes in a readable format such as K, M, or G; usually used together with `-l` |
-| `LinuxPath` | Specifies the target directory |
+| `FILE` | Specifies a file or directory to list; if omitted, the current directory is used |
 
 ```bash
 ls / # View the contents of the root directory
@@ -75,25 +75,21 @@ ls -al /
 ls -lh /
 ```
 
-
-
 ##### Directory navigation commands
 
 `cd`: Change Directory, used to switch the working directory.
 
 ```bash
-cd [LinuxPath]
+cd [DIRECTORY]
 ```
 
-If no parameter is provided, it returns to the HOME directory by default.
+If no directory is provided, `cd` changes to the HOME directory.
 
 `pwd`: Print Working Directory, used to display the current working directory.
 
 ```bash
 pwd
 ```
-
-
 
 Absolute path: starts from the root directory.
 
@@ -117,15 +113,13 @@ cd ~             # Switch to the HOME directory
 cd ~/Desktop     # Switch to the Desktop directory under HOME
 ```
 
-
-
-`mkdir`: Make Directory, used to create a new directory (folder). Permissions are generally limited to the HOME directory.
+`mkdir`: Make Directory, used to create a new directory (folder). Whether creation is allowed depends on the write and search permissions of the parent directory.
 
 ```bash
-mkdir [-p] LinuxPath
+mkdir [-p] DIRECTORY...
 ```
 
-The `LinuxPath` parameter is required.
+At least one directory path is required.
 
 `-p` automatically creates nonexistent parent directories and is suitable for creating multi-level directory structures in one command.
 
@@ -133,69 +127,67 @@ The `LinuxPath` parameter is required.
 mkdir /home/yunxiu/test1
 mkdir ./test2
 mkdir ~/test3
-mkdir -p ~/TEST/test4   # Equivalent to mkdir ~/TEST/test4 if TEST already exists
+mkdir -p ~/TEST/test4   # Equivalent to mkdir ~/TEST/test4 if TEST exists and test4 does not exist
 ```
-
-
 
 ##### File operation commands
 
-`touch`: create a file.
+`touch`: update a file's access and modification timestamps; if the file does not exist, create an empty file by default.
 
 ```bash
-touch LinuxPath
+touch FILE...
 ```
 
 ```bash
 touch test.txt
 ```
 
-`cat`: concatenate; displays the entire file content directly.
+`cat`: concatenate files and write their contents to standard output.
 
 ```bash
-cat LinuxPath
+cat FILE...
 ```
 
 ```bash
 cat test1.txt
 ```
 
-`more`: view file content page by page; press Space to advance and `Q` to quit.
+`more`: view file content page by page; press Space to advance and `q` to quit.
 
 ```bash
-more LinuxPath
+more FILE
 ```
 
 ```bash
 more /etc/services
 ```
 
- `cp` : copy files or directories.
+`cp` : copy files or directories.
 
 ```bash
-cp [-r] param1 param2
+cp [OPTION]... SOURCE DEST
 ```
 
-`-r` option: used when copying directories; indicates recursive copy.
+`-r` option: copy directories recursively.
 
-`param1`: Linux path representing the source file or directory.
+`SOURCE`: source file or directory.
 
-`param2`: Linux path representing the destination.
+`DEST`: destination path.
 
 ```bash
 cp test1.txt text2.txt  # File copy
 cp -r test1 text2       # Directory copy
 ```
 
- `mv` : move files or directories.
+`mv` : move files or directories.
 
 ```bash
-mv param1 param2
+mv [OPTION]... SOURCE DEST
 ```
 
-`param1`: Linux path representing the file or directory to be moved.
+`SOURCE`: file or directory to be moved.
 
-`param2`: Linux path representing the destination. If the destination does not exist, the item will be renamed; otherwise, ensure the target exists.
+`DEST`: destination path. If it is an existing directory, the source is moved into that directory. Otherwise, the source is renamed or replaces the destination according to permissions and options.
 
 ```bash
 mv test1.txt Desktop     # Move a file
@@ -203,39 +195,34 @@ mv test1.txt renamed.txt # Rename a file
 mv test Desktop          # Move a directory
 ```
 
- `rm` : remove files or directories.
+`rm` : remove files or directories.
 
 ```bash
-rm [-r -f] param1 param2 ...
+rm [OPTION]... FILE...
 ```
 
 + `-r`: same as in the `cp` command; used for deleting directories
-+ `-f`: force deletion without a confirmation prompt. Ordinary users are usually not prompted, while the `root` user may receive a prompt; therefore, ordinary users generally do not need `-f`
-+ `param1 param2 ... paramN`: paths of files or directories to delete, separated by spaces
++ `-f`: ignore nonexistent files and never prompt
++ `FILE...`: one or more paths to remove
 
 ```bash
 rm text1.txt test2.txt
-rm test1 test2
+rm -r test1 test2   # Delete directories recursively
 ```
 
-The symbol `*` indicates a **wildcard**, meaning it matches arbitrary content (including empty strings).
+In shell pathname expansion, `*` is a **wildcard** that matches zero or more characters within one path component. By default, it does not match a leading `.` in hidden names.
 
 ```bash
-mv test*    # Indicates deleting anything that starts with test
-mv *test    # Indicates deleting anything that ends with test
-mv *test*   # Indicates deleting anything that contains test
+rm test*    # Delete matching files whose names start with test
+rm *test    # Delete matching files whose names end with test
+rm *test*   # Delete matching files whose names contain test
 ```
 
-```bash
-rm -rf /    # Format the system
-rm -rf /*
-```
-
-
+> **Warning:** Do not use commands such as `rm -rf /*`. They attempt to delete large parts of the file system; this is deletion, not disk formatting. GNU `rm` normally rejects an argument that resolves directly to `/`, but similar variants can still destroy the system.
 
 ##### Search commands
 
- `which` : locate the executable file of a command (program).
+`which`: locate an executable file in `PATH`.
 
 ```bash
 which command
@@ -246,47 +233,47 @@ which pwd
 /usr/bin/pwd
 ```
 
- `find`
+`find`
 
 Search by file name:
 
 ```bash
-su -root
-find startpath -name "filename"
+find START_PATH -name "FILE_NAME"
+# Use sudo only when the search needs access to protected directories
+sudo find / -name "FILE_NAME"
 ```
 
 Search by file size:
 
 ```bash
-su -root
-find startpath -size +/- n[kMG]
+find START_PATH -size [+|-]N[kMG]
 ```
 
 ```bash
-find / -size -100k   # Find files smaller than 100 KB
-find / -size +1G     # Find files larger than 1 GB
+find / -size -100k   # Find files whose rounded size is less than 100 KiB
+find / -size +1G     # Find files whose rounded size is greater than 1 GiB
 ```
 
- `history` : display previously entered commands.
+`history` : display previously entered commands.
 
 ```bash
 history
 ```
 
- `grep` : **G**lobal **R**egular **E**xpression **P**rint; filters file lines by keyword.
+`grep` : **G**lobal **R**egular **E**xpression **P**rint; filters file lines by keyword.
 
 ```bash
-grep [-n] keywords LinuxPath
+grep [-n] "PATTERN" [FILE]...
 ```
 
 + Option `-n`: optional; displays the line number of matching lines in the result
-+ `param1` keyword: required; the keyword to filter by. If it contains spaces or other special symbols, it is recommended to wrap it in quotation marks
-+ `param2` file path: required; the file path whose content is to be filtered; can also be provided through a pipeline
++ `PATTERN`: required; quote it when it contains spaces or shell-special characters
++ `FILE`: optional; if omitted, `grep` reads standard input
 
- `wc` : word count.
+`wc` : word count.
 
 ```bash
-wc [-c -m -l -w] 文件路径
+wc [-c -m -l -w] [FILE]...
 ```
 
 + `-c`: count bytes
@@ -295,7 +282,7 @@ wc [-c -m -l -w] 文件路径
 + `-w`: count words
 + file path: the file to be counted; can also be provided through a pipeline
 
-**Pipeline (`|`)**: passes the output on the left as the input to the command on the right.
+**Pipeline (`|`)**: passes the standard output of the command on the left to the standard input of the command on the right.
 
 ```bash
 cat file.text | grep word
@@ -305,7 +292,7 @@ cat file.text | grep word
 cat file.text | wc -l
 ```
 
- `echo` :
+`echo` :
 
 ```bash
 echo output_content
@@ -318,7 +305,7 @@ echo "Hello World!"
 ```
 
 ```bash
-echo `pwd`   # Content inside backticks is executed as a command
+echo "$(pwd)"   # Recommended command-substitution syntax
 /home/yunxiu
 ```
 
@@ -336,21 +323,21 @@ echo "Hello World!" >> file.text
 ```
 
 ```bash
-echo "Current working directory: `pwd`" > work.text
+echo "Current working directory: $(pwd)" > work.text
 ```
 
- `tail` : view the end of a file and track the latest changes.
+`tail` : view the end of a file and track the latest changes.
 
 ```bash
-tail [-f -num] LinuxPath
+tail [-f] [-n NUM] FILE...
 ```
 
-+ `LinuxPath`: the path of the file being tracked
++ `FILE`: the path of the file being viewed or tracked
 + `-f`: follow mode; continue tracking until you press `Ctrl+C`
-+ `-num`: specifies how many lines from the end to display; defaults to 10 if omitted
++ `-n NUM`: specifies how many lines from the end to display; defaults to 10 if omitted
 
 ```bash
-tail -5 file.text
+tail -n 5 file.text
 ```
 
 ```bash
@@ -362,21 +349,19 @@ echo "content" >> work.text
 tail -f work.text
 ```
 
-
-
 ##### Users and permissions
 
-Ordinary users: generally unrestricted within the HOME directory. Outside the HOME directory, they usually have only read and execute permissions, but not write permissions.
+An ordinary user's access is determined by file permissions, ACLs, ownership, and other security controls. Users commonly own and can modify their HOME directory, but access elsewhere is not determined solely by whether a path is inside or outside HOME.
 
- `root` user**: the account with the highest privileges (superuser).
+**`root` user**: the traditional superuser account with the highest discretionary privileges.
 
- `su` : **S**witch **U**ser.
+`su`: **s**ubstitute **u**ser identity.
 
 ```bash
 su [-] [username]
 ```
 
-+ `-`: whether to load environment variables after switching users
++ `-` or `--login`: start a login shell, change to the target user's HOME directory, and initialize an environment similar to a direct login
 + `username`: if omitted, it defaults to the `root` user
 
 ```bash
@@ -384,22 +369,20 @@ exit        # Return to the previous user, or press Ctrl+D
 ```
 
 ```bash
-su -root    # Switch to the root user
+su - root   # Switch to root using a login shell; `su -` is equivalent
 # Enter password
 exit        # Return to the ordinary user
 ```
 
- `sudo` : authorizes an ordinary command to run temporarily with `root` privileges. It requires sudo authentication to be configured for the ordinary user.
+`sudo`: authorizes a command to run as another user, `root` by default. It requires sudo authentication to be configured for the ordinary user.
 
 ```bash
 sudo command
 ```
 
-
-
 ##### User and group management
 
-Require `root` privileges.
+These operations normally require `root` privileges, typically obtained with `sudo`.
 
 Create a user group:
 
@@ -416,21 +399,22 @@ groupdel usergroupname
 Create a user:
 
 ```bash
-useradd [-g -d] username
+useradd [-m] [-g GROUP] [-d HOME_DIR] USERNAME
 ```
 
-+ `-g`: specify an existing user group. If a group with the same name already exists, `-g` must be used. If `-g` is omitted, a group with the same name is created automatically and the user is added to it
-+ `-d`: specify the user's HOME path; if omitted, the default is `/home/username`
++ `-g GROUP`: specify the initial login group; default group behavior depends on system configuration
++ `-d HOME_DIR`: specify the HOME path; the default depends on system configuration
++ `-m`: create the HOME directory if it does not already exist
 
-View / delete a user:
+Delete a user:
 
 ```bash
 userdel [-r] username
 ```
 
-+ `-r`: delete the user's HOME directory; often not used
++ `-r`: also remove the user's HOME directory and mail spool
 
-View the groups to which a user belongs:
+View a user's UID, primary GID, and supplementary groups:
 
 ```bash
 id [username]
@@ -439,22 +423,20 @@ id [username]
 Modify a user's group membership:
 
 ```bash
-usermod -aG
+usermod -aG GROUP1,GROUP2 USERNAME
 ```
 
-View all user information in the current system:
+View entries in the system user database:
 
 ```bash
 getent passwd
 ```
 
-View all group information in the current system:
+View entries in the system group database:
 
 ```bash
 getent group
 ```
-
-
 
 ##### Permission control
 
@@ -464,17 +446,17 @@ getent group
 | ---- | ---------------- | -- | -- | ---------------- | -- | -- | ---------------- | -- | -- |
 | `-` / `d` / `l` | `r` / `-` | `w` / `-` | `x` / `-` | `r` / `-` | `w` / `-` | `x` / `-` | `r` / `-` | `w` / `-` | `x` / `-` |
 
-+ First character: `-` indicates a file, `d` indicates a directory, and `l` indicates a symbolic link
-+ `w` (write): write permission
-+ `x` (execute): execute permission
++ First character: `-` indicates a regular file, `d` a directory, and `l` a symbolic link
 + `r` (read): read permission
++ `w` (write): write permission
++ `x` (execute/search): execute permission for files and search/traverse permission for directories
 
- `chmod` : change mode; modifies permissions of files or directories.
+`chmod` : change mode; modifies permissions of files or directories.
 
-Only the **owner of the file or directory, or the `root` user**, can modify permissions.
+The file owner can normally change its mode; `root` can also do so.
 
 ```bash
-chmod [-R] <permissions> <files/dirctorise>
+chmod [-R] MODE FILE...
 ```
 
 + `-R`: apply the same operation recursively to all contents within a directory
@@ -500,12 +482,12 @@ chmod u=rwx,g=rx,o=x file.txt   # Set permissions of file.txt to rwxr-x--x
 chmod 751 file.txt   # Shorthand for u=rwx,g=rx,o=x
 ```
 
- `chown` : change owner; modifies the owner and group of a file or directory.
+`chown` : change owner; modifies the owner and group of a file or directory.
 
-Only the **`root` user** can modify the owner and group of a file or directory.
+Changing a file's owner normally requires `root` privileges. A file owner may be allowed to change the group to one of their own groups; exact restrictions depend on the system.
 
 ```bash
-chown [-R] [username][:][usergroupname] <files/dirctorise>
+chown [-R] [OWNER][:[GROUP]] FILE...
 ```
 
 + `-R`: apply the same operation recursively to all contents within a directory
@@ -522,33 +504,31 @@ chown :root file.text  # Change the group of file.text to root
 chown yunxiu:root file.text   # Change the owner of file.text to yunxiu and the group to root
 ```
 
-
-
 | Shortcut | Function |
 | -------- | -------- |
-| `Ctrl+C` | Force stop; cancel current input and re-enter |
-| `Ctrl+D` | Exit a user session or some specific programs; cannot exit vi/vim |
+| `Ctrl+C` | Send an interrupt signal (`SIGINT`) to the foreground process; the process may handle or ignore it |
+| `Ctrl+D` | Send end-of-file input; at an empty shell prompt this usually exits the shell |
 | `!command_prefix` | Automatically execute the most recent command matching the prefix |
-| `Ctrl+R` | Match historical commands in the input area; use Up/Down to browse and Left/Right to edit; press Enter to execute |
+| `Ctrl+R` | Start reverse incremental history search; press `Ctrl+R` again for earlier matches, then edit or press Enter |
 | `Ctrl+A` | Jump to the beginning of the command line |
 | `Ctrl+E` | Jump to the end of the command line |
 | `Ctrl+Left/Right` | Jump by word |
 | `Ctrl+L` | Clear terminal content, same as the `clear` command |
 
-
-
- `apt` : Advanced Package Tool, used for software installation.
+`apt` : Advanced Package Tool command-line interface used on Debian-based distributions such as Ubuntu.
 
 ```bash
-apt [-y] [install | remove | search] softwarename
+sudo apt install [-y] PACKAGE...
+sudo apt remove [-y] PACKAGE...
+apt search PATTERN
 ```
 
-+ `-y`: automatically confirm installation or removal without manual confirmation
++ `-y`: automatically answer yes to confirmation prompts; use it cautiously
 
- `systemctl` : controls service startup, shutdown, and startup-on-boot behavior.
+`systemctl` : inspects and controls the `systemd` system and service manager.
 
 ```bash
-systemctl start | stop | status | enable | disable servicename
+systemctl {start|stop|status|enable|disable} UNIT...
 ```
 
 + `start`: start the service
@@ -557,34 +537,35 @@ systemctl start | stop | status | enable | disable servicename
 + `enable`: enable the service to start automatically at boot
 + `disable`: disable the service from starting automatically at boot
 
-Service names may include built-in system services such as `NetworkManager` (primary network service), `network` (secondary network service), `firewalld` (firewall service), and `sshd` (SSH service).
+Unit names are distribution- and installation-dependent. Examples may include `NetworkManager.service` and `ssh.service`. Use `systemctl list-unit-files --type=service` to inspect available service units. Note that `enable` configures startup links but does not necessarily start the service immediately; use `enable --now` when both actions are intended.
 
- `ln` : create a symbolic link to point a file or directory to another location.
+`ln -s`: create a symbolic link to point a file or directory to another location.
 
 ```bash
-ln -s param1 param2
+ln -s TARGET LINK_NAME
 ```
 
-+ `param1`: the file or directory being linked
-+ `param2`: the destination of the symbolic link
++ `TARGET`: the target file or directory
++ `LINK_NAME`: the name/path of the symbolic link to create
 
- `date` : display the system time.
+`date` : display the system time.
 
 ```bash
-date -d [+formatsrtings]
+date [OPTION]... [+FORMAT]
+date -d "DATE_STRING" [+FORMAT]
 ```
 
 + `-d`: display the date according to the given string; commonly used for date calculations
 + format string: controls date output through specific placeholders
 
-+ `%Y`: four-digit year  
-+ `%y`: last two digits of the year (`00`–`99`)  
-+ `%M`: month (`01`–`12`)  
-+ `%d`: day (`01`–`31`)  
-+ `%H`: hour (`00`–`23`)  
-+ `%M`: minute (`00`–`59`)  
-+ `%S`: second (`00`–`60`)  
-+ `%s`: number of seconds since `1970-01-00:00:00 UTC` until now
++ `%Y`: four-digit year
++ `%y`: last two digits of the year (`00`–`99`)
++ `%m`: month (`01`–`12`)
++ `%d`: day (`01`–`31`)
++ `%H`: hour (`00`–`23`)
++ `%M`: minute (`00`–`59`)
++ `%S`: second (`00`–`60`)
++ `%s`: number of seconds since the Unix Epoch, `1970-01-01 00:00:00 UTC`
 
 ```bash
 date
@@ -602,18 +583,19 @@ date "+%Y-%m-%d %H:%M:%S"   # Includes spaces
 ```
 
 ```bash
-data -d "-1 day"            # Yesterday
+date -d "-1 day"            # Yesterday
 Tue Jan  6 03:19:11 PM CST 2026
 ```
 
-##### IP Address 
+##### IP Address
 
 Internet Protocol Address: the address used for network communication.
 
 IPv4 address format: `a.b.c.d`, where `a`, `b`, `c`, and `d` are numbers from `0` to `255`, for example `192.168.232.204`.
 
 ```bash
-idconfig    # View IP addresses
+ifconfig    # Legacy command; may require the net-tools package
+# Modern alternative: ip address
 eno1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
         ether e0:73:e7:ee:4d:97  txqueuelen 1000  (Ethernet)
         RX packets 0  bytes 0 (0.0 B)
@@ -647,8 +629,8 @@ wlo1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 | `wlo1` | Wireless network adapter (Wi-Fi) |
 
 + `UP`: the system has enabled this network interface
-+ `RUNNING`: the physical link is active
-+ `0.0.0.0`: can refer to the local host, can be used to determine binding relationships in port binding, and can represent all IP addresses in some address restriction scenarios—for example, a rule set to `0.0.0.0` allows access from any IP
++ `RUNNING`: the interface is considered operational by the kernel; it does not guarantee Internet connectivity
++ `0.0.0.0`: the IPv4 unspecified address. When a server binds to it, the socket listens on all local IPv4 interfaces. In CIDR notation, `0.0.0.0/0` represents all IPv4 addresses.
 + `127.0.0.1`: loopback address; accessing this address means accessing the local computer
 + `192.168.232.204`: an IPv4 address
 
@@ -660,7 +642,6 @@ yunxiu-OMEN-by-HP-Gaming-Laptop-16-xf0xxx
 ```
 
 ```bash
-hostnamectl set-hostname <hostname>   # Change the hostname
+sudo hostnamectl set-hostname NEW_HOSTNAME   # Change the hostname
 ```
 
-Domain name resolution:
