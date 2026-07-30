@@ -6,6 +6,15 @@
 
 A control system is an interconnection of components designed to produce a desired system response.
 
+<img src="../../Figures/Ctrl_theory_closed_loop_components.png" alt="closed-loop control system components" style="zoom: 50%;" />
+
+| Component | Concept | Function |
+|---|---|---|
+| Controller | hardware or an algorithm that processes the reference and measured output | computes the control signal needed to reduce the error |
+| Actuator | the mechanism through which the control system acts on the physical process | converts the control signal into physical action that changes the plant input |
+| Plant | the physical system or process to be controlled | receives the actuator input and produces the controlled output |
+| Sensors | devices that measure relevant plant variables or outputs | convert measurements into feedback signals for the controller |
+
 | Symbol | Meaning |
 |---|---|
 | $r(t)$ | reference input, or setpoint when the reference is constant |
