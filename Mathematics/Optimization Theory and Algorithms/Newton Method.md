@@ -213,7 +213,7 @@ $$
 
 Thus the Newton mapping decreases the distance to $\boldsymbol{x}^*$ locally.
 
-When Newton method converges, it has at least quadratic convergence locally, namely
+If $\nabla^2 f$ is Lipschitz continuous near $\boldsymbol{x}^*$, Newton method has quadratic convergence locally, namely
 
 $$
 \left\|
@@ -547,12 +547,10 @@ $$
 f(\boldsymbol{x}_k+
 \alpha_k\boldsymbol{d}_k)
 =
-\min_{\alpha}
+\min_{\alpha\ge 0}
 f(\boldsymbol{x}_k+
 \alpha\boldsymbol{d}_k)
 $$
-
-where $\alpha$ can be negative.
 
 ##### Algorithm
 
@@ -590,7 +588,7 @@ $$
 Choose $\alpha_k$ by line search
 
 $$
-\min_{\alpha}
+\min_{\alpha\ge 0}
 f(\boldsymbol{x}_k+
 \alpha\boldsymbol{d}_k)
 =
@@ -609,7 +607,7 @@ $$
 
 Set $k:=k+1$ and repeat.
 
-Because the damped Newton method uses line search, the objective function value usually decreases and does not increase under exact line search. Under suitable assumptions, it has global convergence and second-order local convergence.
+Because the damped Newton method uses line search, the objective function value usually decreases and does not increase under exact line search. Under suitable assumptions, it has global convergence and quadratic local convergence.
 
 ### Modified Newton Method
 

@@ -167,7 +167,7 @@ $$
 \boldsymbol{H}_k\boldsymbol{q}_k)^T
 }
 {
-\eta_k\boldsymbol{z}_k\boldsymbol{q}_k^T
+\eta_k\boldsymbol{z}_k^T\boldsymbol{q}_k
 }
 =
 \frac{
@@ -191,7 +191,7 @@ $$
 }
 $$
 
-This update satisfies the secant equation, but positive definiteness is not always guaranteed. More specifically, the rank-one update can ensure positive definiteness only when
+This update satisfies the secant equation, but positive definiteness is not always guaranteed. If $\boldsymbol{H}_k\succ\boldsymbol{0}$, the rank-one update preserves positive definiteness when
 
 $$
 \boldsymbol{q}_k^T
@@ -480,6 +480,14 @@ $$
 \boldsymbol{g}_k=\nabla f(\boldsymbol{x}_k)
 $$
 
+If
+
+$$
+\|\boldsymbol{g}_k\|\le \varepsilon
+$$
+
+stop.
+
 Set
 
 $$
@@ -765,9 +773,9 @@ $$
 By induction,
 
 $$
-\boldsymbol{p}_i^T\boldsymbol{A}\boldsymbol{p}_j&=0
+\boldsymbol{p}_i^T\boldsymbol{A}\boldsymbol{p}_j=0
 \qquad
-1\le i<j\le k \\
+1\le i<j\le k
 $$
 
 $$
@@ -911,12 +919,10 @@ $$
 }
 $$
 
-Equivalently,
+For comparison, the DFP update for the Hessian approximation is
 
 $$
-\boldsymbol{B}_{k+1}
-=
-\boldsymbol{H}_{k+1}^{-1}
+\boldsymbol{B}_{k+1}^{\mathrm{DFP}}
 =
 \left(
 \boldsymbol{I}
@@ -1050,10 +1056,14 @@ Choose the initial inverse Hessian approximation as
 $$
 \boldsymbol{H}_k^{(0)}
 =
-\gamma_k\boldsymbol{I}
+\begin{cases}
+\boldsymbol{I}, & r=0
+\\[6pt]
+\gamma_k\boldsymbol{I}, & r>0
+\end{cases}
 $$
 
-where
+where, for $r>0$,
 
 $$
 \gamma_k

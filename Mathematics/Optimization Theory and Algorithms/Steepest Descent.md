@@ -537,7 +537,7 @@ $$
 
 Therefore the sequence $\{\boldsymbol{x}_{k}\}$ often moves along a zigzag path.
 
-When $\boldsymbol{x}_{k}$ is close to the minimizer $\boldsymbol{x}^*$, each step length becomes small. The iterates move from one side of the valley to the other, and the convergence speed is reduced.
+When $\boldsymbol{x}_{k}$ is close to the minimizer $\boldsymbol{x}^*$, the displacement $\|\alpha_k\boldsymbol{g}_k\|$ of each iteration becomes small. The iterates move from one side of the valley to the other, and the convergence speed is reduced.
 
 Thus two consecutive gradients are orthogonal. The orthogonality relation is one reason for the typical **zigzag behavior**.
 
