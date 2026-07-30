@@ -579,7 +579,7 @@ This is the principle behind back propagation. The derivative of the output with
 
 ### Back Propagation
 
-Consider a neural network with $L$ layer. Layer $l$ has $n_l$ neurons. The weight matrix of layer $l$ is
+Consider a neural network with $L$ layers. Layer $l$ has $n_l$ neurons. The weight matrix of layer $l$ is
 $$
 \mathbf{W}^{(l)}
 \in

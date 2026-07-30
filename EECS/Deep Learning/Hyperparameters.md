@@ -141,7 +141,7 @@ H(p,q)
 [-\log q(x)]
 $$
 
-If $q$ is close to $p$, the cross-entropy is small. If $q$ assigns low probability to events that often occur under $p$, the cross-entropy becomes large.
+For a fixed true distribution $p$, cross-entropy is minimized when $q=p$. If $q$ assigns low probability to events that often occur under $p$, the cross-entropy becomes large.
 
 **KL divergence** measures the information loss caused by using $q$ to approximate the true distribution $p$.
 $$

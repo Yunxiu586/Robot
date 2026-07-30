@@ -6,7 +6,7 @@ The Transformer is a sequence transduction model that **relies solely on self-at
 
 ### Architecture
 
-<img src="../../../Figures/Transformer_architecture.png" alt="Transformer_architecture" style="zoom: 28%;" />
+<img src="../../Figures/Transformer_architecture.png" alt="Transformer_architecture" style="zoom: 28%;" />
 
 ### Encoder
 
@@ -26,7 +26,7 @@ $$
 
 The embedding layer does not yet encode word order. It only maps each token into a continuous representation space where semantic and syntactic information can be learned.
 
-The same idea is used on the decoder side output tokens are also converted to vectors of dimension $d_{\text{model}}$. 
+The same idea is used on the decoder side: output tokens are also converted to vectors of dimension $d_{\text{model}}$. 
 
 In the embedding layers, the weights are multiplied by
 $$
@@ -130,7 +130,7 @@ This lets each input position attend to all positions in the previous encoder la
 
 ##### Scaled Dot-Product Attention
 
-<img src="../../../Figures/Transformer_scaled_dot_product_attention.png" alt="Transformer_scaled_dot_product_attention" style="zoom: 28%;" />
+<img src="../../Figures/Transformer_scaled_dot_product_attention.png" alt="Transformer_scaled_dot_product_attention" style="zoom: 28%;" />
 
 The input consists of queries and keys of dimension $d_k$, and values of dimension $d_v$. 
 
@@ -159,7 +159,7 @@ The **scaling factor**
 $$
 \frac{1}{\sqrt{d_k}}
 $$
-prevents the softmax function from entering regions of extremely small gradients when $d_k$ is large, mitigating the vanishing gradient issue of the dot product.
+counteracts the effect of large-magnitude dot products pushing the softmax function into regions with extremely small gradients when $d_k$ is large.
 
 The **softmax** converts compatibility scores into **attention weights**. The **attention matrix** is the softmax-normalized compatibility matrix between queries and keys. 
 
@@ -231,7 +231,7 @@ for illegal connections.
 
 ##### Multi-Head Attention
 
-<img src="../../../Figures/Transformer_multi_head_attention.png" alt="Transformer_multi_head_attention" style="zoom: 28%;" />
+<img src="../../Figures/Transformer_multi_head_attention.png" alt="Transformer_multi_head_attention" style="zoom: 28%;" />
 
 Instead of performing a single attention function with $d_{\text{model}}$-dimensional queries, keys, and values, the Transformer linearly projects them $h$ times with different learned projections.
 $$
@@ -658,6 +658,6 @@ Here, $n$ is the sequence length, and $d$ is the representation dimension of eac
 
 + For self-attention, the **complexity per-layer** is $O(n^2\cdot d)$ because each of the $n$ positions attends to all $n$ positions, and each compatibility computation involves a $d$-dimensional representation. 
 
-+ The **sequential operations** is $O(1)$ because all positions can be computed in parallel by matrix multiplication. 
++ The number of **sequential operations** is $O(1)$ because all positions can be computed in parallel by matrix multiplication. 
 
 + The **maximum path length** is $O(1)$ because any two positions can be directly connected within one self-attention layer, which makes long-range dependencies easier to learn.
