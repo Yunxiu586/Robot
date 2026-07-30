@@ -185,6 +185,40 @@ The sampling period must be included in both the integral and derivative terms. 
 
 The controller gains and $T_s$ form one design. Changing the sampling period without checking the discrete controller changes the effective integral and derivative actions.
 
+##### Practical Improvements
+
+Actuator saturation can keep the error nonzero even though the control output cannot increase further. Continued integration then causes integrator windup, which can increase overshoot and delay recovery from saturation.
+
+**Integral clamping** limits the integral contribution to a prescribed range
+
+$$
+I_{\mathrm{raw}}[k]=I[k-1]+K_iT_se[k]
+$$
+
+$$
+I[k]=\operatorname{clip}\left(I_{\mathrm{raw}}[k],I_{\min},I_{\max}\right)
+$$
+
+The bounds should be consistent with the available control effort. Limiting only the final output does not prevent the internal integral state from continuing to grow.
+
+**Integral separation**, also called error-based conditional integration, enables integral action only when the error is sufficiently small
+$$
+I[k]=
+\begin{cases}
+I[k-1]+K_iT_se[k], & |e[k]|\le e_{\mathrm{sep}}\\
+I[k-1], & |e[k]|>e_{\mathrm{sep}}
+\end{cases}
+$$
+
+This reduces integral buildup during startup or large transients while retaining integral action near the setpoint to remove steady-state error. A threshold that is too small may prevent effective integral correction.
+
+**Derivative on measurement** applies derivative action to the measured output rather than to the error
+$$
+D[k]=-K_d\frac{y[k]-y[k-1]}{T_s}
+$$
+
+Because differentiating $e[k]=r[k]-y[k]$ includes the setpoint change, a step in $r[k]$ can produce a derivative kick. Derivative on measurement avoids this setpoint-induced kick but remains sensitive to measurement noise, so practical derivative action is commonly filtered.
+
 ### Basic Tuning
 
 ##### Manual Tuning
