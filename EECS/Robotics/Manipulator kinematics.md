@@ -10,9 +10,9 @@ A manipulator consists of rigid **links** connected by **joints** with position 
 
 A manipulator’s **degrees of freedom (DOF)** equal the number of independent position variables required to fully locate all its parts. In typical industrial robots, because manipulators are open kinematic chains with each joint defined by a single variable, the number of joints directly equals the number of DOF.
 
-The **end-effector** (e.g., gripper, tool) at the chain’s end is described via a **tool frame** relative to a **base frame**. **Forward kinematics** solves the static geometric problem of computing the end-effector’s position and orientation from given joint angles, transforming motion representation from **joint space** to **Cartesian space**. 
+The **end-effector** (e.g., gripper, tool) at the chain’s end is described via a **tool frame** relative to a **base frame**. **Forward kinematics** solves the static geometric problem of computing the end-effector’s position and orientation from given joint variables, transforming motion representation from **joint space** to **Cartesian space**. 
 
-Given the position and orientation of the end-effector of the manipulator, **inverse kinematics** calculates all possible sets of joint angles that could be used to attain this given position and orientation.
+Given the position and orientation of the end-effector of the manipulator, **inverse kinematics** calculates all possible sets of joint variables that could be used to attain this given position and orientation.
 
 ### Link connection
 
@@ -206,13 +206,13 @@ The equations specify how to compute the position and orientation of frame {6} r
 
 ### Inverse kinematics
 
-Solving the problem of finding the required joint angles to place the tool frame, {$T$}, relative to the station frame, {$S$}, is split into two parts. First, frame transformations are performed to find the wrist frame, {$W$}, relative to the base frame, {$B$}, and then the inverse kinematics are used to solve for the joint angles.
+Solving the problem of finding the required joint variables to place the tool frame, {$T$}, relative to the station frame, {$S$}, is split into two parts. First, frame transformations are performed to find the wrist frame, {$W$}, relative to the base frame, {$B$}, and then the inverse kinematics are used to solve for the joint variables.
 
 ##### Solvability
 
-Given the numerical value of $^0T_N$, we attempt to find values of $\theta_1$, $\theta_2$, ..., $\theta_N$.
+Given the numerical value of $^0T_N$, we attempt to find values of the joint variables $q_1$, $q_2$, ..., $q_N$.
 
-The inverse kinematics for a 6-DOF robotic arm involves solving for 6 joint angles $\theta_1$ through $\theta_6$. This is because the 6 degrees of freedom yield 6 independent equations: 3 from the rotation-matrix portion of $^0T_6$ and 3 from the position-vector portion of $^0T_6$. These 6 equations are nonlinear, transcendental equations, which can be quite difficult to solve.
+The inverse kinematics for a 6-DOF robotic arm involves solving for 6 joint variables $q_1$ through $q_6$. This is because the 6 degrees of freedom yield 6 independent equations: 3 from the rotation-matrix portion of $^0T_6$ and 3 from the position-vector portion of $^0T_6$. These 6 equations are nonlinear, transcendental equations, which can be quite difficult to solve.
 
 ##### Existence of solutions
 
@@ -548,11 +548,11 @@ In a nonsingular configuration, these last three joints generally have two solut
 
 ##### Repeatability and accuracy
 
-Industrial robots often use **taught points**, where the manipulator is physically moved to a location and the joint angles are stored. Returning to these points relies on replaying the stored joint values, so inverse kinematics is unnecessary. The precision in returning to a taught point is defined as the **repeatability** of the manipulator.
+Industrial robots often use **taught points**, where the manipulator is physically moved to a location and the joint variables are stored. Returning to these points relies on replaying the stored joint values, so inverse kinematics is unnecessary. The precision in returning to a taught point is defined as the **repeatability** of the manipulator.
 
-When a goal is specified in Cartesian coordinates,  the inverse kinematics must be computed to solve for the joint angles. Such goals are called **computed points**. The precision with which a computed point can be attained is called the **accuracy** of the manipulator.
+When a goal is specified in Cartesian coordinates,  the inverse kinematics must be computed to solve for the joint variables. Such goals are called **computed points**. The precision with which a computed point can be attained is called the **accuracy** of the manipulator.
 
-**Accuracy** is bounded by **repeatability**. It is affected by errors in the kinematic parameters (such as  Denavit–Hartenberg parameters), which cause inaccuracies in the  calculated joint angles. While repeatability is often quite good, accuracy is usually worse and varies between manipulators. Calibration  techniques can improve accuracy by estimating the specific manipulator’s kinematic parameters.
+**Accuracy** is bounded by **repeatability**. It is affected by errors in the kinematic parameters (such as  Denavit–Hartenberg parameters), which cause inaccuracies in the  calculated joint variables. While repeatability is often quite good, accuracy is usually worse and varies between manipulators. Calibration  techniques can improve accuracy by estimating the specific manipulator’s kinematic parameters.
 
 ### Inverse kinematics of PUMA 560
 
@@ -732,14 +732,14 @@ These equations can be solved simultaneously for $\sin(\theta_2+\theta_3)$ and $
 $$
 \begin{align*}
 \sin(\theta_2+\theta_3) &= \frac{\left(-a_{3}-a_{2} \cos\theta_3\right) p_{z} + \left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)\left(a_{2} \sin\theta_3 - d_{4}\right)}{p_{z}^{2}+\left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)^{2}} \\
-\cos(\theta_2+\theta_3) &= \frac{\left(a_{2} \sin\theta_3 - d_{4}\right) p_{z} - \left(a_{3}+a_{2} \cos\theta_3\right)\left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)}{p_{z}^{2}+\left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)^{2}}
+\cos(\theta_2+\theta_3) &= \frac{\left(a_{2} \sin\theta_3 - d_{4}\right) p_{z} + \left(a_{3}+a_{2} \cos\theta_3\right)\left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)}{p_{z}^{2}+\left(\cos\theta_1 p_{x}+\sin\theta_1 p_{y}\right)^{2}}
 \end{align*}
 $$
 The denominators are equal and positive, so we solve for $\theta_2+\theta_3$. 
 $$
 \begin{aligned}
 \theta_2+\theta_3 = \operatorname{atan2}[& \left(-a_3 - a_2 \cos\theta_3\right) p_z - \left(\cos\theta_1 p_x + \sin\theta_1 p_y\right)\left(d_4 - a_2 \sin\theta_3\right), \\
-& \left(a_2 \sin\theta_3 - d_4\right) p_z - \left(a_3 + a_2 \cos\theta_3\right)\left(\cos\theta_1 p_x + \sin\theta_1 p_y\right) ]
+& \left(a_2 \sin\theta_3 - d_4\right) p_z + \left(a_3 + a_2 \cos\theta_3\right)\left(\cos\theta_1 p_x + \sin\theta_1 p_y\right) ]
 \end{aligned}
 $$
 For the four possible combinations of solutions for $\theta_1$ and $\theta_3$, four corresponding solutions for $\theta_2$ are computed as

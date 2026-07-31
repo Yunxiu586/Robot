@@ -174,7 +174,7 @@ $$
 {^AP_2}={D_Q{(q)}}{^AP_1}
 $$
 
-where $q$ is the signed magnitude of the translation along the vector direction $Q$. The $D_Q$ operator may be thought of as a homogeneous transform of a special simple form:
+where $\hat{Q}$ is the unit translation direction and $q$ is the signed magnitude of the translation, so ${}^AQ=q\hat{Q}=[q_x\;q_y\;q_z]^{\mathsf T}$. The $D_Q$ operator may be thought of as a homogeneous transform of a special simple form:
 $$
 D_Q(q)=
 \begin{bmatrix}
