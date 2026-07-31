@@ -6,11 +6,13 @@
 
 ##### Periodic extension and principal value
 
-A finite-duration sequence $x[n]$ can be extended periodically with period $N$
+For a length-$N$ sequence $x[n]$ supported on the principal interval $0\le n\le N-1$ and zero outside that interval, its period-$N$ extension is
 
 $$
 \tilde{x}[n]=\sum_{r=-\infty}^{\infty}x[n+rN]=x[((n))_N]
 $$
+
+The equality to $x[((n))_N]$ requires that only one shifted copy is nonzero for each $n$; otherwise, the summation represents periodic aliasing
 
 The principal value is
 
@@ -290,7 +292,13 @@ $$
 The IDFT is the periodized sequence
 
 $$
-\tilde{x}[n]=\operatorname{IDFT}\{\tilde{X}[k]\}=x[((n))_N]
+\tilde{x}[n]=\operatorname{IDFT}\{\tilde{X}[k]\}=\sum_{r=-\infty}^{\infty}x[n+rN]
+$$
+
+If $x[n]$ is confined to one length-$N$ principal interval, so that the shifted copies do not overlap, this reduces to
+
+$$
+\tilde{x}[n]=x[((n))_N]
 $$
 
 If $x[n]$ has length $M$, exact recovery from frequency samples requires
@@ -342,11 +350,11 @@ f_s=\frac{1}{T}
 $$
 
 $$
-T_p=NT=\frac{1}{F}
+T_p=NT=\frac{1}{\Delta f}
 $$
 
 $$
-F=\frac{f_s}{N}=\frac{1}{T_p}
+\Delta f=\frac{f_s}{N}=\frac{1}{T_p}
 $$
 
 $$
@@ -366,7 +374,7 @@ $$
 where
 
 $$
-\Omega_0=2\pi F
+\Omega_0=2\pi\Delta f
 $$
 
 ##### Window effects
@@ -413,10 +421,10 @@ Rectangular windows have a narrower main lobe but larger sidelobes. Hanning wind
 
 ##### Resolution leakage and picket-fence effect
 
-Frequency resolution is controlled by the record length
+The DFT frequency-bin spacing is controlled by the record length
 
 $$
-F=\frac{1}{T_p}=\frac{f_s}{N}
+\Delta f=\frac{1}{T_p}=\frac{f_s}{N}
 $$
 
 Increasing the true record length improves resolution. Zero padding only interpolates the sampled spectrum
@@ -424,14 +432,14 @@ Increasing the true record length improves resolution. Zero padding only interpo
 Spectral leakage is caused by time-domain truncation
 
 $$
-\hat{X}(e^{j\omega})=X(e^{j\omega})*W(e^{j\omega})
+\hat{X}(e^{j\omega})=\frac{1}{2\pi}X(e^{j\omega})\circledast W(e^{j\omega})
 $$
 
 To reduce leakage, increase the window length or choose a smoother window
 
 The picket-fence effect means the DFT observes only discrete frequency samples. Increasing DFT length by zero padding makes frequency samples denser but does not improve true resolution
 
-Practical constraints
+For a desired resolution bandwidth $F$, practical constraints are
 
 $$
 f_s\ge 2f_m

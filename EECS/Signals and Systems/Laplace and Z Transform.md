@@ -33,7 +33,7 @@ $$
 $$
 
 $$
-e^{-a|t|}\xleftrightarrow{\mathcal{L}}\frac{2a}{a^2-s^2}\quad -a<\operatorname{Re}\{s\}<a
+e^{-a|t|}\xleftrightarrow{\mathcal{L}}\frac{2a}{a^2-s^2}\quad -a<\operatorname{Re}\{s\}<a,\quad a>0
 $$
 
 $$
@@ -108,7 +108,7 @@ $$
 \lim_{t\to\infty}x(t)=\lim_{s\to 0}sX(s)
 $$
 
-The initial-value theorem is normally used for causal signals. The final-value theorem requires that the limit exists and that the poles of $sX(s)$, except possibly a simple pole at the origin, lie in the open left-half plane
+The initial-value theorem applies to causal signals with finite $x(0^+)$ and no impulse at $t=0$. The final-value theorem requires that the limit exists and that all poles of $sX(s)$ lie in the open left-half plane; equivalently, $X(s)$ may have at most a simple pole at the origin and all its other poles must lie in the open left-half plane
 
 For real $x(t)$, poles and zeros occur in conjugate pairs
 
@@ -128,18 +128,10 @@ $$
 
 For causal signals, $\tilde{X}(s)=X(s)$
 
-Examples
+Example
 
 $$
 e^{-at}u(t)\xleftrightarrow{\mathcal{L}_+}\frac{1}{s+a}\quad \operatorname{Re}\{s\}>-a
-$$
-
-$$
--e^{-at}u(-t)\xleftrightarrow{\mathcal{L}}\frac{1}{s+a}\quad \operatorname{Re}\{s\}<-a
-$$
-
-$$
-e^{-a|t|}\xleftrightarrow{\mathcal{L}}\frac{2a}{a^2-s^2}\quad -a<\operatorname{Re}\{s\}<a
 $$
 
 Derivative properties include initial conditions
@@ -295,7 +287,7 @@ $$
 \lim_{n\to\infty}x[n]=\lim_{z\to 1}(z-1)X(z)
 $$
 
-The final-value theorem requires that the limit exists and that the poles of $(1-z^{-1})X(z)$, except possibly a simple pole at $z=1$, lie inside the unit circle
+The initial-value theorem applies when $x[n]=0$ for $n<0$. The final-value theorem requires that the limit exists and that all poles of $(z-1)X(z)$ lie strictly inside the unit circle; equivalently, $X(z)$ may have at most a simple pole at $z=1$ and all its other poles must lie strictly inside the unit circle
 
 For real $x[n]$
 
@@ -325,13 +317,15 @@ $$
 x[n]=\sum_k\operatorname{Res}\{F(z),z_k\}
 $$
 
+where $z_k$ are the poles inside $C$
+
 For a simple pole
 
 $$
 \operatorname{Res}\{F(z),z_k\}=\lim_{z\to z_k}(z-z_k)F(z)
 $$
 
-For first-order poles, a partial fraction form is
+For a proper rational $X(z)$ with first-order nonzero poles, a partial fraction form is
 
 $$
 X(z)=A_0+\sum_{m=1}^{N}\frac{A_mz}{z-z_m}
@@ -355,7 +349,7 @@ $$
 x[n]=-a^n u[-n-1]\quad |z|<|a|
 $$
 
-For a rational $X(z)$ with first-order poles
+For a proper rational $X(z)$ with first-order nonzero poles
 
 $$
 X(z)=A_0+\sum_{m=1}^{M}\frac{A_m}{1-p_mz^{-1}}
@@ -393,11 +387,13 @@ $$
 \mathcal{Z}_+\{x[n-1]\}=z^{-1}X_+(z)+x[-1]
 $$
 
-A first-order complete response can be written as
+For a stable first-order discrete-time system whose forced response approaches a constant $f(\infty)$, the complete response for $n\ge0$ can be written as
 
 $$
-f(t)=f(\infty)+\left[f(0^+)-f(\infty)\right]e^{-t/\tau}
+f[n]=f(\infty)+\left[f[0]-f(\infty)\right]p^n
 $$
+
+where $p$ is the first-order pole and $|p|<1$
 
 ### Discrete-Time System Structures
 
@@ -485,7 +481,7 @@ $$
 e^{\sigma T}e^{j(\Omega T+2\pi k)}=e^{\sigma T}e^{j\Omega T}
 $$
 
-mapping from the $s$-plane to the $z$-plane is many-to-one. One principal strip maps to the entire $z$-plane
+mapping from the $s$-plane to the $z$-plane is many-to-one. One principal strip maps to the punctured $z$-plane $\mathbb{C}\setminus\{0\}$
 
 $$
 -\frac{\pi}{T}\le \Omega<\frac{\pi}{T}

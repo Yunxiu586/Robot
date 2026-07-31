@@ -254,14 +254,14 @@ $$
 
 <img src="../../Figures/LTI_Systems_moving_average_response.png" alt="Moving average magnitude response" style="zoom: 67%;" />
 
-The magnitude and phase are
+The magnitude and linear-phase term are
 
 $$
 |H(e^{j\omega})|=\left|\frac{\sin\left(\frac{N+1}{2}\omega\right)}{\sin\left(\frac{\omega}{2}\right)}\right|
 $$
 
 $$
-\angle H(e^{j\omega})=-\frac{N}{2}\omega
+\phi_{\mathrm{lin}}(\omega)=-\frac{N}{2}\omega
 $$
 
 ##### First difference system
@@ -287,5 +287,5 @@ $$
 $$
 
 $$
-\angle H(e^{j\omega})=\frac{\pi}{2}-\frac{\omega}{2}
+\angle H(e^{j\omega})=\frac{\pi}{2}-\frac{\omega}{2},\qquad 0<\omega<2\pi
 $$

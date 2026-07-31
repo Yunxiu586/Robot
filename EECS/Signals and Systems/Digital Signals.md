@@ -185,26 +185,39 @@ Upsampling by $M$ inserts $M-1$ zeros between adjacent samples
 $$
 y[n]=
 \begin{cases}
-x[n/M] & n=lM\\
-0 & n\ne lM
+x[n/M] & n=lM,\quad l\in\mathbb{Z}\\
+0 & \text{otherwise}
 \end{cases}
 $$
 
-A cascade example from the source document gives
+For the following cascade, $x_{(2)}[n]$ denotes upsampling by $2$
 
 $$
-S_1:y[n]=x^{(2)}[n]
+S_1:y[n]=x_{(2)}[n]
 $$
 
 $$
-S_2:y[n]=\frac{1}{2}x[n]+\frac{1}{4}x[n-1]+x[n-2]
+S_2:y[n]=x[n]+\frac{1}{2}x[n-1]+\frac{1}{4}x[n-2]
 $$
 
 $$
 S_3:y[n]=x[2n]
 $$
 
-The resulting input-output relation is
+Let $x_i[n]$ and $y_i[n]$ denote the input and output of $S_i$. Since $x_2[n]=y_1[n]$ and $x_3[n]=y_2[n]$,
+
+$$
+\begin{aligned}
+y_3[n]
+&=x_3[2n]\\
+&=y_2[2n]\\
+&=x_2[2n]+\frac{1}{2}x_2[2n-1]+\frac{1}{4}x_2[2n-2]\\
+&=y_1[2n]+\frac{1}{2}y_1[2n-1]+\frac{1}{4}y_1[2n-2]\\
+&=x_1[n]+\frac{1}{4}x_1[n-1]
+\end{aligned}
+$$
+
+Therefore, the input-output relation is
 
 $$
 y[n]=x[n]+\frac{1}{4}x[n-1]
@@ -310,12 +323,22 @@ $$
 
 bandpass sampling may avoid aliasing with a sampling rate below the lowpass Nyquist rate
 
-$$
-\frac{2f_H}{m}\le f_s\le \frac{2f_L}{m-1}
-$$
+For $m=1$
 
 $$
-1\le m\le \left\lfloor\frac{f_H}{B}\right\rfloor
+f_s\ge 2f_H
+$$
+
+For
+
+$$
+2\le m\le \left\lfloor\frac{f_H}{B}\right\rfloor
+$$
+
+the allowable range is
+
+$$
+\frac{2f_H}{m}\le f_s\le \frac{2f_L}{m-1}
 $$
 
 <img src="../../Figures/Digital_Signals_symmetric_bandpass.png" alt="Symmetric bandpass signal" style="zoom:67%;" />

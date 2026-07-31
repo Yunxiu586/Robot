@@ -94,7 +94,7 @@ $$
 X[k+N/2]=X_1[k]-W_N^kX_2[k]
 $$
 
-<img src="../../Figures/FFT_DIT_butterfly.svg" alt="DIF butterfly" style="zoom:34%;" />
+<img src="../../Figures/FFT_DIT_butterfly.svg" alt="DIT butterfly" style="zoom:34%;" />
 
 <img src="../../Figures/FFT_eight_point_flowgraph.png" alt="Eight-point FFT flowgraph" style="zoom: 48%;" />
 
