@@ -1,4 +1,4 @@
-# Object-Oriented and Advanced C++
+# OOP and Advanced C++
 
 [toc]
 
@@ -35,9 +35,9 @@ Access control:
 | `private` | Accessible only inside the class and friends |
 | `protected` | Accessible inside the class, friends, and derived classes |
 
-A `class` uses private access by default. A `struct` uses public access by default.
+A `class` uses private access by default. A `struct` uses public access by default; otherwise, both support member functions, constructors, and the same access specifiers.
 
-##### Constructors, Destructors, and Object Initialization
+##### Object Lifecycle
 
 A constructor establishes a valid object state.
 
@@ -122,7 +122,16 @@ private:
 };
 ```
 
-##### `this`, Const Members, Static Members, and Friends
+`std::move` does not move an object by itself. It converts its argument to an rvalue expression so that a move constructor or move assignment operator can be selected.
+
+```cpp
+std::string source = "Hello";
+std::string destination = std::move(source);
+```
+
+After a move, the source object remains valid, but its value is generally unspecified; it may still be assigned to or destroyed.
+
+##### Class Members
 
 `this` points to the current object.
 
@@ -190,7 +199,7 @@ Point operator+(const Point& a, const Point& b) {
 }
 ```
 
-`operator+` is a non-member friend function that can access the private members of `Vector2` and defines how two `Vector2` objects are added.
+`operator+` is a non-member friend function that can access the private members of `Point` and defines how two `Point` objects are added.
 
 ##### Encapsulation and Abstraction
 
@@ -277,7 +286,7 @@ Public inheritance is the normal choice for polymorphic interfaces. Prefer compo
 
 Construction runs from base to derived. Destruction runs from derived to base.
 
-##### Function and Operator Overloading
+##### Overloading
 
 Function overloading uses the same name for related operations with different parameter lists.
 
@@ -312,7 +321,7 @@ bool operator==(const Point& a, const Point& b) {
 
 Do not overload an operator with surprising meaning. Some operators, including `.`, `::`, `?:`, and `sizeof`, cannot be overloaded.
 
-##### Polymorphism and Virtual Functions
+##### Polymorphism
 
 Runtime polymorphism uses virtual functions through base references or pointers.
 
@@ -378,6 +387,7 @@ A pure virtual function makes a class abstract.
 ```cpp
 class Animal {
 public:
+    virtual ~Animal() = default;
     virtual void makeSound() const = 0;
 };
 ```
@@ -406,7 +416,9 @@ An abstract class cannot be instantiated. A derived class must implement all req
 
 Prefer small interfaces focused on one responsibility.
 
-##### Header Files, Source Files, and Namespaces
+##### Class Files and Namespaces
+
+The general header/source compilation model is covered in `Functions and Memory.md`. For a class, place its declaration in a header and define non-inline member functions in a source file.
 
 Typical class declaration:
 
@@ -481,7 +493,7 @@ Use `#include <...>` for standard library or installed headers:
 #include <vector>
 ```
 
-Use `#include "..."` for project headers:
+Use `#include "..."` for local headers:
 
 ```cpp
 #include "student.hpp"
@@ -676,15 +688,15 @@ std::ofstream output{"value.bin", std::ios::binary};
 output.write(reinterpret_cast<const char*>(&value), sizeof(value));
 ```
 
-Raw binary serialization is not portable across different architectures, compilers, padding rules, or endianness. Define a stable file format for real projects.
+Raw binary serialization is not portable across different architectures, compilers, padding rules, or endianness. Define a stable file format for portable data exchange.
 
-##### Preprocessor and Conditional Compilation
+##### Preprocessor
 
 The preprocessor runs before compilation.
 
 ```cpp
 #include <iostream>
-#define PROJECT_VERSION 2
+#define VERSION 2
 ```
 
 Prefer `constexpr`, inline functions, and templates over function-like macros.
@@ -705,53 +717,9 @@ std::cout << "debug information\n";
 ```
 
 ```cpp
-#if PROJECT_VERSION >= 2
-// version-specific code
+#if VERSION >= 2
+// compiled when VERSION is at least 2
 #endif
 ```
 
 Useful predefined macros include `__FILE__`, `__LINE__`, `__DATE__`, and `__TIME__`.
-
-##### Ownership and Smart Pointers
-
-Exclusive ownership:
-
-```cpp
-#include <memory>
-
-class Book {};
-
-auto book = std::make_unique<Book>();
-```
-
-Transfer ownership with `std::move`.
-
-```cpp
-auto first = std::make_unique<Book>();
-auto second = std::move(first);
-// first is now empty
-```
-
-Shared ownership:
-
-```cpp
-auto shared_book = std::make_shared<Book>();
-auto another_owner = shared_book;
-```
-
-Break ownership cycles with `std::weak_ptr`.
-
-```cpp
-std::weak_ptr<Book> observer = shared_book;
-
-if (auto locked = observer.lock()) {
-    // safely use locked
-}
-```
-
-| Type | Ownership |
-| --- | --- |
-| `std::unique_ptr<T>` | Exactly one owner |
-| `std::shared_ptr<T>` | Reference-counted shared ownership |
-| `std::weak_ptr<T>` | Non-owning observation of a shared object |
-| Raw pointer or reference | Usually non-owning access |

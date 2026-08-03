@@ -1,4 +1,4 @@
-# STL and Common Standard Library
+# Standard Library
 
 [toc]
 
@@ -49,13 +49,7 @@ for (auto iterator = values.rbegin(); iterator != values.rend(); ++iterator) {
 }
 ```
 
-Prefer range-based loops when the iterator itself is not needed.
-
-```cpp
-for (const auto& value : values) {
-    std::cout << value << '\n';
-}
-```
+Use an iterator when its position or iterator operations are needed; otherwise use the range-based loop form covered in `Basic Syntax.md`.
 
 Iterator invalidation depends on the container. In particular, growing a `vector` may invalidate all pointers, references, and iterators to its elements.
 
@@ -156,6 +150,7 @@ values.pop_back();
 `std::list<T>` is a doubly linked list.
 
 ```cpp
+#include <iterator>
 #include <list>
 
 std::list<int> values{1, 2, 3};
@@ -189,7 +184,7 @@ values.reverse();
 
 Do not choose `list` merely because insertion is theoretically `O(1)`; `vector` is often faster because of cache locality.
 
-##### Stack, Queue, and Priority Queue
+##### Container Adapters
 
 These are container adaptors that expose restricted interfaces.
 
@@ -382,7 +377,7 @@ values.erase(
 );
 ```
 
-`std::remove` moves unwanted elements to the end; it does not change container size. In C++20, `std::erase(values, 3)` is simpler for supported containers.
+`std::remove` moves the retained elements toward the beginning and returns the new logical end; it does not change the container size. Elements after the new logical end remain valid but have unspecified values. In C++20, `std::erase(values, 3)` is simpler for supported containers.
 
 Unique adjacent duplicates:
 
@@ -397,7 +392,7 @@ Custom sorting:
 std::sort(values.begin(), values.end(), std::greater<int>{});
 ```
 
-##### Numeric Algorithms and Utilities
+##### Numeric Utilities
 
 ```cpp
 #include <numeric>
@@ -420,27 +415,46 @@ std::cout << student.first << ' ' << student.second << '\n';
 auto [id, name] = student;  // structured binding
 ```
 
-Move an object when ownership or expensive resources should be transferred.
+##### Strings and Streams
+
+`std::string` manages a resizable character sequence.
 
 ```cpp
-std::string source = "Hello, world!";
-std::string destination = std::move(source);  // transfers the string's resources
+#include <string>
+
+std::string first = "Hello";
+std::string second = "World";
+std::string text = first + " " + second;
 ```
 
-After moving, the source remains valid but its value is unspecified. It may be assigned or destroyed safely.
-
-##### Strings and String Streams
-
-Common `std::string` operations:
+Common operations:
 
 ```cpp
-std::string text = "Hello, World!";
-
 bool empty = text.empty();
 std::size_t size = text.size();
+
+text += "!";
+text.append(" Welcome.");
+text.insert(0, "Message: ");
+text.erase(0, 9);
+text.replace(0, 5, "Hi");
+
 std::size_t position = text.find("World");
-std::string part = text.substr(7, 5);  // "World"
-text.replace(7, 5, "C++");           // "Hello, C++!"
+std::string part = text.substr(0, 2);
+```
+
+`operator[]` does not check bounds. `at()` throws `std::out_of_range` for an invalid position.
+
+```cpp
+char first_character = text.at(0);
+```
+
+String-number conversions:
+
+```cpp
+int number = std::stoi("42");
+double value = std::stod("3.14");
+std::string number_text = std::to_string(100);
 ```
 
 Parse formatted text with `std::istringstream`.
@@ -448,16 +462,16 @@ Parse formatted text with `std::istringstream`.
 ```cpp
 #include <sstream>
 
-std::istringstream input{"1.0 2.0 3.0"};
-double x{}, y{}, z{};
-input >> x >> y >> z;
+std::istringstream input{"10 20 30"};
+int a{}, b{}, c{};
+input >> a >> b >> c;
 ```
 
 Build a string with `std::ostringstream`.
 
 ```cpp
 std::ostringstream output;
-output << "point: " << x << ", " << y << ", " << z;
+output << "Value: " << 42;
 std::string result = output.str();
 ```
 
@@ -479,17 +493,46 @@ Formatting flags remain active until changed, except `std::setw`, which applies 
 
 ##### Smart Pointers
 
+Smart pointers express dynamic-object ownership and release their objects automatically.
+
 ```cpp
 #include <memory>
 
 struct Resource {};
-
-auto unique_resource = std::make_unique<Resource>();
-auto shared_resource = std::make_shared<Resource>();
-std::weak_ptr<Resource> weak_resource = shared_resource;
 ```
 
-Use `std::make_unique` and `std::make_shared` rather than writing `new` directly.
+Exclusive ownership uses `std::unique_ptr`:
+
+```cpp
+auto first = std::make_unique<Resource>();
+auto second = std::move(first);  // transfers ownership; first is empty
+```
+
+Shared ownership uses `std::shared_ptr`:
+
+```cpp
+auto shared_resource = std::make_shared<Resource>();
+auto another_owner = shared_resource;
+```
+
+Use `std::weak_ptr` for non-owning observation of an object managed by `shared_ptr`, especially to break ownership cycles.
+
+```cpp
+std::weak_ptr<Resource> observer = shared_resource;
+
+if (auto locked = observer.lock()) {
+    // safely use locked
+}
+```
+
+| Type | Ownership |
+| --- | --- |
+| `std::unique_ptr<T>` | Exactly one owner |
+| `std::shared_ptr<T>` | Reference-counted shared ownership |
+| `std::weak_ptr<T>` | Non-owning observation of a shared object |
+| Raw pointer or reference | Usually non-owning access |
+
+Prefer `std::make_unique` and `std::make_shared` rather than writing `new` directly.
 
 ```cpp
 void useResource(const Resource& resource);              // required non-owning access
@@ -498,9 +541,9 @@ void takeResource(std::unique_ptr<Resource> resource);   // ownership transfer
 void shareResource(std::shared_ptr<Resource> resource);  // shared ownership
 ```
 
-A smart pointer communicates ownership. It is not merely a replacement syntax for every raw pointer.
+Do not use `shared_ptr` merely to avoid deciding ownership. A smart pointer communicates ownership; it is not a replacement syntax for every raw pointer.
 
-##### Container Selection and Complexity
+##### Container Selection
 
 | Requirement | Recommended Container |
 | --- | --- |
@@ -523,7 +566,7 @@ Approximate complexity:
 | `array` | `O(1)` | Not resizable | Not resizable | `O(n)` |
 | `vector` | `O(1)` | Amortized `O(1)` | `O(n)` | `O(n)` |
 | `deque` | `O(1)` | `O(1)` at either end | `O(n)` | `O(n)` |
-| `list` | `O(n)` | `O(1)` | `O(1)` after iterator is known | `O(n)` |
+| `list` | No indexed access | `O(1)` | `O(1)` after iterator is known | `O(n)` |
 | `set` / `map` | No indexed access | — | `O(log n)` | `O(log n)` |
 | `unordered_set` / `unordered_map` | No indexed access | — | Average `O(1)` | Average `O(1)` |
 

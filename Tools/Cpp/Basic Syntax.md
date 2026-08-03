@@ -1,8 +1,8 @@
-# Basic Syntax and Control Flow
+# Basic Syntax
 
 [toc]
 
-##### Program Structure and Compilation
+##### Program Structure
 
 A C++ program starts from `main()`.
 
@@ -38,9 +38,9 @@ C++ is case-sensitive. `value`, `Value`, and `VALUE` are different names.
 An identifier may contain letters, digits, and underscores, but it cannot start with a digit or use a reserved keyword.
 
 ```cpp
-int robot_count = 3;   // valid
-int _index = 0;        // valid, but leading underscores are best avoided
-// int 2robots = 2;    // invalid
+int item_count = 3;    // valid
+int index = 0;         // valid
+// int 2items = 2;     // invalid
 // int class = 1;      // invalid: class is a keyword
 ```
 
@@ -50,14 +50,17 @@ Prefer descriptive names and a consistent style.
 
 ```cpp
 bool ready = true;
-char grade = 'A';
+char grade = 'A';					// single char
+char str1[] = "Hello World!"		// C-string array, ends with '\0', size = len+1
 short small_value = 10;
 int count = 100;
-long long large_value = 1'000'000'000LL;
-unsigned int non_negative = 42U;
-float ratio = 0.5F;
-double distance = 3.14;
-long double precise_value = 3.14L;
+long long large_value = 1'000'000'000LL;	// LL specifies long long literal type
+unsigned int non_negative = 42U;	// U specifies unsigned literal type
+float ratio = 0.5F;					// F specifies float literal, otherwise double
+double distance = 3.14;				// double by default
+long double precise_value = 3.14L;	// L specifies long double literal
+double a = 1.5e3;   				// 1500
+double b = 2E-4;    				// 0.0002
 ```
 
 | Category | Common Types | Notes |
@@ -72,8 +75,15 @@ long double precise_value = 3.14L;
 Use `sizeof` to inspect storage size.
 
 ```cpp
-std::cout << sizeof(int) << '\n';
-std::cout << sizeof(double) << '\n';
+std::cout << sizeof(bool) << '\n';			// 1
+std::cout << sizeof(char) << '\n';			// 1
+std::cout << sizeof(short) << '\n';     	// 2
+std::cout << sizeof(int) << '\n';       	// 4
+std::cout << sizeof(long) << '\n';      	// 4 on Windows, 8 on 64-bit Linux
+std::cout << sizeof(long long) << '\n'; 	// 8
+std::cout << sizeof(float) << '\n';     	// 4
+std::cout << sizeof(double) << '\n';    	// 8
+std::cout << sizeof(long double) << '\n';	// 8 on Windows， 16 on Linux
 ```
 
 For fixed-width integers, use `<cstdint>`.
@@ -85,7 +95,29 @@ std::int32_t id = 100;
 std::uint64_t timestamp = 0;
 ```
 
-##### Initialization, `auto`, and Type Aliases
+##### Escape Sequences
+
+Escape sequences represent special characters inside character and string literals. Each escape sequence begins with a backslash (`\`).
+
+| escape sequence | meaning               |
+| --------------- | --------------------- |
+| `\n`            | newline               |
+| `\t`            | horizontal tab        |
+| `\r`            | carriage return       |
+| `\\`            | backslash             |
+| `\'`            | single quotation mark |
+| `\"`            | double quotation mark |
+| `\0`            | null character        |
+
+```cpp
+std::cout << "Name:\tAlice\n";
+std::cout << "Path: C:\\Users\\Alice\n";
+std::cout << "She said, \"Hello.\"\n";
+```
+
+A backslash must itself be escaped as `\\`. Similarly, quotation marks must be escaped when they would otherwise terminate the surrounding literal.
+
+##### Initialization and Aliases
 
 Prefer initialization when a variable is declared.
 
@@ -109,7 +141,7 @@ int y = static_cast<int>(x);   // explicit conversion, y == 3
 ```cpp
 auto count = 10;          // int
 auto length = 2.5;        // double
-auto name = std::string{"robot"};
+auto name = std::string{"Alice"};
 ```
 
 Use `auto` when the type is obvious or unnecessarily long, not when it hides important meaning.
@@ -121,7 +153,7 @@ typedef unsigned long OldStyleId;
 
 `using` is the preferred modern syntax for type aliases.
 
-##### Scope, Lifetime, and Storage Duration
+##### Scope and Lifetime
 
 A name is visible only within its scope.
 
@@ -149,7 +181,7 @@ int nextId() {
 }
 ```
 
-`extern` declares a variable or function defined in another translation unit.
+`extern` declares a variable or function whose definition is provided elsewhere in the program.
 
 ```cpp
 // config.cpp
@@ -204,6 +236,7 @@ x += 2;
 x -= 1;
 x *= 3;
 x /= 2;
+x %= 2;
 ++x;       // increment first
 x++;       // use old value, then increment
 ```
@@ -213,18 +246,18 @@ Comparison and logical operators:
 ```cpp
 bool equal = (a == b);
 bool different = (a != b);
-bool inside = (a >= 0 && a < 100);
-bool valid = ready || count > 0;
-bool stopped = !ready;
+bool inside = (a >= 0 && a < 100);	// AND
+bool valid = ready || count > 0;	// OR
+bool stopped = !ready;				// NOT
 ```
 
 Bitwise operators work on integer bits.
 
 ```cpp
-unsigned int flags = 0b0011;
-flags |= 0b0100;       // set bits
-flags &= ~0b0010;      // clear bits
-bool enabled = (flags & 0b0001) != 0;
+unsigned int flags = 0b0011U;
+flags |= 0b0100U;       // set bits, flags = 0b0111
+flags &= ~0b0010U;      // clear bits, flags = 0b0101
+bool enabled = (flags & 0b0001U) != 0U;
 ```
 
 Conditional operator:
@@ -262,17 +295,20 @@ if (score >= 90) {
 `switch` is useful for discrete integral or enumeration values.
 
 ```cpp
-enum class Mode { Idle, Run, Walk };
-Mode mode = Mode::Run;
+int choice = 2;
 
-switch (mode) {
-    case Mode::Idle:
+switch (choice) {
+    case 1:
+        std::cout << "Start\n";
         break;
-    case Mode::Run:
-        std::cout << "Run\n";
+    case 2:
+        std::cout << "Settings\n";
         break;
-    case Mode::Walk:
-        std::cout << "Walk\n";
+    case 3:
+        std::cout << "Exit\n";
+        break;
+    default:
+        std::cout << "Invalid choice\n";
         break;
 }
 ```
@@ -284,6 +320,17 @@ A missing `break` causes execution to continue into the next case. Use `[[fallth
 ```cpp
 for (int i = 0; i < 5; ++i) {
     std::cout << i << '\n';
+}
+```
+
+Nested loops can be used for two-dimensional iteration. The following example prints a 9 × 9 multiplication table.
+
+```cpp
+for (int i = 1; i <= 9; ++i) {
+    for (int j = 1; j <= i; ++j) {
+        std::cout << j << " * " << i << " = " << i * j << '\t';
+    }
+    std::cout << '\n';
 }
 ```
 
@@ -323,18 +370,29 @@ for (const int& value : values) {
 }
 ```
 
-`break` exits the nearest loop. `continue` skips the rest of the current iteration.
+`break` exits the nearest loop. `continue` skips the rest of the current iteration. `goto` transfers control to a labeled statement and should be used sparingly.
 
 ```cpp
-for (int i = 0; i < 10; ++i) {
-    if (i == 8) {
-        break;
+for (int row = 1; row <= 3; ++row) {
+    for (int column = 1; column <= 5; ++column) {
+        if (column == 2) {
+            continue;		// Skip the current iteration.
+        }
+
+        if (column == 5) {
+            break;     		// Exit the inner loop.
+        }
+
+        if (row == 3 && column == 4) {
+            goto finished;  // Exit both loops.
+        }
+
+        std::cout << row << ", " << column << '\n';
     }
-    if (i % 2 == 0) {
-        continue;
-    }
-    std::cout << i << '\n';
 }
+
+finished:
+std::cout << "Finished\n";
 ```
 
 ##### Input and Output
@@ -364,7 +422,23 @@ int main() {
 | `std::cerr` | Error output, usually unbuffered |
 | `std::clog` | Log output, usually buffered |
 
-`'\n'` only inserts a newline. `std::endl` inserts a newline and flushes the stream, so avoid unnecessary `std::endl` in performance-sensitive loops.
+`'\n'` is a newline character. Inserting it writes the newline character to the output sequence but does not itself request a flush.
+
+`std::endl` is a standard output-stream manipulator. For an output stream `os`, its effect is equivalent to
+
+```cpp
+os.put(os.widen('\n'));
+os.flush();
+```
+
+Therefore, the two forms differ as follows:
+
+```cpp
+std::cout << '\n';          // inserts a newline
+std::cout << std::endl;     // inserts a newline, then flushes the stream
+```
+
+Use `'\n'` for ordinary line breaks. Use `std::endl` when a newline followed by an immediate flush is specifically required. A stream can also be flushed without inserting a newline by using `std::flush`.
 
 When `std::getline` follows `operator>>`, consume the remaining newline first.
 
