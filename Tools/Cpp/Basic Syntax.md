@@ -24,7 +24,6 @@ int main() {
 | `return 0` | Reports successful termination |
 
 C++ is case-sensitive. `value`, `Value`, and `VALUE` are different names.
-
 ##### Comments, Identifiers, and Keywords
 
 ```cpp
@@ -45,7 +44,6 @@ int index = 0;         // valid
 ```
 
 Prefer descriptive names and a consistent style.
-
 ##### Variables and Fundamental Types
 
 ```cpp
@@ -94,7 +92,6 @@ For fixed-width integers, use `<cstdint>`.
 std::int32_t id = 100;
 std::uint64_t timestamp = 0;
 ```
-
 ##### Escape Sequences
 
 Escape sequences represent special characters inside character and string literals. Each escape sequence begins with a backslash (`\`).
@@ -116,7 +113,6 @@ std::cout << "She said, \"Hello.\"\n";
 ```
 
 A backslash must itself be escaped as `\\`. Similarly, quotation marks must be escaped when they would otherwise terminate the surrounding literal.
-
 ##### Initialization and Aliases
 
 Prefer initialization when a variable is declared.
@@ -152,7 +148,6 @@ typedef unsigned long OldStyleId;
 ```
 
 `using` is the preferred modern syntax for type aliases.
-
 ##### Scope and Lifetime
 
 A name is visible only within its scope.
@@ -192,7 +187,6 @@ extern int max_iterations;
 ```
 
 `register` is obsolete in modern C++ and should not be used.
-
 ##### Constants and Qualifiers
 
 ```cpp
@@ -212,7 +206,6 @@ constexpr int area = square(5);
 ```
 
 `volatile` is mainly for low-level hardware access. It does not make code thread-safe.
-
 ##### Operators
 
 Arithmetic operators:
@@ -277,7 +270,6 @@ Member and scope operators:
 | `*` | Dereference operator or pointer declaration |
 
 Use parentheses when operator precedence is not immediately clear.
-
 ##### Conditional Statements
 
 ```cpp
@@ -314,7 +306,6 @@ switch (choice) {
 ```
 
 A missing `break` causes execution to continue into the next case. Use `[[fallthrough]]` when that behavior is intentional.
-
 ##### Loops
 
 ```cpp
@@ -394,7 +385,6 @@ for (int row = 1; row <= 3; ++row) {
 finished:
 std::cout << "Finished\n";
 ```
-
 ##### Input and Output
 
 ```cpp
@@ -449,7 +439,6 @@ std::cin >> age;
 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 std::getline(std::cin, name);
 ```
-
 ##### Quick Review
 
 ```cpp

@@ -1,4 +1,4 @@
-# Functions and Memory
+# Functions and Arrays
 
 [toc]
 
@@ -35,43 +35,6 @@ Default arguments are normally written in the declaration.
 ```cpp
 void printValue(int value, int width = 4);
 ```
-
-##### Header and Source Files
-
-A header file usually contains function declarations that form an interface. A source file contains the corresponding definitions. Each source file that uses the function includes the header.
-
-```cpp
-// math_utils.hpp
-#pragma once
-
-int add(int a, int b);
-```
-
-```cpp
-// math_utils.cpp
-#include "math_utils.hpp"
-
-int add(int a, int b) {
-    return a + b;
-}
-```
-
-```cpp
-// main.cpp
-#include "math_utils.hpp"
-
-#include <iostream>
-
-int main() {
-    std::cout << add(2, 3) << '\n';
-    return 0;
-}
-```
-
-Each `.cpp` file is compiled separately. Including the same header in both files keeps the declaration consistent with the definition. 
-
-Do not include a `.cpp` file; compile and link it instead. Ordinary non-`inline` functions should normally have one definition in the program. Header-defined `inline` functions and templates are covered in their dedicated sections.
-
 ##### Function Parameters
 
 A **parameter** is a named input in a function declaration or definition. An **argument** is the concrete value or expression supplied by the caller.
@@ -113,25 +76,12 @@ void printName(const std::string& name) {
 }
 ```
 
-Use a pointer parameter when `nullptr` is a meaningful state or pointer arithmetic is required.
-
-```cpp
-void reset(int* value) {
-    if (value != nullptr) {
-        *value = 0;
-    }
-}
-```
-
-Practical rule:
-
 | Need | Preferred Parameter |
 | --- | --- |
 | Small independent value | `T value` |
-| Read a large object | `const T& value` |
-| Modify a required object | `T& value` |
 | Optional object | `T* value` |
-
+| Modify a required object | `T& value` |
+| Read a large object | `const T& value` |
 ##### Function Features
 
 Returning by value is normally efficient because compilers apply copy elision and move semantics.
@@ -192,7 +142,71 @@ auto modifyScale = [&scale]() {
 | `[&]` | Capture used local variables by reference |
 
 Avoid returning a lambda that holds references to local variables that have already been destroyed.
+##### Header and Source Files
 
+A header file usually contains declarations that form an interface. A source file contains the corresponding definitions. Do not include a `.cpp` file; compile and link it instead.
+
+A header may be included more than once through direct or indirect inclusion. Use either `#pragma once` or an include guard to prevent repeated inclusion.
+
+```cpp
+// math_utils.hpp
+#pragma once
+
+namespace math_utils {
+
+int add(int a, int b);
+
+}  // namespace math_utils
+```
+
+The standard preprocessor alternative is an include guard:
+
+```cpp
+// math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+
+namespace math_utils {
+
+int add(int a, int b);
+
+}  // namespace math_utils
+
+#endif  // MATH_UTILS_HPP
+```
+
+`#pragma once` is shorter and widely supported, but it is not part of the C++ standard. An include guard is a standard preprocessor technique, and its macro name must be unique. Normally, use one method rather than both.
+
+In project code, place declarations in a named namespace in the header and their definitions in the same namespace in the source file. The source file should include its matching header first. 
+
+Do not write `using namespace ...;` in a header. Names used only within one source file may be placed in an unnamed namespace in that `.cpp` file.
+
+```cpp
+// math_utils.cpp
+#include "math_utils.hpp"
+
+namespace math_utils {
+
+int add(int a, int b) {
+    return a + b;
+}
+
+}  // namespace math_utils
+```
+
+```cpp
+// main.cpp
+#include "math_utils.hpp"
+
+#include <iostream>
+
+int main() {
+    std::cout << math_utils::add(2, 3) << '\n';
+    return 0;
+}
+```
+
+Each `.cpp` file is compiled separately. Including the same header in the source file and its users keeps the declaration consistent with the definition.
 ##### Math and Randomness
 
 Use `<cmath>` for mathematical functions.
@@ -201,13 +215,13 @@ Use `<cmath>` for mathematical functions.
 #include <cmath>
 
  double x = 9.0;
- double root = std::sqrt(x);
- double power = std::pow(2.0, 3.0);
+ double root = std::sqrt(x);        // 3.0
+ double power = std::pow(2.0, 3.0); // 8.0
  double angle = std::sin(3.1415926 / 2.0);
- double rounded = std::round(3.6);
- double lower = std::floor(3.6);
- double upper = std::ceil(3.2);
- double absolute = std::abs(-5.0);
+ double rounded = std::round(3.6);  // 4.0
+ double lower = std::floor(3.6);    // 3.0
+ double upper = std::ceil(3.2);     // 4.0
+ double absolute = std::abs(-5.0);	// 5.0
 ```
 
 Floating-point values are approximate. Do not usually compare them with exact equality.
@@ -227,7 +241,6 @@ std::mt19937 engine{std::random_device{}()};
 std::uniform_int_distribution<int> distribution(1, 6);
 int dice = distribution(engine);
 ```
-
 ##### Arrays
 
 An array is a sequence of objects of the **same type** that occupy a **contiguous area** of memory.
@@ -391,7 +404,6 @@ std::cout << static_cast<const void*>(first_element_address) << '\n';
 ```
 
 In most expressions, `matrix` is converted to a pointer to its first row. `&matrix[0][0]` is the address of the first `int` element. Both addresses have the same numeric location but different pointer types.
-
 ##### Strings
 
 A C-style string is a null-terminated character array. Its storage is an array whose capacity must be managed explicitly.
@@ -419,150 +431,6 @@ std::string cpp_text = "hello";
 | Buffer size and termination require explicit care | Storage and termination are managed automatically |
 
 Prefer `std::string` for ordinary string handling. Its operations, conversions, and string streams are covered in `Standard Library.md`.
-
-##### Pointers
-
-A pointer stores an address.
-
-```cpp
-int value = 10;
-int* pointer = &value;
-
-std::cout << pointer << '\n';   // address
-std::cout << *pointer << '\n';  // pointed-to value
-
-*pointer = 20;
-```
-
-Use `nullptr` for a null pointer.
-
-```cpp
-int* pointer = nullptr;
-
-if (pointer != nullptr) {
-    std::cout << *pointer << '\n';
-}
-```
-
-Pointer constness:
-
-```cpp
-int a = 1;
-int b = 2;
-
-const int* p1 = &a;       // pointer to const int
-int* const p2 = &a;       // const pointer to int
-const int* const p3 = &a; // const pointer to const int
-```
-
-Object member access:
-
-```cpp
-struct Point {
-    double x;
-    double y;
-};
-
-Point point{1.0, 2.0};
-Point* point_ptr = &point;
-
-point_ptr->x = 3.0;       // equivalent to (*point_ptr).x
-```
-
-Pointer arithmetic is mainly appropriate for contiguous arrays. Do not dereference null, dangling, or out-of-range pointers.
-
-##### References
-
-A reference is an alias for an existing object and must be initialized.
-
-```cpp
-int value = 10;
-int& reference = value;
-
-reference = 20;
-std::cout << value << '\n';
-```
-
-A const reference can bind to temporary values.
-
-```cpp
-const std::string& text = std::string{"hello"};
-```
-
-| Reference | Main Use |
-| --- | --- |
-| `T&` | Modify an existing object |
-| `const T&` | Read without copying |
-| `T&&` | Bind to temporary objects and support move semantics |
-
-For basic review, understand `T&&` as an rvalue reference used by move-aware code. Most direct uses appear in library or generic code.
-
-##### Dynamic Memory and RAII
-
-Manual allocation:
-
-```cpp
-int* value = new int{10};
-delete value;
-value = nullptr;
-```
-
-Dynamic array:
-
-```cpp
-std::size_t size = 5;
-int* values = new int[size]{};
-
-delete[] values;
-values = nullptr;
-```
-
-Common errors include memory leaks, double deletion, use-after-free, and mismatching `new[]` with `delete`.
-
-Modern C++ uses Resource Acquisition Is Initialization (RAII): a resource is owned by an object and released automatically by its destructor. Prefer standard containers for dynamic sequences and the ownership types described in `Standard Library.md` instead of manual `new` and `delete`.
-
-##### Structs, Enums, and Unions
-
-A `struct` groups related data.
-
-```cpp
-struct Point {
-    double x{};
-    double y{};
-
-    double squaredNorm() const {
-        return x * x + y * y;
-    }
-};
-
-Point point{1.0, 2.0};
-```
-
-Access defaults and constructor initialization are covered with classes in `OOP and Advanced C++.md`.
-
-Prefer scoped enumerations.
-
-```cpp
-enum class State {
-    Idle,
-    Running,
-    Failed
-};
-
-State state = State::Running;
-```
-
-A union stores different members in the same memory. Only one member is normally active at a time.
-
-```cpp
-union Number {
-    int integer;
-    float decimal;
-};
-```
-
-For type-safe alternatives, prefer `std::variant` when available.
-
 ##### Date and Time
 
 C-style time utilities are provided by `<ctime>`.
