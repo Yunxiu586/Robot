@@ -19,8 +19,8 @@ std::cout << *pointer << '\n';  // Pointed-to value
 In a declaration, `*` declares a pointer; in an expression, it dereferences a pointer.
 
 ```cpp
-int* pointer = nullptr;	// Pointer declaration
-// int value = *pointer; // Pointer dereference
+int* pointer = nullptr;		// Pointer declaration
+// int value = *pointer; 	// Pointer dereference
 ```
 
 `nullptr` is a null pointer constant convertible to any pointer type. Use it when a pointer does not refer to an object. A null pointer points to no object or function, and dereferencing it has undefined behavior.
@@ -135,29 +135,88 @@ int main() {
 Pointer arithmetic is valid only within the same array and one position past its end. Do not dereference null, invalid, dangling, out-of-range, or one-past-the-end pointers.
 ##### References
 
-A reference is an alias for an existing object and must be initialized.
+A reference is an alias for an existing object. It must be initialized, and it cannot later be changed to refer to another object. Assignment through a reference modifies the referred-to object.
 
 ```cpp
 int value = 10;
+int another = 20;
+
+// int& reference;       // Error: no initializer
 int& reference = value;
 
-reference = 20;
-std::cout << value << '\n';
+reference = another;     // Assigns 20 to value; does not rebind reference
+std::cout << value << '\n';  // 20
 ```
 
-A const reference can bind to temporary values.
+A const reference provides read-only access through the reference. It is commonly used for function parameters that should not copy or modify an argument.
 
 ```cpp
-const std::string& text = std::string{"hello"};
+void printText(const std::string& text) {
+    std::cout << text << '\n';
+    // text += "!";  // Error: text is read-only
+}
 ```
 
-| Reference | Main Use |
-| --- | --- |
-| `T&` | Modify an existing object |
-| `const T&` | Read without copying |
-| `T&&` | Bind to temporary objects and support move semantics |
+A non-const lvalue reference cannot bind to a temporary. A const lvalue reference and an rvalue reference can bind to a temporary, extending its lifetime to the lifetime of the reference.
 
-For basic review, understand `T&&` as an rvalue reference used by move-aware code. Most direct uses appear in library or generic code.
+```cpp
+int value = 10;
+
+int& lvalue_reference = value;       // Binds to a modifiable lvalue
+// int& invalid = 10;                // Error: cannot bind to a temporary
+
+const int& const_reference = 10;     // Binds to a read-only temporary
+int&& rvalue_reference = 10;         // Binds to a modifiable temporary
+// int&& invalid = value;            // Error: cannot bind to an lvalue
+
+lvalue_reference = 20;
+rvalue_reference = 30;
+// const_reference = 20;             // Error: read-only
+```
+
+A function may return a reference to an existing object whose lifetime continues after the call. A call to a function returning `T&` is an lvalue, so it can appear on the left side of an assignment.
+
+```cpp
+int& larger(int& first, int& second) {
+    return first > second ? first : second;
+}
+
+int first = 10;
+int second = 20;
+
+larger(first, second) = 0;  // Modifies second
+```
+
+Do not return a reference to a local automatic variable because the object is destroyed when the function returns.
+
+```cpp
+int& invalidReference() {
+    int value = 10;
+    return value;  // Wrong: returns a dangling reference
+}
+```
+
+```cpp
+int& validReference() {
+    static int value = 10;
+    return value;  // Correct: value has static storage duration
+}
+```
+
+For understanding, a reference has non-reseatable behavior similar to a const pointer.
+
+```cpp
+int value = 10;
+
+int& reference = value;
+int* const pointer = &value;
+
+reference = 20;  // Modifies value directly
+*pointer = 30;   // Requires explicit dereferencing
+```
+
+References provide alias syntax without explicit dereferencing. They are commonly used to modify caller-owned objects, avoid copies with `const T&`, and return existing objects.
+
 ##### Structs, Enums, and Unions
 
 A `struct` defines a user-defined type that groups related members. Its members are public by default.

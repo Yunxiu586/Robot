@@ -30,14 +30,9 @@ int add(int a, int b) {  // definition
 }
 ```
 
-Default arguments are normally written in the declaration.
-
-```cpp
-void printValue(int value, int width = 4);
-```
 ##### Function Parameters
 
-A **parameter** is a named input in a function declaration or definition. An **argument** is the concrete value or expression supplied by the caller.
+A **parameter** is an input declared in a function declaration or definition. An **argument** is the concrete value or expression supplied by the caller.
 
 ```cpp
 int add(int a, int b) {  // a and b are parameters
@@ -66,6 +61,11 @@ Pass by reference can modify the caller's object.
 void increment(int& value) {
     ++value;
 }
+
+int number = 5;
+increment(number);
+
+std::cout << number << '\n';	// 6
 ```
 
 Pass by const reference avoids copying and prevents modification.
@@ -82,7 +82,79 @@ void printName(const std::string& name) {
 | Optional object | `T* value` |
 | Modify a required object | `T& value` |
 | Read a large object | `const T& value` |
-##### Function Features
+
+A **default argument** is used when a trailing argument is omitted. After a parameter has a default argument, each following parameter must also have one.
+
+With separate declaration and definition, place default arguments in the declaration and do not repeat them in the definition.
+
+```cpp
+void printValue(int value, int width = 4, char fill = ' ');
+
+void printValue(int value, int width, char fill) {
+    std::cout << fill << value << ' ' << width << '\n';
+}
+
+printValue(10);
+printValue(10, 6);
+printValue(10, 6, '0');
+
+// void invalid(int value = 0, int width);  // Error
+```
+
+A parameter name may be omitted when the function does not use it. The argument is still required unless the unnamed parameter has a default argument.
+
+```cpp
+void printMessage(const std::string& message, int = 0);
+
+void printMessage(const std::string& message, int) {
+    std::cout << message << '\n';
+}
+
+printMessage("Hello");
+printMessage("Hello", 1);
+```
+##### Function Overloading
+
+Function overloading reuses one function name for related operations. Overloads are declared in the same scope and differ in parameter count, type, or order. Return type alone cannot distinguish overloads.
+
+```cpp
+void func(int value);
+void func(double value);
+void func(int value, int count);
+void func(int value, double scale);
+void func(double scale, int value);
+
+// double func(int value);  // Error: differs only by return type
+```
+
+Reference types can distinguish overloads.
+
+```cpp
+void show(int& value) {
+    std::cout << "modifiable: " << value << '\n';
+}
+
+void show(const int& value) {
+    std::cout << "read-only: " << value << '\n';
+}
+
+int value = 10;
+const int limit = 20;
+
+show(value);  // modifiable: 10
+show(limit);  // read-only: 20
+show(30);     // read-only: 30
+```
+
+Default arguments can make an overloaded call ambiguous. Avoid such overload sets.
+
+```cpp
+void display(int value);
+void display(int value, int width = 4);
+
+// display(10);  // Error: ambiguous call
+```
+##### Return by Value
 
 Returning by value is normally efficient because compilers apply copy elision and move semantics.
 
@@ -91,14 +163,7 @@ std::string makeGreeting() {
     return "Hello";
 }
 ```
-
-A function defined inside a class body is implicitly `inline`. `inline` also allows identical definitions in multiple translation units, which is useful for small header-defined functions.
-
-```cpp
-inline int square(int x) {
-    return x * x;
-}
-```
+##### Recursion
 
 Recursion requires a base case.
 
@@ -110,6 +175,7 @@ int factorial(int n) {
     return n * factorial(n - 1);
 }
 ```
+##### Lambda Expressions
 
 A lambda is an unnamed function.
 
@@ -207,6 +273,52 @@ int main() {
 ```
 
 Each `.cpp` file is compiled separately. Including the same header in the source file and its users keeps the declaration consistent with the definition.
+
+##### Inline Functions
+
+An `inline` function may have identical definitions in multiple translation units. This allows a small function definition to be placed in a header included by several source files.
+
+```cpp
+// math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+
+namespace math_utils {
+
+inline int square(int value) {
+	return value * value;
+}
+
+}  // namespace math_utils
+
+#endif  // MATH_UTILS_HPP
+```
+
+```cpp
+// area.cpp
+#include "math_utils.hpp"
+
+int squareArea(int side) {
+	return math_utils::square(side);
+}
+```
+
+```cpp
+// main.cpp
+#include "math_utils.hpp"
+
+#include <iostream>
+
+int main() {
+	std::cout << math_utils::square(5) << '\n';
+	return 0;
+}
+```
+
+Both source files include the header, so the definition of `square` appears in both translation units. `inline` permits these identical definitions; without it, defining a non-`inline` function in the header would cause a multiple-definition error when the program is linked.
+
+A member function defined inside a class body is implicitly `inline`. The keyword does not require the compiler to expand the function call; inlining as an optimization is decided by the compiler.
+
 ##### Math and Randomness
 
 Use `<cmath>` for mathematical functions.
