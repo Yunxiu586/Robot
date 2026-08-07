@@ -8012,13 +8012,13 @@ Not a number: nan
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">2.25</span>
 <span class="n">y</span> <span class="o">=</span> <span class="mf">4.9</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ceil(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Round upward</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"floor(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Round downward</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"trunc(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">trunc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Remove the fractional part</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ceil(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Smallest integer greater than or equal to x</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"floor(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Largest integer less than or equal to x</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"trunc(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">trunc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Integer part of x, rounded toward zero</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fabs(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Absolute value</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"sqrt(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Square root</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pow(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Raise x to the power y</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"exp(2) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Raise e to the power x</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"exp(2) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Raise e to the given power</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ln(e) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Natural logarithm</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"log10(100) = </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Base-10 logarithm</span>
 </pre></div>
@@ -8217,7 +8217,7 @@ factorial(5) = 120
 <div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># choice(seq) returns a random element from a sequence</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># choice(seq) returns a randomly selected element from a non-empty sequence</span>
 <span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"apple"</span><span class="p">,</span> <span class="s2">"banana"</span><span class="p">,</span> <span class="s2">"orange"</span><span class="p">,</span> <span class="s2">"grape"</span><span class="p">,</span> <span class="s2">"strawberry"</span><span class="p">]</span>
 <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">fruits</span><span class="p">)</span>
 </pre></div>
@@ -8245,7 +8245,7 @@ factorial(5) = 120
 <div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># shuffle(seq) shuffles a sequence in place</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># shuffle(seq) shuffles a mutable sequence in place</span>
 <span class="n">cards</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Ace of Hearts"</span><span class="p">,</span> <span class="s2">"King of Spades"</span><span class="p">,</span> <span class="s2">"Queen of Diamonds"</span><span class="p">,</span> <span class="s2">"Jack of Clubs"</span><span class="p">,</span> <span class="s2">"Ten of Hearts"</span><span class="p">]</span>
 <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span>
@@ -8275,7 +8275,7 @@ factorial(5) = 120
 <div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># sample(population, k) selects k unique elements</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># sample(population, k) performs random sampling without replacement</span>
 <span class="n">numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
 <span class="n">selected</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
@@ -8305,7 +8305,7 @@ factorial(5) = 120
 <div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># randrange(start, stop, step) returns a random value from the specified range</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># randrange(start, stop, step) returns a randomly selected element from range(start, stop, step)</span>
 <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -8332,7 +8332,7 @@ factorial(5) = 120
 <div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize the random number generator</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize the random number generator's internal state</span>
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -8809,8 +8809,8 @@ name 'undefined_name' is not defined &lt;class 'NameError'&gt;
 <div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># The else clause runs when no exception occurs</span>
-<span class="c1"># The finally clause always runs</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># The else clause runs if the try clause completes without raising an exception</span>
+<span class="c1"># The finally clause executes whether or not an exception occurs</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Hello, world!"</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -8847,7 +8847,7 @@ This block always runs
 <div class="jp-InputPrompt jp-InputArea-prompt">In [30]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Exceptions propagate through function calls until they are handled</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># An unhandled exception in a function propagates to its caller</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">divide_by_zero</span><span class="p">():</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span>
 

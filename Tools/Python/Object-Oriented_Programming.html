@@ -7810,13 +7810,14 @@ a.anchor-link {
 <span class="sd">    class attributes</span>
 <span class="sd">    methods</span>
 
-<span class="sd">A method is a function defined inside a class.</span>
+<span class="sd">A method is a function associated with an object through its class.</span>
 
 <span class="sd">def method_name(self, parameter1, parameter2, ...):</span>
 <span class="sd">    method body</span>
 
-<span class="sd">self refers to the current instance and is passed automatically when the method is called.</span>
-<span class="sd">Instance attributes are accessed through self inside methods.</span>
+<span class="sd">self is the conventional name for the instance parameter.</span>
+<span class="sd">When a method is called through an instance, that instance is supplied as the first argument.</span>
+<span class="sd">Instance attributes are commonly accessed through self inside methods.</span>
 <span class="sd">'''</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -7843,7 +7844,7 @@ a.anchor-link {
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s1">Age: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">msg_print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>  <span class="c1"># Arguments supplied by the caller do not use self</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>  <span class="c1"># When called through an instance, self is supplied automatically</span>
 </pre></div>
 </div>
 </div>
@@ -7976,10 +7977,10 @@ This is a message
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="sd">'''</span>
-<span class="sd">Constructor</span>
+<span class="sd">Instance Initialization</span>
 
-<span class="sd">The __init__() method runs automatically when an instance is created.</span>
-<span class="sd">Arguments passed to the class are passed to __init__().</span>
+<span class="sd">When a class defines __init__(), class instantiation automatically invokes it for the newly created instance.</span>
+<span class="sd">Arguments passed to the class call are passed to __init__() after the instance argument.</span>
 <span class="sd">'''</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -8068,7 +8069,7 @@ This is a message
 <div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">contact1</span><span class="p">))</span>  <span class="c1"># The default representation includes the class and object identity</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">contact1</span><span class="p">))</span>  <span class="c1"># object.__str__() calls object.__repr__() by default</span>
 <span class="c1"># Special methods</span>
 </pre></div>
 </div>
@@ -8326,7 +8327,7 @@ Alice is at most as old as Bob: False
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="sd">'''</span>
-<span class="sd">Three main object-oriented programming concepts</span>
+<span class="sd">Object-oriented programming concepts</span>
 
 <span class="sd">Encapsulation, inheritance, and polymorphism</span>
 
@@ -8355,7 +8356,7 @@ Alice is at most as old as Bob: False
 <li><code>_name</code> marks a non-public name and is not imported by <code>from module import *</code></li>
 <li><code>name_</code> avoids conflicts with Python keywords</li>
 <li><code>__name</code> triggers name mangling for a class attribute</li>
-<li><code>__name__</code> is reserved for system-defined special names, such as <code>__version__</code></li>
+<li><code>__name__</code> uses leading and trailing double underscores for special names defined by Python, such as <code>__init__</code> and <code>__str__</code></li>
 </ul>
 </div>
 </div>
@@ -9003,12 +9004,10 @@ Phone1 5G calling is enabled
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Type annotations</span>
-<span class="c1"># Help IDEs infer types and provide code completion</span>
-<span class="c1"># Help developers record the expected types of variables</span>
-<span class="c1"># The Python runtime does not enforce function and variable type annotations</span>
+<span class="c1"># Annotations provide type information that can be used by type checkers, IDEs, and other tools</span>
+<span class="c1"># Python does not enforce function or variable annotations at runtime</span>
 
 <span class="c1"># Variable annotations</span>
-<span class="c1"># Obvious built-in types usually do not require explicit annotations</span>
 <span class="n">var_1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">var_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.14</span>
 <span class="n">var_3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
@@ -9175,7 +9174,7 @@ Phone1 5G calling is enabled
 <span class="sd">A function can operate on any object that provides the required methods; inheritance is not required.</span>
 
 <span class="sd">An abstract base class defines a common interface with abstract methods.</span>
-<span class="sd">A class with unimplemented abstract methods cannot be instantiated.</span>
+<span class="sd">A class with abstract methods cannot be instantiated until all abstract methods and properties are overridden.</span>
 <span class="sd">'''</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -9196,12 +9195,12 @@ Phone1 5G calling is enabled
 <span class="k">class</span><span class="w"> </span><span class="nc">Animal</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""All animals can make sounds"""</span><span class="p">;</span>
+<span class="w">        </span><span class="sd">"""Produce the animal's sound"""</span><span class="p">;</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""All animals can move"""</span><span class="p">;</span>
+<span class="w">        </span><span class="sd">"""Perform the animal's movement"""</span><span class="p">;</span>
         <span class="k">pass</span>
 </pre></div>
 </div>

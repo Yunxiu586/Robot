@@ -7854,7 +7854,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Literals are values written directly in source code</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Literals are notations for constant values written directly in source code</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Hello, Python!"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
@@ -8764,23 +8764,23 @@ No result
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="sd">'''</span>
 <span class="sd">Functions</span>
-<span class="sd">A reusable block of code organized to perform a specific task</span>
+<span class="sd">A function groups reusable statements under a name.</span>
 
 <span class="sd">Function definition</span>
 <span class="sd">def function_name(parameters):</span>
 <span class="sd">    function_body</span>
 <span class="sd">    return value</span>
 
-<span class="sd">return ends the function call, so statements after it are not executed</span>
+<span class="sd">return leaves the current function call and optionally returns a value.</span>
 
 <span class="sd">Function call</span>
 <span class="sd">function_name(arguments)</span>
 
 <span class="sd">Function encapsulation</span>
-<span class="sd">Wrap code that performs a specific task in a separate function</span>
+<span class="sd">Group statements that perform a related task in a separate function.</span>
 
 <span class="sd">Function generalization</span>
-<span class="sd">Use parameters so the same function can process different inputs</span>
+<span class="sd">Use parameters so the same function can operate on different argument values.</span>
 <span class="sd">'''</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -8802,7 +8802,7 @@ No result
 <span class="sd">    :param y: subtrahend</span>
 <span class="sd">    :return: difference</span>
 <span class="sd">    """</span>
-    <span class="c1"># The string at the start of the function body is its documentation string</span>
+    <span class="c1"># A string literal as the first statement of a function body is its docstring</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>
     <span class="k">return</span> <span class="n">z</span>
 
@@ -8840,8 +8840,8 @@ No result
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">hi</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"A function without an explicit return returns </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">, whose type is </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="c1"># None represents the absence of a value</span>
-<span class="c1"># None can be a function return value, be used in a Boolean test, or be assigned to a variable</span>
+<span class="c1"># None is commonly used to represent the absence of a value</span>
+<span class="c1"># None is false in a Boolean context</span>
 <span class="k">while</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"None is false in a Boolean context"</span><span class="p">)</span>
     <span class="k">break</span>
@@ -8965,7 +8965,7 @@ None is false in a Boolean context
     <span class="n">f1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
     <span class="n">f2</span> <span class="o">=</span> <span class="s2">"xyz"</span>
     <span class="n">f3</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span>
-    <span class="k">return</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span>  <span class="c1"># Multiple return values may have different types</span>
+    <span class="k">return</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span>  <span class="c1"># Comma-separated return values are packed into a tuple</span>
 
 
 <span class="n">a0</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">c0</span> <span class="o">=</span> <span class="n">muti_return</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -9001,7 +9001,7 @@ None is false in a Boolean context
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Positional arguments</span>
-<span class="c1"># The arguments must match the parameters in order and number</span>
+<span class="c1"># Positional arguments are assigned to parameters in order</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">user_info1</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">gender</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Name: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, age: </span><span class="si">{</span><span class="n">age</span><span class="si">}</span><span class="s2">, gender: </span><span class="si">{</span><span class="n">gender</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
@@ -9033,10 +9033,9 @@ None is false in a Boolean context
 <div class="jp-InputPrompt jp-InputArea-prompt">In [31]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Keyword arguments</span>
-<span class="c1"># key=value</span>
-<span class="c1"># Positional arguments must precede keyword arguments</span>
-<span class="c1"># Keyword arguments may be given in any order</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Keyword arguments use the name=value form</span>
+<span class="c1"># Positional arguments must precede keyword arguments in a call</span>
+<span class="c1"># Keyword arguments can be supplied in any order</span>
 <span class="n">user_info1</span><span class="p">(</span><span class="s2">"Liz"</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s2">"female"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -9064,13 +9063,13 @@ None is false in a Boolean context
 <div class="jp-InputPrompt jp-InputArea-prompt">In [32]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Default arguments</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">user_info2</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s2">"male"</span><span class="p">):</span>  <span class="c1"># Parameters with defaults must follow parameters without defaults</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Default argument values</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">user_info2</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s2">"male"</span><span class="p">):</span>  <span class="c1"># Parameters with defaults follow required positional-or-keyword parameters</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Name: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, age: </span><span class="si">{</span><span class="n">age</span><span class="si">}</span><span class="s2">, gender: </span><span class="si">{</span><span class="n">gender</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="n">user_info2</span><span class="p">(</span><span class="s2">"Tim"</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
-<span class="n">user_info2</span><span class="p">(</span><span class="s2">"Emmy"</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">"female"</span><span class="p">)</span>  <span class="c1"># Override the default value</span>
+<span class="n">user_info2</span><span class="p">(</span><span class="s2">"Emmy"</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">"female"</span><span class="p">)</span>  <span class="c1"># Supply a value instead of using the default</span>
 </pre></div>
 </div>
 </div>
@@ -9168,7 +9167,7 @@ Name: Emmy, age: 20, gender: female
 <div class="jp-InputPrompt jp-InputArea-prompt">In [35]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Anonymous function</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Passing a function as an argument</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">func12</span><span class="p">(</span><span class="n">compute</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">compute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># The data is fixed; the operation is passed in</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Argument type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">compute</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -9179,7 +9178,7 @@ Name: Emmy, age: 20, gender: female
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 
 
-<span class="c1"># A function can be passed as an argument</span>
+<span class="c1"># Function objects can be passed as arguments</span>
 <span class="n">func12</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -9209,7 +9208,7 @@ func12 result: 3
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Lambda expression</span>
-<span class="c1"># A lambda expression creates a small anonymous function for temporary use</span>
+<span class="c1"># Lambda expressions create anonymous functions restricted to a single expression</span>
 <span class="c1"># lambda parameters: expression</span>
 <span class="n">func12</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
