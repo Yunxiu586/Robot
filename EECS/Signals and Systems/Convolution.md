@@ -12,11 +12,11 @@ $$
 (f*g)(t)=\int_{-\infty}^{\infty}f(\tau)g(t-\tau)d\tau
 $$
 
-Equal-width rectangular pulses convolve to a triangular pulse
+Equal-width rectangular pulses convolve to a triangular pulse.
 
 <img src="../../Figures/Convolution_equal_rectangles.png" alt="Equal rectangular-pulse convolution" style="zoom: 50%;" />
 
-Unequal-width rectangular pulses convolve to a trapezoidal pulse
+Unequal-width rectangular pulses convolve to a trapezoidal pulse.
 
 <img src="../../Figures/Convolution_unequal_rectangles.png" alt="Unequal rectangular-pulse convolution" style="zoom:50%;" />
 
@@ -134,7 +134,7 @@ $$
 N_1+N_2-1
 $$
 
-The lower and upper indices of the output are the sums of the corresponding lower and upper indices of the inputs
+The lower and upper indices of the output are the sums of the corresponding lower and upper indices of the inputs.
 
 ##### Example
 
@@ -154,7 +154,7 @@ $$
 y[n]=x[n]*h[n]=\{3,5,9,1,-1,-3,1\}
 $$
 
-The same result follows from the table expansion
+The same result follows from the table expansion.
 
 $$
 y[n]=3x[n+1]+2x[n]+x[n-1]-x[n-2]
@@ -176,7 +176,7 @@ $$
 
 ##### Cross-correlation and autocorrelation
 
-Correlation measures similarity under relative shift
+Correlation measures similarity under relative shift.
 
 $$
 r_{xy}[m]=\sum_{n=-\infty}^{\infty}x[n]y^*[n-m]
@@ -204,7 +204,7 @@ $$
 r_x[m]=r_x[-m]
 $$
 
-The autocorrelation value at the origin is the signal energy
+The autocorrelation value at the origin is the signal energy.
 
 $$
 r_x[0]=\sum_{n=-\infty}^{\infty}|x[n]|^2
@@ -242,7 +242,7 @@ $$
 x[n]\circledast_N h[n]=x[n]*h[n]
 $$
 
-within the chosen principal interval. If $N<N_1+N_2-1$, the linear-convolution result wraps around
+within the chosen principal interval. If $N<N_1+N_2-1$, the linear-convolution result wraps around.
 
 $$
 y_c[n]=\sum_{r=-\infty}^{\infty}y_l[n-rN]
@@ -250,13 +250,13 @@ $$
 
 ##### DFT relation
 
-Circular convolution corresponds to multiplication in the DFT domain
+Circular convolution corresponds to multiplication in the DFT domain.
 
 $$
 x[n]\circledast_N h[n]\xleftrightarrow{\mathrm{DFT}}X[k]H[k]
 $$
 
-Pointwise multiplication in time corresponds to circular convolution in frequency
+Pointwise multiplication in time corresponds to circular convolution in frequency.
 
 $$
 x[n]h[n]\xleftrightarrow{\mathrm{DFT}}\frac{1}{N}X[k]\circledast_N H[k]
@@ -311,7 +311,7 @@ $$
 x_1[n]\circledast_5 x_2[n]=\{3,7,5,5,4\}
 $$
 
-These circular results can be obtained by wrapping the linear convolution
+These circular results can be obtained by wrapping the linear convolution.
 
 $$
 y_l[n]=\{2,6,5,5,4,1,1\}

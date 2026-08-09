@@ -22,13 +22,13 @@ $$
 N=2^L
 $$
 
-For $N=8$, the DFT can first be split into even and odd indexed samples
+For $N=8$, the DFT can first be split into even and odd indexed samples.
 
 $$
 X[k]=\sum_{r=0}^{3}x[2r]W_4^{rk}+W_8^k\sum_{r=0}^{3}x[2r+1]W_4^{rk}
 $$
 
-The subsequences are then split again until only two-point butterflies remain
+The subsequences are then split again until only two-point butterflies remain.
 
 $$
 \{0,2,4,6\}\rightarrow\{0,4\},\{2,6\}
@@ -60,7 +60,7 @@ $$
 
 ##### Even-odd decomposition
 
-Split the input into even-index and odd-index subsequences
+Split the input into even-index and odd-index subsequences.
 
 $$
 x_1[r]=x[2r]
@@ -82,7 +82,7 @@ $$
 X[k]=X_1[k]+W_N^kX_2[k]
 $$
 
-where $X_1[k]$ and $X_2[k]$ are $N/2$-point DFTs
+where $X_1[k]$ and $X_2[k]$ are $N/2$-point DFTs.
 
 For $k=0,1,\ldots,N/2-1$
 
@@ -100,7 +100,7 @@ $$
 
 ##### Complexity and storage
 
-An $N=2^L$ FFT has $L$ stages. Each stage has $N/2$ butterflies
+An $N=2^L$ FFT has $L$ stages. Each stage has $N/2$ butterflies.
 
 Complex multiplications
 
@@ -120,9 +120,9 @@ $$
 O(N\log N)
 $$
 
-Because each butterfly output can overwrite its input locations, radix-2 FFT supports in-place computation with $O(N)$ storage
+Because each butterfly output can overwrite its input locations, radix-2 FFT supports in-place computation with $O(N)$ storage.
 
-The DIT radix-2 input order is bit reversed and the output order is natural
+The DIT radix-2 input order is bit reversed and the output order is natural.
 
 For $N=8$, bit reversal gives
 
@@ -137,7 +137,7 @@ For $N=8$, bit reversal gives
 | 6 | 110 | 011 | 3 |
 | 7 | 111 | 111 | 7 |
 
-For one butterfly, there is one complex multiplication and two complex additions. Therefore each stage has $N/2$ multiplications and $N$ additions
+For one butterfly, there is one complex multiplication and two complex additions. Therefore each stage has $N/2$ multiplications and $N$ additions.
 
 ### Decimation in Frequency FFT
 
@@ -175,7 +175,7 @@ $$
 
 <img src="../../Figures/FFT_DIF_butterfly.svg" alt="DIF butterfly" style="zoom:36%;" />
 
-For radix-2 DIF, the input order is natural and the output order is bit reversed. This is the opposite ordering pattern of radix-2 DIT
+For radix-2 DIF, the input order is natural and the output order is bit reversed. This is the opposite ordering pattern of radix-2 DIT.
 
 ### Using One Complex FFT
 
@@ -187,13 +187,13 @@ $$
 w[n]=x[n]+jh[n]
 $$
 
-Compute one complex FFT
+Compute one complex FFT.
 
 $$
 W[k]=X[k]+jH[k]
 $$
 
-Then separate the two DFTs using circular conjugate symmetry
+Then separate the two DFTs using circular conjugate symmetry.
 
 $$
 X[k]=\frac{1}{2}\left(W[k]+W^*[((N-k))_N]\right)
@@ -205,7 +205,7 @@ $$
 
 ##### One real $2N$-point DFT from one complex $N$-point DFT
 
-For a real $2N$-point sequence $x[n]$, split even and odd samples
+For a real $2N$-point sequence $x[n]$, split even and odd samples.
 
 $$
 x_1[r]=x[2r]
@@ -221,7 +221,7 @@ $$
 y[r]=x_1[r]+jx_2[r]
 $$
 
-After one $N$-point FFT, recover $X_1[k]$ and $X_2[k]$ as the conjugate-symmetric and conjugate-antisymmetric parts
+After one $N$-point FFT, recover $X_1[k]$ and $X_2[k]$ as the conjugate-symmetric and conjugate-antisymmetric parts.
 
 $$
 X_1[k]=\frac{1}{2}\left(Y[k]+Y^*[((N-k))_N]\right)
@@ -267,7 +267,7 @@ $$
 x[n]=\frac{1}{N}\left(\operatorname{DFT}\{X^*[k]\}\right)^*
 $$
 
-The practical rule is conjugate the spectrum, run the FFT, conjugate again, and divide by $N$
+The practical rule is conjugate the spectrum, run the FFT, conjugate again, and divide by $N$.
 
 Equivalently
 

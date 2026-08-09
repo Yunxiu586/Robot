@@ -6,7 +6,7 @@
 
 ##### Linearity and time invariance
 
-A discrete-time system $T\{\cdot\}$ is linear if it satisfies additivity and homogeneity
+A discrete-time system $T\{\cdot\}$ is linear if it satisfies additivity and homogeneity.
 
 $$
 T\{x_1[n]+x_2[n]\}=T\{x_1[n]\}+T\{x_2[n]\}
@@ -20,7 +20,7 @@ $$
 T\left\{\sum_k\alpha_k x_k[n]\right\}=\sum_k\alpha_kT\{x_k[n]\}
 $$
 
-It is time invariant if a delay in the input produces the same delay in the output
+It is time invariant if a delay in the input produces the same delay in the output.
 
 $$
 T\{x[n-n_0]\}=y[n-n_0]
@@ -34,19 +34,19 @@ $$
 
 ##### Memoryless causal stable and invertible systems
 
-A memoryless system depends only on the current input sample
+A memoryless system depends only on the current input sample.
 
 $$
 y[n]=F(x[n])
 $$
 
-For an LTI system, causality is equivalent to a right-sided impulse response
+For an LTI system, causality is equivalent to a right-sided impulse response.
 
 $$
 h[n]=0\quad n<0
 $$
 
-BIBO stability is equivalent to absolute summability of the impulse response
+BIBO stability is equivalent to absolute summability of the impulse response.
 
 $$
 \sum_{k=-\infty}^{\infty}|h[k]|<\infty
@@ -76,7 +76,7 @@ $$
 y[n]=x[-n]
 $$
 
-is time varying because shifting the input and shifting the output do not give the same result
+is time varying because shifting the input and shifting the output do not give the same result.
 
 The system
 
@@ -90,7 +90,7 @@ $$
 y[n]=\sum_{k=-\infty}^{n}x[k]
 $$
 
-is LTI with impulse response $u[n]$, but it is not BIBO stable since $\sum_n|u[n]|$ diverges
+is LTI with impulse response $u[n]$, but it is not BIBO stable since $\sum_n|u[n]|$ diverges.
 
 $$
 y[n]=x[n-1]
@@ -106,7 +106,7 @@ $$
 y[n]=x[2n]
 $$
 
-is not invertible because odd-indexed samples are lost
+is not invertible because odd-indexed samples are lost.
 
 The first-difference system
 
@@ -114,15 +114,15 @@ $$
 y[n]=x[n]-x[n-1]
 $$
 
-is BIBO stable, but it is not uniquely invertible without an initial value because adding a constant to $x[n]$ gives the same difference. With a fixed initial condition, its inverse is an accumulator
+is BIBO stable, but it is not uniquely invertible without an initial value because adding a constant to $x[n]$ gives the same difference. With a fixed initial condition, its inverse is an accumulator.
 
 ### Difference Equations and Initial Conditions
 
 ##### Relaxed systems
 
-A difference equation alone does not uniquely determine a system. Linearity, time invariance, causality, and stability depend on the initial conditions
+A difference equation alone does not uniquely determine a system. Linearity, time invariance, causality, and stability depend on the initial conditions.
 
-A relaxed system has no stored energy at the initial time. Its output is the zero-state response
+A relaxed system has no stored energy at the initial time. Its output is the zero-state response.
 
 For
 
@@ -142,7 +142,7 @@ $$
 H(z)=\frac{1}{1-az^{-1}}
 $$
 
-can represent different systems under different ROCs
+can represent different systems under different ROCs.
 
 $$
 h[n]=a^n u[n]\quad |z|>|a|
@@ -152,7 +152,7 @@ $$
 h[n]=-a^n u[-n-1]\quad |z|<|a|
 $$
 
-Thus the difference equation must be combined with initial-state or ROC information to determine the actual system
+Thus the difference equation must be combined with initial-state or ROC information to determine the actual system.
 
 ### LTI Representation
 
@@ -164,7 +164,7 @@ $$
 h[n]=T\{\delta[n]\}
 $$
 
-Any discrete-time signal can be represented as shifted impulses
+Any discrete-time signal can be represented as shifted impulses.
 
 $$
 x[n]=\sum_{k=-\infty}^{\infty}x[k]\delta[n-k]
@@ -180,11 +180,11 @@ $$
 y[n]=x[n]*h[n]
 $$
 
-This impulse decomposition is the reason that a unit impulse response completely characterizes an LTI system
+This impulse decomposition is the reason that a unit impulse response completely characterizes an LTI system.
 
 ##### Eigenfunctions
 
-For an LTI system, complex exponentials are eigenfunctions
+For an LTI system, complex exponentials are eigenfunctions.
 
 $$
 x[n]=a^n
@@ -200,7 +200,7 @@ $$
 \lambda(a)=\sum_{k=-\infty}^{\infty}h[k]a^{-k}
 $$
 
-For $a=e^{j\omega}$, the eigenvalue is the frequency response
+For $a=e^{j\omega}$, the eigenvalue is the frequency response.
 
 $$
 H(e^{j\omega})=\sum_{k=-\infty}^{\infty}h[k]e^{-j\omega k}

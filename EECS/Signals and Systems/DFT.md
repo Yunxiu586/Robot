@@ -12,7 +12,7 @@ $$
 \tilde{x}[n]=\sum_{r=-\infty}^{\infty}x[n+rN]=x[((n))_N]
 $$
 
-The equality to $x[((n))_N]$ requires that only one shifted copy is nonzero for each $n$; otherwise, the summation represents periodic aliasing
+The equality to $x[((n))_N]$ requires that only one shifted copy is nonzero for each $n$; otherwise, the summation represents periodic aliasing.
 
 The principal value is
 
@@ -20,7 +20,7 @@ $$
 x[n]=\tilde{x}[n]R_N[n]
 $$
 
-The DFT samples one period of the periodic sequence spectrum
+The DFT samples one period of the periodic sequence spectrum.
 
 $$
 \tilde{X}[k]=\tilde{X}[((k))_N]
@@ -72,7 +72,7 @@ $$
 N(N-1)
 $$
 
-complex additions
+complex additions.
 
 ##### DFT matrix
 
@@ -106,19 +106,19 @@ $$
 
 ##### Frequency sampling view
 
-The $N$-point DFT is the Z transform sampled at $N$ equally spaced points on the unit circle
+The $N$-point DFT is the Z transform sampled at $N$ equally spaced points on the unit circle.
 
 $$
 X[k]=X(z)\big|_{z=W_N^{-k}}
 $$
 
-It is also the DTFT sampled on $[0,2\pi)$
+It is also the DTFT sampled on $[0,2\pi)$.
 
 $$
 X[k]=X(e^{j\omega})\big|_{\omega=2\pi k/N}
 $$
 
-The inverse DFT produces the principal value of the corresponding period-$N$ sequence
+The inverse DFT produces the principal value of the corresponding period-$N$ sequence.
 
 $$
 \tilde{x}[n]=\operatorname{IDFT}\{X[k]\}=x[((n))_N]
@@ -131,7 +131,7 @@ $$
 | Z transform | discrete sequence with ROC | continuous function on the $z$-plane |
 | DFT | finite principal value | finite principal value of DFS samples |
 
-The DFT can therefore be viewed as both a sampled DTFT and the principal value of a DFS
+The DFT can therefore be viewed as both a sampled DTFT and the principal value of a DFS.
 
 ### DFT Properties
 
@@ -179,7 +179,7 @@ $$
 
 ##### Circular conjugate symmetry
 
-A finite sequence can be decomposed into circular conjugate-symmetric and circular conjugate-antisymmetric parts
+A finite sequence can be decomposed into circular conjugate-symmetric and circular conjugate-antisymmetric parts.
 
 $$
 x_{ep}[n]=\frac{1}{2}\left(x[((n))_N]+x^*[((N-n))_N]\right)R_N[n]
@@ -215,7 +215,7 @@ $$
 X[k]=X^*[((N-k))_N]
 $$
 
-Therefore $X[0]$ is real. If $N$ is even, $X[N/2]$ is also real
+Therefore $X[0]$ is real. If $N$ is even, $X[N/2]$ is also real.
 
 ##### Computing two real DFTs by one complex DFT
 
@@ -243,7 +243,7 @@ $$
 
 ##### Computing one real $2N$-point DFT by one complex $N$-point DFT
 
-Let $x[n]$ be a real $2N$-point sequence. Split it into even and odd subsequences
+Let $x[n]$ be a real $2N$-point sequence. Split it into even and odd subsequences.
 
 $$
 g[n]=x[2n]
@@ -289,7 +289,7 @@ $$
 \tilde{X}[k]=X(z)\big|_{z=W_N^{-k}}=\sum_{n=-\infty}^{\infty}x[n]W_N^{nk}
 $$
 
-The IDFT is the periodized sequence
+The IDFT is the periodized sequence.
 
 $$
 \tilde{x}[n]=\operatorname{IDFT}\{\tilde{X}[k]\}=\sum_{r=-\infty}^{\infty}x[n+rN]
@@ -307,7 +307,7 @@ $$
 N\ge M
 $$
 
-When $N<M$, time-domain aliasing occurs
+When $N<M$, time-domain aliasing occurs.
 
 A useful example is a four-point DFT. For
 
@@ -409,7 +409,7 @@ $$
 
 <img src="../../Figures/DFT_window_frequency_response.png" alt="Window frequency response" style="zoom:50%;" />
 
-Rectangular windows have a narrower main lobe but larger sidelobes. Hanning windows suppress sidelobes but widen the main lobe
+Rectangular windows have a narrower main lobe but larger sidelobes. Hanning windows suppress sidelobes but widen the main lobe.
 
 <img src="../../Figures/DFT_rect_window_128.png" alt="Rectangular window N=128" style="zoom:50%;" />
 
@@ -421,23 +421,23 @@ Rectangular windows have a narrower main lobe but larger sidelobes. Hanning wind
 
 ##### Resolution leakage and picket-fence effect
 
-The DFT frequency-bin spacing is controlled by the record length
+The DFT frequency-bin spacing is controlled by the record length.
 
 $$
 \Delta f=\frac{1}{T_p}=\frac{f_s}{N}
 $$
 
-Increasing the true record length improves resolution. Zero padding only interpolates the sampled spectrum
+Increasing the true record length improves resolution. Zero padding only interpolates the sampled spectrum.
 
-Spectral leakage is caused by time-domain truncation
+Spectral leakage is caused by time-domain truncation.
 
 $$
 \hat{X}(e^{j\omega})=\frac{1}{2\pi}X(e^{j\omega})\circledast W(e^{j\omega})
 $$
 
-To reduce leakage, increase the window length or choose a smoother window
+To reduce leakage, increase the window length or choose a smoother window.
 
-The picket-fence effect means the DFT observes only discrete frequency samples. Increasing DFT length by zero padding makes frequency samples denser but does not improve true resolution
+The picket-fence effect means the DFT observes only discrete frequency samples. Increasing DFT length by zero padding makes frequency samples denser but does not improve true resolution.
 
 For a desired resolution bandwidth $F$, practical constraints are
 

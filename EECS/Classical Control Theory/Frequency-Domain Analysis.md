@@ -80,6 +80,61 @@ $$
 
 The horizontal axis is logarithmic in $\omega$, usually in rad/s. A decade means a tenfold change in frequency. A slope in Bode magnitude is measured in dB/dec.
 
+##### Pole-Zero Interpretation
+
+For a factored transfer function
+
+$$
+G(s)=K\frac{\prod_{i=1}^{m}(s-z_i)}{\prod_{i=1}^{n}(s-p_i)}
+$$
+
+the frequency response is
+
+$$
+G(j\omega)=K\frac{\prod_{i=1}^{m}(j\omega-z_i)}{\prod_{i=1}^{n}(j\omega-p_i)}
+$$
+
+As $\omega$ varies from $0$ to $\infty$, the evaluation point $s=j\omega$ moves upward along the positive imaginary axis. Each zero or pole defines a vector from its location to the point $j\omega$. Therefore,
+
+$$
+|G(j\omega)|=|K|\frac{\prod_{i=1}^{m}|j\omega-z_i|}{\prod_{i=1}^{n}|j\omega-p_i|}
+$$
+
+$$
+\angle G(j\omega)=\angle K+\sum_{i=1}^{m}\angle(j\omega-z_i)-\sum_{i=1}^{n}\angle(j\omega-p_i)
+$$
+
+A zero contributes its vector length to the numerator and adds its vector angle. A pole contributes its vector length to the denominator and subtracts its vector angle.
+
+For example,
+
+$$
+H(s)=\frac{s-1}{s+2}
+$$
+
+has a zero at $z=1$ and a pole at $p=-2$. Hence
+
+$$
+H(j\omega)=\frac{j\omega-1}{j\omega+2}
+$$
+
+$$
+|H(j\omega)|=\frac{\sqrt{1+\omega^2}}{\sqrt{4+\omega^2}}
+$$
+
+$$
+\angle H(j\omega)=\operatorname{atan2}(\omega,-1)-\operatorname{atan2}(\omega,2)
+$$
+
+<img src="../../Figures/Ctrl_theory_demo1.png" style="zoom: 30%;" />
+
+As $\omega\to0^+$, the vector from the right-half-plane zero approaches the negative real axis from above, so its angle approaches $180^\circ$. The pole vector approaches the positive real axis, so its angle approaches $0^\circ$. Thus
+$$
+|H(j\omega)|\to\frac{1}{2},\qquad \angle H(j\omega)\to180^\circ
+$$
+
+As $\omega\to\infty$, both vector angles approach $90^\circ$, so $|H(j\omega)|\to1$ and $\angle H(j\omega)\to0^\circ$.
+
 ### Elementary Factors
 
 ##### Proportional Factor
@@ -162,9 +217,41 @@ $$
 
 The integral factor has slope $-20\ \mathrm{dB/dec}$ and constant phase $-90^\circ$. The derivative factor has slope $20\ \mathrm{dB/dec}$ and constant phase $90^\circ$.
 
+For a sinusoidal input, the pure derivative factor contributes a constant phase of $+90^\circ$. Its output therefore leads the input by one quarter cycle, so it is a phase-advance factor. Its magnitude increases without bound as frequency increases, which also makes an ideal differentiator sensitive to high-frequency components.
+
 <img src="../../Figures/ctrl_theory_integrator_polar.png" alt="polar plots of integral and derivative factors" style="zoom: 50%;" />
 
 <img src="../../Figures/ctrl_theory_integrator_bode.png" alt="Bode plots of integral and derivative factors" style="zoom: 50%;" />
+
+##### Approximate Derivative Factor
+
+An ideal differentiator is not physically realizable as a proper causal transfer function. A practical derivative action can be approximated by a first-order high-pass factor
+
+$$
+G_D(s)=\frac{s}{1+\varepsilon\tau_d s},\qquad \varepsilon>0
+$$
+
+Its frequency response is
+
+$$
+G_D(j\omega)=\frac{j\omega}{1+j\omega\varepsilon\tau_d}
+$$
+
+$$
+A(\omega)=\frac{\omega}{\sqrt{1+(\omega\varepsilon\tau_d)^2}}
+$$
+
+$$
+\varphi(\omega)=90^\circ-\operatorname{atan2}(\omega\varepsilon\tau_d,1)
+$$
+
+The break frequency introduced by the pole is
+
+$$
+\omega_f=\frac{1}{\varepsilon\tau_d}
+$$
+
+For $\omega\ll\omega_f$, $G_D(j\omega)\approx j\omega$, so the factor behaves like an ideal differentiator. For $\omega\gg\omega_f$, its magnitude approaches $1/(\varepsilon\tau_d)$ and its phase approaches $0^\circ$, limiting the unbounded high-frequency gain of the ideal derivative factor.
 
 ##### First-Order Lag Factor
 
@@ -280,7 +367,13 @@ $$
 \omega_b=\omega_n=\frac{1}{T}
 $$
 
-For $0<\zeta<1/\sqrt{2}$, the resonant frequency and resonant peak are
+For $0<\zeta<1$, the poles are a complex-conjugate pair and the system is underdamped. A nonzero-frequency resonant peak exists only for
+
+$$
+0<\zeta<\frac{1}{\sqrt{2}}
+$$
+
+The resonant frequency and resonant peak are
 
 $$
 \omega_r=\omega_n\sqrt{1-2\zeta^2}
@@ -290,7 +383,13 @@ $$
 M_r=\frac{1}{2\zeta\sqrt{1-\zeta^2}}
 $$
 
-Smaller $\zeta$ gives a larger resonant peak and a sharper phase transition.
+At the natural frequency,
+
+$$
+A(\omega_n)=\frac{1}{2\zeta},\qquad \varphi(\omega_n)=-90^\circ
+$$
+
+For small damping, $\omega_r\approx\omega_n$ and $M_r\approx1/(2\zeta)$. Geometrically, as $j\omega$ passes near a complex pole, the corresponding denominator vector becomes short and the magnitude increases. Smaller $\zeta$ places the poles closer to the imaginary axis and produces a higher, sharper resonant peak. For $\zeta\geq1/\sqrt{2}$, the magnitude is largest at $\omega=0$ and decreases monotonically, so there is no nonzero-frequency resonant peak.
 
 <img src="../../Figures/ctrl_theory_second_order_polar.png" alt="polar plots of second-order factors" style="zoom: 50%;" />
 
