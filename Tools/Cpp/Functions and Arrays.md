@@ -2,6 +2,8 @@
 
 [toc]
 
+### Functions
+
 ##### Functions
 
 A function has a return type, name, parameter list, and body.
@@ -30,7 +32,7 @@ int add(int a, int b) {  // definition
 }
 ```
 
-##### Function Parameters
+##### Parameters
 
 A **parameter** is an input declared in a function declaration or definition. An **argument** is the concrete value or expression supplied by the caller.
 
@@ -113,7 +115,7 @@ void printMessage(const std::string& message, int) {
 printMessage("Hello");
 printMessage("Hello", 1);
 ```
-##### Function Overloading
+##### Overloading
 
 Function overloading reuses one function name for related operations. Overloads are declared in the same scope and differ in parameter count, type, or order. Return type alone cannot distinguish overloads.
 
@@ -154,7 +156,7 @@ void display(int value, int width = 4);
 
 // display(10);  // Error: ambiguous call
 ```
-##### Return by Value
+##### Return Values
 
 Returning by value is normally efficient because compilers apply copy elision and move semantics.
 
@@ -175,7 +177,7 @@ int factorial(int n) {
     return n * factorial(n - 1);
 }
 ```
-##### Lambda Expressions
+##### Lambdas
 
 A lambda is an unnamed function.
 
@@ -208,151 +210,8 @@ auto modifyScale = [&scale]() {
 | `[&]` | Capture used local variables by reference |
 
 Avoid returning a lambda that holds references to local variables that have already been destroyed.
-##### Header and Source Files
+### Arrays
 
-A header file usually contains declarations that form an interface. A source file contains the corresponding definitions. Do not include a `.cpp` file; compile and link it instead.
-
-A header may be included more than once through direct or indirect inclusion. Use either `#pragma once` or an include guard to prevent repeated inclusion.
-
-```cpp
-// math_utils.hpp
-#pragma once
-
-namespace math_utils {
-
-int add(int a, int b);
-
-}  // namespace math_utils
-```
-
-The standard preprocessor alternative is an include guard:
-
-```cpp
-// math_utils.hpp
-#ifndef MATH_UTILS_HPP
-#define MATH_UTILS_HPP
-
-namespace math_utils {
-
-int add(int a, int b);
-
-}  // namespace math_utils
-
-#endif  // MATH_UTILS_HPP
-```
-
-`#pragma once` is shorter and widely supported, but it is not part of the C++ standard. An include guard is a standard preprocessor technique, and its macro name must be unique. Normally, use one method rather than both.
-
-In project code, place declarations in a named namespace in the header and their definitions in the same namespace in the source file. The source file should include its matching header first. 
-
-Do not write `using namespace ...;` in a header. Names used only within one source file may be placed in an unnamed namespace in that `.cpp` file.
-
-```cpp
-// math_utils.cpp
-#include "math_utils.hpp"
-
-namespace math_utils {
-
-int add(int a, int b) {
-    return a + b;
-}
-
-}  // namespace math_utils
-```
-
-```cpp
-// main.cpp
-#include "math_utils.hpp"
-
-#include <iostream>
-
-int main() {
-    std::cout << math_utils::add(2, 3) << '\n';
-    return 0;
-}
-```
-
-Each `.cpp` file is compiled separately. Including the same header in the source file and its users keeps the declaration consistent with the definition.
-
-##### Inline Functions
-
-An `inline` function may have identical definitions in multiple translation units. This allows a small function definition to be placed in a header included by several source files.
-
-```cpp
-// math_utils.hpp
-#ifndef MATH_UTILS_HPP
-#define MATH_UTILS_HPP
-
-namespace math_utils {
-
-inline int square(int value) {
-	return value * value;
-}
-
-}  // namespace math_utils
-
-#endif  // MATH_UTILS_HPP
-```
-
-```cpp
-// area.cpp
-#include "math_utils.hpp"
-
-int squareArea(int side) {
-	return math_utils::square(side);
-}
-```
-
-```cpp
-// main.cpp
-#include "math_utils.hpp"
-
-#include <iostream>
-
-int main() {
-	std::cout << math_utils::square(5) << '\n';
-	return 0;
-}
-```
-
-Both source files include the header, so the definition of `square` appears in both translation units. `inline` permits these identical definitions; without it, defining a non-`inline` function in the header would cause a multiple-definition error when the program is linked.
-
-A member function defined inside a class body is implicitly `inline`. The keyword does not require the compiler to expand the function call; inlining as an optimization is decided by the compiler.
-
-##### Math and Randomness
-
-Use `<cmath>` for mathematical functions.
-
-```cpp
-#include <cmath>
-
- double x = 9.0;
- double root = std::sqrt(x);        // 3.0
- double power = std::pow(2.0, 3.0); // 8.0
- double angle = std::sin(3.1415926 / 2.0);
- double rounded = std::round(3.6);  // 4.0
- double lower = std::floor(3.6);    // 3.0
- double upper = std::ceil(3.2);     // 4.0
- double absolute = std::abs(-5.0);	// 5.0
-```
-
-Floating-point values are approximate. Do not usually compare them with exact equality.
-
-```cpp
-bool almostEqual(double a, double b, double epsilon = 1e-9) {
-    return std::abs(a - b) < epsilon;
-}
-```
-
-Use `<random>` instead of `rand()` for modern random-number generation.
-
-```cpp
-#include <random>
-
-std::mt19937 engine{std::random_device{}()};
-std::uniform_int_distribution<int> distribution(1, 6);
-int dice = distribution(engine);
-```
 ##### Arrays
 
 An array is a sequence of objects of the **same type** that occupy a **contiguous area** of memory.
@@ -543,6 +402,175 @@ std::string cpp_text = "hello";
 | Buffer size and termination require explicit care | Storage and termination are managed automatically |
 
 Prefer `std::string` for ordinary string handling. Its operations, conversions, and string streams are covered in `Standard Library.md`.
+### Program Structure
+
+##### Preprocessor
+
+Preprocessor directives begin with `#` and are processed before normal compilation. Common uses are file inclusion, macro definition, and conditional compilation.
+
+`#include` inserts the contents of another file. Angle brackets are normally used for standard headers; quotes are normally used for project headers.
+
+```cpp
+#include <iostream>
+#include "math_utils.hpp"
+```
+
+Macros perform token replacement. Prefer constants, functions, and templates when normal C++ language features can express the same operation.
+
+```cpp
+#define SQUARE_BAD(x) x * x
+
+constexpr int square(int value) {
+    return value * value;
+}
+
+int first = SQUARE_BAD(1 + 2);  // Expands to 1 + 2 * 1 + 2
+int second = square(1 + 2);     // 9
+```
+
+Conditional directives include or exclude source text according to a preprocessing condition.
+
+```cpp
+#ifdef DEBUG
+std::cout << "debug information\n";
+#endif
+```
+
+`#ifndef`, `#define`, and `#endif` are also commonly used to form include guards.
+##### Headers and Sources
+
+A header file usually contains declarations that form an interface. A source file contains the corresponding definitions. Do not include a `.cpp` file; compile and link it instead.
+
+A header may be included more than once through direct or indirect inclusion. Use an include guard to prevent repeated inclusion.
+
+```cpp
+// math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+
+namespace math_utils {
+
+int add(int a, int b);
+
+}  // namespace math_utils
+
+#endif  // MATH_UTILS_HPP
+```
+
+An include guard uses conditional preprocessing so that the declarations are seen only once in a translation unit. Use a distinct macro name for each header.
+
+In project code, place declarations in a named namespace in the header and their definitions in the same namespace in the source file. The source file should include its matching header first. 
+
+Do not write `using namespace ...;` in a header. Names used only within one source file may be placed in an unnamed namespace in that `.cpp` file.
+
+```cpp
+// math_utils.cpp
+#include "math_utils.hpp"
+
+namespace math_utils {
+
+int add(int a, int b) {
+    return a + b;
+}
+
+}  // namespace math_utils
+```
+
+```cpp
+// main.cpp
+#include "math_utils.hpp"
+
+#include <iostream>
+
+int main() {
+    std::cout << math_utils::add(2, 3) << '\n';
+    return 0;
+}
+```
+
+Each `.cpp` file is compiled separately. Including the same header in the source file and its users keeps the declaration consistent with the definition.
+
+##### Inline Functions
+
+An `inline` function may have identical definitions in multiple translation units. This allows a small function definition to be placed in a header included by several source files.
+
+```cpp
+// math_utils.hpp
+#ifndef MATH_UTILS_HPP
+#define MATH_UTILS_HPP
+
+namespace math_utils {
+
+inline int square(int value) {
+	return value * value;
+}
+
+}  // namespace math_utils
+
+#endif  // MATH_UTILS_HPP
+```
+
+```cpp
+// area.cpp
+#include "math_utils.hpp"
+
+int squareArea(int side) {
+	return math_utils::square(side);
+}
+```
+
+```cpp
+// main.cpp
+#include "math_utils.hpp"
+
+#include <iostream>
+
+int main() {
+	std::cout << math_utils::square(5) << '\n';
+	return 0;
+}
+```
+
+Both source files include the header, so the definition of `square` appears in both translation units. `inline` permits these identical definitions; without it, defining a non-`inline` function in the header would cause a multiple-definition error when the program is linked.
+
+A member function defined inside a class body is implicitly `inline`. The keyword does not require the compiler to expand the function call; inlining as an optimization is decided by the compiler.
+
+### Utilities
+
+##### Math and Randomness
+
+Use `<cmath>` for mathematical functions.
+
+```cpp
+#include <cmath>
+
+ double x = 9.0;
+ double root = std::sqrt(x);        // 3.0
+ double power = std::pow(2.0, 3.0); // 8.0
+ double angle = std::sin(3.1415926 / 2.0);
+ double rounded = std::round(3.6);  // 4.0
+ double lower = std::floor(3.6);    // 3.0
+ double upper = std::ceil(3.2);     // 4.0
+ double absolute = std::abs(-5.0);	// 5.0
+```
+
+Floating-point values are approximate. Do not usually compare them with exact equality.
+
+```cpp
+bool almostEqual(double a, double b, double epsilon = 1e-9) {
+    return std::abs(a - b) < epsilon;
+}
+```
+
+Use `<random>` instead of `rand()` for modern random-number generation.
+
+```cpp
+#include <random>
+
+std::mt19937 engine{std::random_device{}()};
+std::uniform_int_distribution<int> distribution(1, 6);
+int dice = distribution(engine);
+```
 ##### Date and Time
 
 C-style time utilities are provided by `<ctime>`.

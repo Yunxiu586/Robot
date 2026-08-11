@@ -385,6 +385,34 @@ for (int row = 1; row <= 3; ++row) {
 finished:
 std::cout << "Finished\n";
 ```
+##### Exceptions
+
+Exception handling transfers control from a point where an exception is thrown to a matching handler. Use `try` for code that may throw, `throw` to signal an error, and `catch` to handle it.
+
+```cpp
+#include <iostream>
+#include <stdexcept>
+
+int divide(int dividend, int divisor) {
+    if (divisor == 0) {
+        throw std::invalid_argument{"division by zero"};
+    }
+
+    return dividend / divisor;
+}
+
+int main() {
+    try {
+        std::cout << divide(10, 0) << '\n';
+    } catch (const std::invalid_argument& error) {
+        std::cerr << error.what() << '\n';
+    }
+}
+```
+
+Throw exception objects by value and catch them by `const` reference. Standard exception types derive from `std::exception`.
+
+When an exception propagates out of a block, automatic objects already constructed in that block are destroyed during stack unwinding.
 ##### Input and Output
 
 ```cpp
@@ -439,6 +467,45 @@ std::cin >> age;
 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 std::getline(std::cin, name);
 ```
+##### File I/O
+
+`<fstream>` provides `std::ifstream` for file input, `std::ofstream` for file output, and `std::fstream` for both input and output.
+
+Write to a text file:
+
+```cpp
+#include <fstream>
+#include <iostream>
+
+std::ofstream output{"result.txt"};
+
+if (!output) {
+    std::cerr << "cannot open file\n";
+} else {
+    output << "Alice 95\n";
+}
+```
+
+Read a text file:
+
+```cpp
+#include <fstream>
+#include <iostream>
+#include <string>
+
+std::ifstream input{"result.txt"};
+
+if (!input) {
+    std::cerr << "cannot open file\n";
+} else {
+    std::string line;
+    while (std::getline(input, line)) {
+        std::cout << line << '\n';
+    }
+}
+```
+
+File streams use the same formatted input and output operations as other iostreams. Their files are closed when the stream objects are destroyed.
 ##### Quick Review
 
 ```cpp

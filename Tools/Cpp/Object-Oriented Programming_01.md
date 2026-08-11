@@ -329,52 +329,58 @@ A member-wise copy of a raw pointer copies only the address. Two objects then re
 ```cpp
 class ShallowBox {
 public:
-	explicit ShallowBox(int value)
-		: value_{new int{value}} {}	// Member initializer list
+    explicit ShallowBox(int value)
+        : value_ptr_{new int{value}} {} // Member initializer list
 
-	~ShallowBox() {
-		delete value_;
-	}
+    ~ShallowBox() {
+        delete value_ptr_;
+    }
 
 private:
-	int* value_{};
+    int* value_ptr_{};
 };
 
 ShallowBox first{10};
-// ShallowBox second{first};		// Unsafe: both objects would own the same address
+// ShallowBox second{first};        // Unsafe: both objects would own the same address
 ```
 
-A deep copy gives each object separate storage and copies the pointed-to value. A class that owns a raw resource must also handle copy assignment and destruction consistently.
+A deep copy gives each object separate storage and copies the pointed-to value.
 
 ```cpp
 class Box {
 public:
-	explicit Box(int value)
-		: value_{new int{value}} {}
+    explicit Box(int value)
+        : value_ptr_{new int{value}} {}
 
-	Box(const Box& other)	// Deep copy
-		: value_{new int{*other.value_}} {}
+    Box(const Box& other)   // Deep copy
+        : value_ptr_{new int{*other.value_ptr_}} {}
 
-	Box& operator=(const Box& other) {
-		if (this != &other) {
-			*value_ = *other.value_;
-		}
+    Box& operator=(const Box& other) {
+        if (this != &other) {
+            *value_ptr_ = *other.value_ptr_;
+        }
 
-		return *this;
-	}
+        return *this;
+    }
 
-	~Box() {
-		delete value_;
-	}
+    ~Box() {
+        delete value_ptr_;
+    }
 
-	int value() const {
-		return *value_;
-	}
+    int value() const {
+        return *value_ptr_;
+    }
 
 private:
-	int* value_{};
+    int* value_ptr_{};
 };
 ```
+
+The copy constructor takes `other` by reference because copying it by value would itself require a copy. `const` allows the source object to remain unchanged and permits copying from const objects.
+
+A member function of `Box` may access the private members of any `Box` object, so `other.value_ptr_` is valid even though `value_ptr_` is private.
+
+The copy-assignment operator copies the pointed-to value rather than the pointer address, so the two objects continue to own separate allocations.
 
 The raw pointer above is used only to demonstrate deep copy. Modern C++ normally prefers RAII types such as `std::string` and `std::vector`; their members manage resources and usually make compiler-generated copy operations correct. This is the **Rule of Zero**.
 
@@ -409,7 +415,7 @@ For an object member, the member object is constructed before the containing obj
 
 A static data member is not part of any object. A non-`thread_local` static data member is shared by all objects of the class and has static storage duration. A `thread_local` static data member has one copy per thread and thread storage duration.
 
-The declaration of a non-inline static data member inside the class is not a definition. If the member is odr-used, it requires a definition at namespace scope, even when it is private.
+The declaration of a non-inline static data member inside the class is not a definition. If the member is odr-used/One Definition Rule-used, it requires a definition at namespace scope, even when it is private.
 
 A static member function belongs to the class rather than to a particular object. It has no `this` pointer and cannot access a non-static member without an object.
 
@@ -417,33 +423,34 @@ A static member function belongs to the class rather than to a particular object
 class Student {
 public:
 	Student() {
-		++count_;
+		++count_;	// Increment the shared object count
 	}
 
 	Student(const Student&) {
-		++count_;
+		++count_;	// A copied object is also a new object
 	}
 
 	~Student() {
-		--count_;
+		--count_;	// Decrement the shared object count
 	}
 
-	static int school_code;
+	static int school_code;	// static data member, non-inline
 
-	static int count() {
+	static int count() {	// static member function, implicitly inline
 		return count_;
 	}
 
 private:
 	int student_id_{};
-	static int count_;
+	static int count_;		// static data member, non-inlin
 
-	static void resetCount() {
-		count_ = 0;
-		// student_id_ = 0;		// Error: no object
+	static void resetCount() {	// static member function, implicitly inline
+		count_ = 0;				// Can access static members directly
+		// student_id_ = 0;		// Error: requires a Student object
 	}
 };
 
+// Definitions of non-inline static data members
 int Student::school_code = 1001;
 int Student::count_ = 0;
 ```
@@ -512,32 +519,32 @@ Member functions are not stored in each object. Objects of the same type call th
 ```cpp
 class Counter {
 public:
-	Counter& setValue(int value_) {
-		this->value_ = value_;		// Distinguish the member from the parameter
-		return *this;
-	}
+    Counter& setValue(int value_) {
+        this->value_ = value_;	// Distinguish the member from the parameter
+        return *this;	// Return this object by reference for chained calls
+    }
 
-	Counter& add(int value) {
-		value_ += value;
-		return *this;
-	}
+    Counter& add(int value) {
+        value_ += value;
+        return *this;	// Return the same object by reference, without making a copy
+    }
 
-	Counter copy() const {
-		return *this;
-	}
+    Counter copy() const {
+        return *this;	// Return a copy of this object by value
+    }
 
-	int value() const {
-		return value_;
-	}
+    int value() const {
+        return value_;
+    }
 
 private:
-	int value_{};
+    int value_{};
 };
-
+   
 Counter counter;
 counter.setValue(1).add(2).add(3);	// Chained calls modify the same object
 
-Counter copied = counter.copy();	// A separate result object
+Counter copied = counter.copy();	// copied is a separate object
 copied.add(4);						// Does not modify counter
 ```
 
@@ -559,23 +566,25 @@ In a const-qualified non-static member function, `this` has pointer-to-const cla
 ```cpp
 class Counter {
 public:
-	void increment() {
-		++value_;
-	}
+    void increment() {
+        ++value_;
+    }
 
-	int value() const {
-		++read_count_;			// mutable may be modified
-		return value_;
-	}
+    int value() const {			// const member function
+        // Conceptually, this behaves like: int value(const Counter* this)
+        // ++value_;			// Error: value_ is non-mutable
+        ++read_count_;			// Valid: mutable may be modified
+        return value_;
+    }
 
 private:
-	int value_{};
-	mutable int read_count_{};
+    int value_{};
+    mutable int read_count_{};
 };
 
 const Counter counter;
-int value = counter.value();	// Calls a const member function
-// counter.increment();			// Error: non-const member function
+int value = counter.value();	// Valid: value() is const-qualified member function
+// counter.increment();			// Error: increment() is non-const member function
 ```
 
 For non-static member functions, a const object can call only const-qualified overloads. A `mutable` member can be modified even when the complete object is const.

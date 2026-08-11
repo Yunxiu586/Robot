@@ -133,6 +133,28 @@ int main() {
 ```
 
 Pointer arithmetic is valid only within the same array and one position past its end. Do not dereference null, invalid, dangling, out-of-range, or one-past-the-end pointers.
+
+##### Value Categories
+
+Every expression has a value category. The fundamental categories are `lvalue`, `xvalue`, and `prvalue`; `glvalue` and `rvalue` group these categories. Value categories affect language rules such as reference binding.
+
+- `glvalue` (generalized lvalue): an expression whose evaluation determines the **identity** of an object or function. Identity means which specific object or function is being referred to, so it can be distinguished from others; this is commonly associated with a stable object location. A glvalue is either an `lvalue` or an `xvalue`.
+- `rvalue`: an expression that is either a `prvalue` or an `xvalue`. It represents a value that can be used for initialization or computation, or an object whose resources can be reused. An rvalue does not necessarily lack identity because an `xvalue` is also a glvalue.
+- `lvalue`: a glvalue that is not an xvalue. It normally refers to an object or function with an established identity. A named variable is typically an lvalue, but having a name is not the definition; for example, `*pointer` is also an lvalue.
+- `prvalue` (pure rvalue): an expression whose evaluation initializes an object or computes a value. Literals and most arithmetic results are common prvalues.
+- `xvalue` (expiring value): a glvalue that denotes an object or bit-field whose resources can be reused, usually because the object is near the end of its lifetime. A cast to an rvalue reference type can produce an xvalue.
+
+```cpp
+int value = 10;
+int* pointer = &value;
+
+value;                      // lvalue: refers to the specific object value
+*pointer;                   // lvalue: refers to the object pointed to by pointer
+10;                         // prvalue: computes the value 10
+value + 1;                  // prvalue: computes a new value
+static_cast<int&&>(value);  // xvalue: still refers to value, but resources may be reused
+```
+
 ##### References
 
 A reference is an alias for an existing object. It must be initialized, and it cannot later be changed to refer to another object. Assignment through a reference modifies the referred-to object.
