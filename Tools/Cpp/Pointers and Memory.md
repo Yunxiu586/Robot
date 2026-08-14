@@ -179,7 +179,7 @@ void printText(const std::string& text) {
 }
 ```
 
-A non-const lvalue reference cannot bind to a temporary. A const lvalue reference and an rvalue reference can bind to a temporary, extending its lifetime to the lifetime of the reference.
+A non-const lvalue reference cannot bind to a temporary. A const lvalue reference and an rvalue reference can bind to a temporary. The lifetime of a temporary bound to a reference can be extended to the lifetime of the reference, subject to specific exceptions such as reference parameters in function calls.
 
 ```cpp
 int value = 10;

@@ -2,6 +2,8 @@
 
 [toc]
 
+### Program Basics
+
 ##### Program Structure
 
 A C++ program starts from `main()`.
@@ -24,7 +26,7 @@ int main() {
 | `return 0` | Reports successful termination |
 
 C++ is case-sensitive. `value`, `Value`, and `VALUE` are different names.
-##### Comments, Identifiers, and Keywords
+##### Comments
 
 ```cpp
 // Single-line comment
@@ -33,6 +35,8 @@ C++ is case-sensitive. `value`, `Value`, and `VALUE` are different names.
    Multi-line comment
 */
 ```
+
+##### Identifiers and Keywords
 
 An identifier may contain letters, digits, and underscores, but it cannot start with a digit or use a reserved keyword.
 
@@ -44,12 +48,14 @@ int index = 0;         // valid
 ```
 
 Prefer descriptive names and a consistent style.
-##### Variables and Fundamental Types
+### Types and Variables
+
+##### Fundamental Types
 
 ```cpp
 bool ready = true;
 char grade = 'A';					// single char
-char str1[] = "Hello World!"		// C-string array, ends with '\0', size = len+1
+char str1[] = "Hello World!";		// C-string array, ends with '\0', size = len+1
 short small_value = 10;
 int count = 100;
 long long large_value = 1'000'000'000LL;	// LL specifies long long literal type
@@ -113,7 +119,7 @@ std::cout << "She said, \"Hello.\"\n";
 ```
 
 A backslash must itself be escaped as `\\`. Similarly, quotation marks must be escaped when they would otherwise terminate the surrounding literal.
-##### Initialization and Aliases
+##### Initialization
 
 Prefer initialization when a variable is declared.
 
@@ -131,6 +137,8 @@ double x = 3.8;
 int y = static_cast<int>(x);   // explicit conversion, y == 3
 // int z{x};                   // error: narrowing conversion
 ```
+
+##### Type Deduction and Aliases
 
 `auto` asks the compiler to infer the type.
 
@@ -176,7 +184,7 @@ int nextId() {
 }
 ```
 
-`extern` declares a variable or function whose definition is provided elsewhere in the program.
+An `extern` declaration can refer to an entity defined elsewhere in the program. A declaration with `extern` and no initializer or function body is not a definition.
 
 ```cpp
 // config.cpp
@@ -187,17 +195,41 @@ extern int max_iterations;
 ```
 
 `register` is obsolete in modern C++ and should not be used.
-##### Constants and Qualifiers
+##### Declaration Specifiers and Qualifiers
+
+Common modern C++ declaration specifiers and declarator qualifiers are summarized below.
+
+| Syntax | Category | Common Use |
+| --- | --- | --- |
+| `const` | cv-qualifier | Prevents modification through the const-qualified type; after a non-static member function, makes the implicit object const-qualified |
+| `volatile` | cv-qualifier | Marks accesses that may be affected by implementation-external conditions; mainly used for low-level hardware access |
+| `constexpr` | declaration specifier | Declares a variable or function usable in constant evaluation when its requirements are satisfied |
+| `consteval` | declaration specifier | Declares an immediate function whose potentially evaluated calls must produce constant expressions |
+| `constinit` | declaration specifier | Requires static or thread storage duration variables to have static initialization; does not make them const |
+| `static` | storage-class specifier | Gives static storage duration to local variables; also declares class-wide static members or namespace-scope internal linkage depending on context |
+| `thread_local` | storage-class specifier | Gives a variable thread storage duration, with a separate object for each thread |
+| `extern` | storage-class specifier | Declares an entity that can be defined elsewhere; commonly used for declarations with external linkage |
+| `mutable` | storage-class specifier | Allows a non-static data member to be modified even through a const-qualified object |
+| `inline` | declaration specifier | Permits an inline function or variable to have identical definitions in multiple translation units |
+| `virtual` | function specifier | Declares a non-static member function for virtual dispatch |
+| `explicit` | function specifier | Prevents constructors and conversion functions from participating in unwanted implicit conversions |
+| `friend` | declaration specifier | Grants a function or class access to private and protected members |
+| `noexcept` | exception specification | Declares whether a function is non-throwing |
+| `&` / `&&` | ref-qualifier | Restricts a non-static member function to lvalue or rvalue objects |
+| `override` | virt-specifier | Requires a virtual member function to override a base-class virtual function |
+| `final` | virt-specifier | Prevents further overriding of a virtual function, or further derivation from a class |
+| `= default` | function definition form | Requests a compiler-generated definition for an eligible function |
+| `= delete` | deleted function definition | Declares a function as deleted so it cannot be used |
+| `= 0` | pure-specifier | Declares a virtual function as pure virtual |
+
+`override` and `final` are identifiers with special meaning rather than ordinary keywords. `&`, `&&`, `= default`, `= delete`, and `= 0` are included because they commonly appear in modern declarations.
 
 ```cpp
-const double pi = 3.1415926;          // cannot be modified
-constexpr int max_size = 100;         // compile-time constant
-volatile bool hardware_flag = false;  // value may change outside normal code flow
-```
+const double pi = 3.1415926;
+constexpr int max_size = 100;
+constinit static int startup_count = 0;
+thread_local int thread_count = 0;
 
-Use `const` whenever an object should not be modified. Use `constexpr` when the value or function can be evaluated at compile time.
-
-```cpp
 constexpr int square(int x) {
     return x * x;
 }
@@ -205,7 +237,9 @@ constexpr int square(int x) {
 constexpr int area = square(5);
 ```
 
-`volatile` is mainly for low-level hardware access. It does not make code thread-safe.
+`volatile` does not provide atomicity or thread synchronization.
+### Expressions and Control Flow
+
 ##### Operators
 
 Arithmetic operators:
@@ -385,6 +419,8 @@ for (int row = 1; row <= 3; ++row) {
 finished:
 std::cout << "Finished\n";
 ```
+### Error Handling
+
 ##### Exceptions
 
 Exception handling transfers control from a point where an exception is thrown to a matching handler. Use `try` for code that may throw, `throw` to signal an error, and `catch` to handle it.
@@ -413,116 +449,155 @@ int main() {
 Throw exception objects by value and catch them by `const` reference. Standard exception types derive from `std::exception`.
 
 When an exception propagates out of a block, automatic objects already constructed in that block are destroyed during stack unwinding.
-##### Input and Output
+### Input and Output
+
+##### Standard Streams
+
+`<iostream>` provides the standard character streams. `operator<<` performs formatted output, `operator>>` performs formatted input, and `std::getline` reads a complete line.
+
+| Stream | Purpose |
+| --- | --- |
+| `std::cin` | Standard input |
+| `std::cout` | Standard output |
+| `std::cerr` | Error output |
+| `std::clog` | Log output |
 
 ```cpp
 #include <iostream>
 #include <string>
 
 int main() {
-    int age{};
     std::string name;
+    int age{};
 
-    std::cout << "Name: ";
     std::getline(std::cin, name);
-
-    std::cout << "Age: ";
     std::cin >> age;
 
     std::cout << name << " is " << age << " years old\n";
 }
 ```
 
-| Stream | Purpose |
+`'\n'` inserts a newline. `std::endl` inserts a newline and then flushes the output stream, so prefer `'\n'` for ordinary line breaks.
+
+##### File Streams
+
+`<fstream>` provides the standard file stream types.
+
+| Type | Purpose | Default mode |
+| --- | --- | --- |
+| `std::ifstream` | File input | `std::ios::in` |
+| `std::ofstream` | File output | `std::ios::out` |
+| `std::fstream` | File input and output | `std::ios::in | std::ios::out` |
+
+File open modes are bitmask flags and can be combined with `|`.
+
+| Mode | Effect |
 | --- | --- |
-| `std::cin` | Standard input |
-| `std::cout` | Normal output |
-| `std::cerr` | Error output, usually unbuffered |
-| `std::clog` | Log output, usually buffered |
+| `std::ios::in` | Open for input |
+| `std::ios::out` | Open for output |
+| `std::ios::ate` | Seek to the end immediately after opening |
+| `std::ios::app` | Seek to the end before each write |
+| `std::ios::trunc` | Discard existing contents when opening |
+| `std::ios::binary` | Open in binary mode |
 
-`'\n'` is a newline character. Inserting it writes the newline character to the output sequence but does not itself request a flush.
+Without `std::ios::binary`, the file is opened in text mode. With its default mode, `std::ofstream` truncates an existing file. Use `std::ios::app` when new output should be appended.
 
-`std::endl` is a standard output-stream manipulator. For an output stream `os`, its effect is equivalent to
-
-```cpp
-os.put(os.widen('\n'));
-os.flush();
-```
-
-Therefore, the two forms differ as follows:
-
-```cpp
-std::cout << '\n';          // inserts a newline
-std::cout << std::endl;     // inserts a newline, then flushes the stream
-```
-
-Use `'\n'` for ordinary line breaks. Use `std::endl` when a newline followed by an immediate flush is specifically required. A stream can also be flushed without inserting a newline by using `std::flush`.
-
-When `std::getline` follows `operator>>`, consume the remaining newline first.
-
-```cpp
-#include <limits>
-
-std::cin >> age;
-std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-std::getline(std::cin, name);
-```
-##### File I/O
-
-`<fstream>` provides `std::ifstream` for file input, `std::ofstream` for file output, and `std::fstream` for both input and output.
-
-Write to a text file:
+Write a text file with `operator<<`:
 
 ```cpp
 #include <fstream>
 #include <iostream>
 
-std::ofstream output{"result.txt"};
+int main() {
+    std::ofstream output{"scores.txt"};
 
-if (!output) {
-    std::cerr << "cannot open file\n";
-} else {
-    output << "Alice 95\n";
-}
-```
-
-Read a text file:
-
-```cpp
-#include <fstream>
-#include <iostream>
-#include <string>
-
-std::ifstream input{"result.txt"};
-
-if (!input) {
-    std::cerr << "cannot open file\n";
-} else {
-    std::string line;
-    while (std::getline(input, line)) {
-        std::cout << line << '\n';
+    if (!output) {
+        std::cerr << "cannot open file\n";
+        return 1;
     }
+
+    output << "Alice " << 95 << '\n';
 }
 ```
 
-File streams use the same formatted input and output operations as other iostreams. Their files are closed when the stream objects are destroyed.
-##### Quick Review
+Constructing a file stream with a filename opens it immediately. Use `open()` when construction and opening need to be separate.
 
 ```cpp
+std::ofstream output;
+output.open("scores.txt", std::ios::out | std::ios::app);
+```
+
+Read formatted values with `operator>>`, or read complete lines with `std::getline`.
+
+```cpp
+#include <fstream>
 #include <iostream>
 #include <string>
 
 int main() {
-    constexpr int pass_score = 60;
+    std::ifstream input{"scores.txt"};
+
+    if (!input) {
+        std::cerr << "cannot open file\n";
+        return 1;
+    }
+
     std::string name;
     int score{};
 
-    std::getline(std::cin, name);
-    std::cin >> score;
-
-    const bool passed = score >= pass_score;
-    std::cout << name << (passed ? " passed\n" : " failed\n");
-
-    return 0;
+    while (input >> name >> score) {
+        std::cout << name << ' ' << score << '\n';
+    }
 }
 ```
+
+```cpp
+std::string line;
+while (std::getline(input, line)) {
+    std::cout << line << '\n';
+}
+```
+
+`close()` closes the associated file. File streams also close their files when destroyed, so an explicit `close()` is normally needed only when the file must be closed before the stream leaves scope or the stream will be reused.
+
+```cpp
+output.close();
+```
+
+##### Binary I/O
+
+Use `std::ios::binary` with `read()` and `write()` when exact byte-oriented I/O is required.
+
+```cpp
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+
+int main() {
+    const std::uint32_t written{42};
+
+    {
+        std::ofstream output{"data.bin", std::ios::binary};
+        if (!output) {
+            return 1;
+        }
+
+        output.write(reinterpret_cast<const char*>(&written), sizeof written);
+    }
+
+    std::uint32_t read{};
+    std::ifstream input{"data.bin", std::ios::binary};
+
+    if (!input) {
+        return 1;
+    }
+
+    input.read(reinterpret_cast<char*>(&read), sizeof read);
+
+    if (input) {
+        std::cout << read << '\n';		// 42
+    }
+}
+```
+
+This binary example stores the native object representation. Portable file formats should define byte order and field representation explicitly instead of dumping pointers, `std::string`, or arbitrary class objects directly.

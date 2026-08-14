@@ -179,7 +179,7 @@ int factorial(int n) {
 ```
 ##### Lambdas
 
-A lambda is an unnamed function.
+A lambda expression creates a closure object, which behaves like a function object.
 
 ```cpp
 auto add = [](int a, int b) {
@@ -533,7 +533,7 @@ int main() {
 
 Both source files include the header, so the definition of `square` appears in both translation units. `inline` permits these identical definitions; without it, defining a non-`inline` function in the header would cause a multiple-definition error when the program is linked.
 
-A member function defined inside a class body is implicitly `inline`. The keyword does not require the compiler to expand the function call; inlining as an optimization is decided by the compiler.
+In the global module, a member function defined inside a class body is implicitly `inline`. The keyword does not require the compiler to expand the function call; inlining as an optimization is decided by the compiler.
 
 ### Utilities
 

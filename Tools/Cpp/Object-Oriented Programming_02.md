@@ -113,7 +113,6 @@ public:
 		return old;						// Postfix returns the previous value by value
 	}
 
-	// Vector2& operator=(const Vector2&) is implicitly declared for copy assignment
     Vector2& operator=(const Vector2& other) {
         x_ = other.x_;
         y_ = other.y_;
@@ -726,7 +725,7 @@ The `Base` table still contains `Base::print`. The derived object's virtual-func
 
 ##### Pure Virtual Functions
 
-A pure virtual function is declared with `= 0`. A class with an unimplemented pure virtual function is abstract and cannot be instantiated. A derived class remains abstract until it provides a non-pure override for every inherited pure virtual function.
+A pure virtual function is declared with `= 0`. A class is abstract if it has at least one pure virtual function for which the final overrider is pure virtual, and an abstract class cannot be instantiated. A derived class remains abstract until every inherited pure virtual function has a non-pure final overrider.
 
 ```cpp
 #include <iostream>
@@ -805,7 +804,7 @@ Interface::~Interface() = default;	// A pure virtual destructor still needs a de
 
 The need for a virtual destructor depends on polymorphic deletion, not on whether the derived class directly owns heap memory.
 
-##### Example
+### Example
 
 The example combines abstract interfaces, overriding, overload resolution, derived-to-base conversion, and runtime dispatch.
 

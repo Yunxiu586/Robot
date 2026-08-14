@@ -65,7 +65,6 @@ public:
 	}
 
     // First const: the returned reference cannot modify name_
-    // Second const: this function cannot modify the Student object
 	const std::string& name() const {
 		return name_;
 	}
@@ -587,4 +586,4 @@ int value = counter.value();	// Valid: value() is const-qualified member functio
 // counter.increment();			// Error: increment() is non-const member function
 ```
 
-For non-static member functions, a const object can call only const-qualified overloads. A `mutable` member can be modified even when the complete object is const.
+For implicit object member functions, a const object can call only const-qualified overloads. A `mutable` member can be modified even when the complete object is const.
