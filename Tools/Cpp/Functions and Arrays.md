@@ -401,7 +401,7 @@ std::string cpp_text = "hello";
 | Operations use functions such as those in `<cstring>` | Operations use member functions and operators |
 | Buffer size and termination require explicit care | Storage and termination are managed automatically |
 
-Prefer `std::string` for ordinary string handling. Its operations, conversions, and string streams are covered in `Standard Library.md`.
+Prefer `std::string` for ordinary string handling. Its operations, conversions, and string streams are covered in `STL_01.md`.
 ### Program Structure
 
 ##### Preprocessor
@@ -577,6 +577,7 @@ C-style time utilities are provided by `<ctime>`.
 
 ```cpp
 #include <ctime>
+#include <iostream>
 
 std::time_t now = std::time(nullptr);
 std::cout << std::ctime(&now);
@@ -586,6 +587,7 @@ Modern duration measurement uses `<chrono>`.
 
 ```cpp
 #include <chrono>
+#include <iostream>
 
 const auto start = std::chrono::steady_clock::now();
 // work

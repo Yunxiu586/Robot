@@ -321,6 +321,8 @@ public:
 };
 ```
 
+A move constructor and move assignment operator can also be implicitly declared. User-declaring a copy constructor, copy assignment operator, move operation, or destructor affects which other copy/move operations are generated, so these special members should be considered together.
+
 ##### Copy Depth
 
 A member-wise copy of a raw pointer copies only the address. Two objects then refer to the same allocation, which can cause repeated deletion.
@@ -382,6 +384,58 @@ A member function of `Box` may access the private members of any `Box` object, s
 The copy-assignment operator copies the pointed-to value rather than the pointer address, so the two objects continue to own separate allocations.
 
 The raw pointer above is used only to demonstrate deep copy. Modern C++ normally prefers RAII types such as `std::string` and `std::vector`; their members manage resources and usually make compiler-generated copy operations correct. This is the **Rule of Zero**.
+
+##### Move Construction and Assignment
+
+A move constructor initializes an object from an rvalue of the same type. A move assignment operator replaces an existing object's state from an rvalue.
+
+```cpp
+class T {
+public:
+	T(T&& other) noexcept;
+	T& operator=(T&& other) noexcept;
+};
+```
+
+A resource-owning class can define move operations that transfer ownership and leave the source in a valid state.
+
+```cpp
+#include <cstddef>
+#include <memory>
+#include <utility>
+
+class Buffer {
+public:
+	explicit Buffer(std::size_t size)
+		: size_{size}, data_{std::make_unique<int[]>(size)} {}
+
+	Buffer(const Buffer&) = delete;
+	Buffer& operator=(const Buffer&) = delete;
+
+	Buffer(Buffer&& other) noexcept
+		: size_{other.size_}, data_{std::move(other.data_)} {
+		other.size_ = 0;
+	}
+
+	Buffer& operator=(Buffer&& other) noexcept {
+		if (this != &other) {
+			size_ = other.size_;
+			data_ = std::move(other.data_);
+			other.size_ = 0;
+		}
+
+		return *this;
+	}
+
+	~Buffer() = default;
+
+private:
+	std::size_t size_{};
+	std::unique_ptr<int[]> data_;
+};
+```
+
+Move operations that cannot throw should normally be `noexcept`. If a class requires a user-declared copy operation, move operation, or destructor, consider all five copy/move/destructor operations together. Prefer the Rule of Zero when RAII members already provide the required ownership semantics.
 
 ##### Initializers and Object Members
 

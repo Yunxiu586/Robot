@@ -6,9 +6,21 @@
 
 ##### `vector`
 
-`std::vector<T>` is a sequence container that supports random access. Except for the `bool` specialization, its elements are stored contiguously. Its storage is managed automatically and can grow dynamically.
+`std::vector<T>` is a sequence container that supports **random access**. Except for the `bool` specialization, its elements are stored **contiguously**. Its storage is managed automatically and can grow **dynamically**.
 
 When additional storage is required, a `vector` may allocate a larger contiguous block and move or copy its elements into the new storage. The growth factor is not specified by the standard.
+
+**Data Structure**
+
+Conceptually, `vector` manages a dynamically allocated array containing constructed elements followed by reserved storage:
+
+```text
+[ element ][ element ][ element ][ reserved storage ... ]
+^                              ^                        ^
+begin                          end              end of storage
+```
+
+The exact object representation and growth strategy are implementation-defined.
 
 **Construction and Assignment**
 
@@ -22,8 +34,8 @@ explicit std::vector<T>(size_type count);
 std::vector<T>(size_type count, const T& value);
 template<class InputIt>
 std::vector<T>(InputIt first, InputIt last);
-std::vector<T>(const std::vector<T>& other);
-std::vector<T>(std::initializer_list<T> init);
+std::vector<T>(const std::vector<T>& other);	// Copy constructor
+std::vector<T>(std::initializer_list<T> init);	// Initializer-list constructor
 
 std::vector<T>& operator=(const std::vector<T>& other);
 std::vector<T>& operator=(std::initializer_list<T> init);
@@ -41,22 +53,30 @@ void assign(std::initializer_list<T> init);
 int main() {
 	std::vector<int> source{10, 20, 30};
 	std::vector<int> range(source.begin(), source.end());
-	std::vector<int> repeated(3, 7);
-	std::vector<int> copy{source};
+	std::vector<int> repeated(3, 7);	// 7 7 7
+	std::vector<int> copy(source);
+	std::vector<int> init_list{3, 7};	// 3 7
 
 	std::cout << range[1] << '\n';		// 20
 	std::cout << repeated[0] << '\n';	// 7
 	std::cout << copy.back() << '\n';	// 30
+
+	std::vector<int> assigned;
+	assigned = source;
+	std::cout << assigned.back() << '\n';	// 30
+
+	assigned = {1, 2, 3};
+	std::cout << assigned.front() << '\n';	// 1
 
 	copy.assign(2, 5);
 	std::cout << copy.size() << '\n';	// 2
 	std::cout << copy.front() << '\n';	// 5
 
 	copy.assign(source.begin() + 1, source.end());
-	std::cout << copy.front() << '\n';	// 20
+	std::cout << copy.front() << '\n';		// 20
 
 	copy.assign({40, 50});
-	std::cout << copy.back() << '\n';	// 50
+	std::cout << copy.back() << '\n';		// 50
 }
 ```
 
@@ -93,12 +113,12 @@ int main() {
 
 	values.resize(3, 7);
 	std::cout << values.size() << '\n';		// 3
-	std::cout << values[0] << '\n';			// 7
+	std::cout << values[2] << '\n';			// 7
 
 	values.resize(2);
 	std::cout << values.size() << '\n';		// 2
 
-	values.shrink_to_fit();
+	values.shrink_to_fit();					// Request to reduce capacity
 	std::cout << (values.capacity() >= values.size()) << '\n';	// 1
 }
 ```
@@ -164,6 +184,12 @@ const_reverse_iterator rend() const noexcept;
 const_reverse_iterator crend() const noexcept;
 ```
 
+`iterator` permits modification of an element when the container is non-const. `const_iterator` refers to elements as const: the iterator itself can still be incremented or otherwise moved, but the element cannot be modified through it.
+
+- `cbegin()` and `cend()` always return `const_iterator`
+- `begin()` and `end()` on a const container also return `const_iterator`
+- an `iterator` can be converted to the corresponding `const_iterator`
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -171,21 +197,64 @@ const_reverse_iterator crend() const noexcept;
 int main() {
 	std::vector<int> values{10, 20, 30};
 
-	for (auto it = values.begin(); it != values.end(); ++it) {
-		std::cout << *it << ' ';
-	}
-	std::cout << '\n';	// 10 20 30
+	std::vector<int>::iterator it = values.begin();
+	*it = 100;
 
-	for (auto it = values.rbegin(); it != values.rend(); ++it) {
-		std::cout << *it << ' ';
+	std::vector<int>::const_iterator cit = values.cbegin();
+	std::cout << *cit << '\n';	// 100
+	++cit;
+	std::cout << *cit << '\n';	// 20
+	// *cit = 200;	// Error: cannot modify an element through const_iterator
+
+	std::vector<int>::const_iterator converted = values.begin();
+	std::cout << *converted << '\n';	// 100
+
+	const std::vector<int> constants{40, 50};
+	auto const_it = constants.begin();
+	std::cout << *const_it << '\n';	// 40
+
+	for (auto rit = values.rbegin(); rit != values.rend(); ++rit) {
+		std::cout << *rit << ' ';
 	}
-	std::cout << '\n';	// 30 20 10
+	std::cout << '\n';	// 30 20 100
 }
 ```
 
+**Traversal Forms**
+
+Range-based `for` traverses the range delimited by `begin()` and `end()`:
+
+- `for (auto value : values)` copies each element
+- `for (const auto& value : values)` reads elements without copying
+- `for (auto& value : values)` refers to the original elements and permits modification
+- an explicit iterator loop exposes the iterator itself; `*it` accesses the current element
+
+```cpp
+std::vector<int> values{10, 20, 30};
+
+for (auto value : values) {
+	value += 1;					// Modifies only the copy
+}
+
+for (auto& value : values) {
+	value += 1;					// Modifies the element
+}
+
+for (const auto& value : values) {
+	std::cout << value << ' ';	// Read-only access, no copy
+}
+std::cout << '\n';				// 11 21 31
+
+for (auto it = values.begin(); it != values.end(); ++it) {
+	*it += 1;					// Access through iterator
+}
+```
+
+Use a range-based `for` when only the elements are needed. Use an explicit iterator when the iterator or its position is needed, such as for iterator-based container operations.
+
 **Modification**
 
-- `push_back()` and `emplace_back()` add an element at the end
+- `push_back()` add an element at the end
 - `pop_back()` removes the last element
 - `insert()` inserts elements before a position
 - `erase()` removes an element or range
@@ -195,8 +264,6 @@ int main() {
 ```cpp
 void push_back(const T& value);
 void push_back(T&& value);
-template<class... Args>
-T& emplace_back(Args&&... args);
 void pop_back();
 
 iterator insert(const_iterator pos, const T& value);
@@ -241,6 +308,13 @@ int main() {
 	values.pop_back();
 	values.clear();
 	std::cout << values.empty() << '\n';	// 1
+    
+	values.reserve(100);
+	values.resize(3, 10);
+	std::cout << values.size() << ' ' << values.capacity() << '\n';	// 3 >=100(128)
+
+	std::vector<int>().swap(values);		// Replace with an empty vector
+	std::cout << values.empty() << '\n';	// 1
 }
 ```
 
@@ -259,9 +333,31 @@ Do not keep an iterator across an operation that may invalidate it.
 
 ##### `deque`
 
-`std::deque<T>` is a sequence container with random-access iterators. It supports constant-time insertion and removal at both ends; insertion and removal in the middle are linear.
+`std::deque<T>` is a sequence container with **random-access iterators**. It supports constant-time insertion and removal at both ends; insertion and removal in the middle are linear.
 
-Its storage is managed automatically but is not required to form one contiguous block. Prefer `vector` when contiguous storage is required.
+Its storage is managed automatically but its elements are **not stored contiguously**. Prefer `vector` when contiguous storage is required.
+
+**Data Structure**
+
+A typical implementation uses a **control structure** that stores pointers to separately allocated blocks.
+
+```text
+	                     	  control structure
+                +--------+--------+--------+--------+--------+
+                | unused |   *    |   *    |   *    | unused |
+                +--------+---|----+---|----+---|----+--------+
+                             |        |        |
+                             v        v        v
+                         +------+ +------+ +------+
+                         | T... | | T... | | T... |
+                         +------+ +------+ +------+
+                          block    block    block
+
+                          ^                      ^
+                        start                  finish
+```
+
+`start` and `finish` identify the active range across these blocks. The block layout and control structure are implementation details rather than a required object layout.
 
 **Construction and Assignment**
 
@@ -294,7 +390,18 @@ void assign(std::initializer_list<T> init);
 int main() {
 	std::deque<int> source{10, 20, 30};
 	std::deque<int> range(source.begin(), source.end());
-	std::deque<int> copy{source};
+	std::deque<int> repeated(3, 7);			// 7 7 7
+	std::deque<int> copy(source);
+
+	std::cout << range[1] << '\n';			// 20
+	std::cout << repeated.front() << '\n';	// 7
+
+	std::deque<int> assigned;
+	assigned = source;
+	std::cout << assigned.back() << '\n';	// 30
+
+	assigned = {1, 2, 3};
+	std::cout << assigned.front() << '\n';	// 1
 
 	copy.assign(3, 7);
 	std::cout << copy.size() << '\n';		// 3
@@ -341,12 +448,16 @@ const T& back() const;
 int main() {
 	std::deque<int> values{10, 20, 30};
 
-	values.resize(4, 40);
+	values.resize(5, 40);
 
-	std::cout << values.size() << '\n';	// 4
-	std::cout << values[1] << '\n';		// 20
-	std::cout << values.at(2) << '\n';	// 30
-	std::cout << values.back() << '\n';	// 40
+	std::cout << values.size() << '\n';		// 5
+	std::cout << values.front() << '\n';	// 10
+	std::cout << values.at(2) << '\n';		// 30
+	std::cout << values[3] << '\n';			// 40
+	std::cout << values.back() << '\n';		// 40
+
+	values.resize(3);
+	std::cout << values.size() << '\n';		// 3
 }
 ```
 
@@ -391,8 +502,8 @@ int main() {
 
 - `push_front()` / `push_back()` add elements at either end
 - `pop_front()` / `pop_back()` remove elements at either end
-- `emplace_front()` / `emplace_back()` construct elements at either end
-- `insert()` and `erase()` modify a specified position or range
+- `insert()` inserts one element, repeated copies, or an iterator range before a position
+- `erase()` removes one element or an iterator range
 - `clear()` removes all elements
 - `swap()` exchanges two deques
 
@@ -402,16 +513,15 @@ void push_front(T&& value);
 void push_back(const T& value);
 void push_back(T&& value);
 
-template<class... Args>
-T& emplace_front(Args&&... args);
-template<class... Args>
-T& emplace_back(Args&&... args);
-
 void pop_front();
 void pop_back();
 
 iterator insert(const_iterator pos, const T& value);
 iterator insert(const_iterator pos, T&& value);
+iterator insert(const_iterator pos, size_type count, const T& value);
+template<class InputIt>
+iterator insert(const_iterator pos, InputIt first, InputIt last);
+
 iterator erase(const_iterator pos);
 iterator erase(const_iterator first, const_iterator last);
 
@@ -424,23 +534,32 @@ void swap(std::deque<T>& other);
 #include <iostream>
 
 int main() {
-	std::deque<int> values{20, 30};
+	std::deque<int> values{20, 50};
+	std::deque<int> extra{60, 70};
 
 	values.push_front(10);
-	values.push_back(40);
-	values.insert(values.begin() + 2, 25);
-	values.erase(values.begin() + 2);
-
-	std::cout << values.front() << '\n';	// 10
-	std::cout << values.back() << '\n';		// 40
-
-	values.pop_front();
-	values.pop_back();
+	values.push_back(80);
+	values.insert(values.begin() + 2, 30);
+	values.insert(values.begin() + 3, 2, 40);
+	values.insert(values.end() - 1, extra.begin(), extra.end());
 
 	for (int value : values) {
 		std::cout << value << ' ';
 	}
-	std::cout << '\n';	// 20 30
+	std::cout << '\n';	// 10 20 30 40 40 50 60 70 80
+
+	values.erase(values.begin() + 2);
+	values.erase(values.begin() + 2, values.begin() + 4);
+
+	for (int value : values) {
+		std::cout << value << ' ';
+	}
+	std::cout << '\n';	// 10 20 50 60 70 80
+
+	values.pop_front();
+	values.pop_back();
+	std::cout << values.front() << '\n';	// 20
+	std::cout << values.back() << '\n';		// 70
 
 	values.clear();
 	std::cout << values.empty() << '\n';	// 1
@@ -468,9 +587,19 @@ int main() {
 
 ##### `list`
 
-`std::list<T>` is a doubly linked sequence container. It supports bidirectional traversal and constant-time insertion or erasure at a known position.
+`std::list<T>` is a **doubly linked sequence container**. It supports bidirectional traversal and constant-time insertion or erasure at a known position.
 
 It does not provide random access.
+
+**Data Structure**
+
+`list` is typically represented as a chain of **nodes**. Each node stores an element together with links to its neighboring nodes:
+
+```text
+... <-> [ prev | value | next ] <-> [ prev | value | next ] <-> ...
+```
+
+Insertion or erasure at a known node changes links between neighboring nodes instead of shifting later elements.
 
 **Construction and Assignment**
 
@@ -503,7 +632,18 @@ void assign(std::initializer_list<T> init);
 int main() {
 	std::list<int> source{10, 20, 30};
 	std::list<int> range(source.begin(), source.end());
-	std::list<int> copy{source};
+	std::list<int> repeated(3, 7);			// 7 7 7
+	std::list<int> copy(source);
+
+	std::cout << range.front() << '\n';		// 10
+	std::cout << repeated.front() << '\n';	// 7
+
+	std::list<int> assigned;
+	assigned = source;
+	std::cout << assigned.back() << '\n';	// 30
+
+	assigned = {1, 2, 3};
+	std::cout << assigned.front() << '\n';	// 1
 
 	copy.assign(3, 7);
 	std::cout << copy.size() << '\n';		// 3
@@ -552,6 +692,9 @@ int main() {
 	std::cout << values.size() << '\n';		// 4
 	std::cout << values.front() << '\n';	// 10
 	std::cout << values.back() << '\n';		// 30
+
+	values.resize(2);
+	std::cout << values.size() << '\n';		// 2
 }
 ```
 
@@ -579,6 +722,13 @@ const_reverse_iterator rend() const noexcept;
 
 int main() {
 	std::list<int> values{10, 20, 30};
+    
+    auto it = values.begin();
+    ++it;
+    std::cout << *it << '\n';	// 20
+    --it;
+    std::cout << *it << '\n';	// 10
+    // auto next = it + 1;		// Error: list iterators do not support random access
 
 	for (auto it = values.begin(); it != values.end(); ++it) {
 		std::cout << *it << ' ';
@@ -596,7 +746,8 @@ int main() {
 
 - `push_front()` / `push_back()` add elements at either end
 - `pop_front()` / `pop_back()` remove elements at either end
-- `insert()` and `erase()` modify a known position or range
+- `insert()` inserts one element, repeated copies, or an iterator range before a position
+- `erase()` removes one element or an iterator range
 - `remove()` erases all elements equal to a specified value
 - `clear()` removes all elements
 - `swap()` exchanges two lists
@@ -611,6 +762,10 @@ void pop_back();
 
 iterator insert(const_iterator pos, const T& value);
 iterator insert(const_iterator pos, T&& value);
+iterator insert(const_iterator pos, size_type count, const T& value);
+template<class InputIt>
+iterator insert(const_iterator pos, InputIt first, InputIt last);
+
 iterator erase(const_iterator pos);
 iterator erase(const_iterator first, const_iterator last);
 size_type remove(const T& value);
@@ -624,32 +779,55 @@ void swap(std::list<T>& other);
 #include <list>
 
 int main() {
-	std::list<int> values{20, 30, 30};
+	std::list<int> values{20, 50, 50};
+	std::list<int> extra{60, 70};
+
+	auto print_values = [&values]() {
+		for (int value : values) {
+			std::cout << value << ' ';
+		}
+		std::cout << '\n';
+	};
 
 	values.push_front(10);
-	values.push_back(40);
+	values.push_back(80);
+	print_values();	// 10 20 50 50 80
 
 	auto position = values.begin();
-	++position;
+	++position;							// Refers to 20
 	values.insert(position, 15);
-	values.erase(position);
-	values.remove(30);
+	values.insert(position, 2, 18);
+	values.insert(values.end(), extra.begin(), extra.end());
+	print_values();						// 10 15 18 18 20 50 50 80 60 70
+	std::cout << *position << '\n';		// 20: insertion keeps position valid
 
-	for (int value : values) {
-		std::cout << value << ' ';
-	}
-	std::cout << '\n';	// 10 15 40
+	values.erase(position);				// position is invalid after erasing 20
+	print_values();						// 10 15 18 18 50 50 80 60 70
+
+	auto first = values.begin();
+	++first;
+	++first;							// Refers to the first 18
+	auto last = first;
+	++last;
+	++last;								// Refers to the first 50
+	values.erase(first, last);
+	print_values();						// 10 15 50 50 80 60 70
+	std::cout << *last << '\n';			// 50: last was not erased and remains valid
+
+	values.remove(50);					// last is invalid because its element is removed
+	print_values();						// 10 15 80 60 70
 
 	values.pop_front();
 	values.pop_back();
-	std::cout << values.front() << '\n';	// 15
+	print_values();						// 15 80 60
 
 	values.clear();
 	std::cout << values.empty() << '\n';	// 1
 }
 ```
 
-Insertion does not invalidate existing iterators or references. Erasing an element invalidates only iterators and references to the erased element.
+- `list`: insertion does not invalidate existing iterators or references; erasure invalidates only those referring to erased elements
+- `vector`: reallocation invalidates all iterators and references; otherwise insertion or erasure invalidates those at or after the affected position
 
 **List Operations**
 
@@ -674,171 +852,89 @@ int main() {
 	std::list<int> values{3, 1, 2};
 
 	values.sort();
-	values.reverse();
+	for (int value : values) {
+		std::cout << value << ' ';
+	}
+	std::cout << '\n';	// 1 2 3
 
+	values.sort([](int lhs, int rhs) { return lhs > rhs; });
 	for (int value : values) {
 		std::cout << value << ' ';
 	}
 	std::cout << '\n';	// 3 2 1
+
+	values.reverse();
+	for (int value : values) {
+		std::cout << value << ' ';
+	}
+	std::cout << '\n';	// 1 2 3
 }
 ```
 
-### Container Adaptors
+**Example**
 
-Container adaptors expose a restricted interface over an underlying container. They do not expose iterators.
-
-##### `stack`
-
-`std::stack<T>` provides last-in, first-out access. Its default underlying container is `std::deque<T>`.
-
-**Construction and Assignment**
-
-```cpp
-std::stack<T>();
-explicit std::stack<T>(const Container& cont);
-std::stack<T>(const std::stack<T>& other);
-
-std::stack<T>& operator=(const std::stack<T>& other);
-```
-
-```cpp
-#include <deque>
-#include <iostream>
-#include <stack>
-
-int main() {
-	std::deque<int> source{10, 20, 30};
-	std::stack<int> values(source);
-	std::stack<int> copy{values};
-
-	std::cout << copy.top() << '\n';	// 30
-}
-```
-
-**Access and Modification**
-
-- `top()` accesses the top element
-- `push()` and `emplace()` add an element to the top
-- `pop()` removes the top element
-- `empty()` and `size()` query the adaptor
-- `swap()` exchanges two stacks
-
-```cpp
-bool empty() const;
-size_type size() const;
-
-T& top();
-const T& top() const;
-
-void push(const T& value);
-void push(T&& value);
-template<class... Args>
-decltype(auto) emplace(Args&&... args);
-
-void pop();
-void swap(std::stack<T>& other);
-```
+Custom type sorting can define multiple comparison levels. The following example sorts by `age` in ascending order, then by `height` in descending order when ages are equal.
 
 ```cpp
 #include <iostream>
-#include <stack>
+#include <list>
+#include <string>
+
+struct Person {
+	std::string name;
+	int age;
+	int height;
+};
+
+struct PersonCompare {
+	bool operator()(const Person& lhs, const Person& rhs) const {
+		if (lhs.age != rhs.age) {
+			return lhs.age < rhs.age;
+		}
+		return lhs.height > rhs.height;
+	}
+};
+
+bool comparePerson(const Person& lhs, const Person& rhs) {
+	if (lhs.age != rhs.age) {
+		return lhs.age < rhs.age;
+	}
+	return lhs.height > rhs.height;
+}
+
+void printPeople(const std::list<Person>& people) {
+	for (const auto& person : people) {
+		std::cout << person.name << ' '
+				  << person.age << ' '
+				  << person.height << '\n';
+	}
+}
 
 int main() {
-	std::stack<int> values;
+	std::list<Person> people{
+		{"Alice", 20, 165},
+		{"Bob", 18, 175},
+		{"Charlie", 20, 180},
+		{"David", 18, 170}
+	};
 
-	values.push(10);
-	values.push(20);
-	values.emplace(30);
+	auto people_by_functor = people;
+	people_by_functor.sort(PersonCompare{});
+	printPeople(people_by_functor);
+	// Bob     18 175
+	// David   18 170
+	// Charlie 20 180
+	// Alice   20 165
 
-	std::cout << values.size() << '\n';		// 3
-	std::cout << values.top() << '\n';		// 30
+	std::cout << '\n';
 
-	values.pop();
-	std::cout << values.top() << '\n';		// 20
-
-	values.pop();
-	values.pop();
-	std::cout << values.empty() << '\n';	// 1
+	auto people_by_callback = people;
+	people_by_callback.sort(comparePerson);
+	printPeople(people_by_callback);
+	// Bob     18 175
+	// David   18 170
+	// Charlie 20 180
+	// Alice   20 165
 }
 ```
 
-`pop()` removes an element and does not return it. Read `top()` before `pop()` when the value is needed.
-
-##### `queue`
-
-`std::queue<T>` provides first-in, first-out access. Its default underlying container is `std::deque<T>`.
-
-**Construction and Assignment**
-
-```cpp
-std::queue<T>();
-explicit std::queue<T>(const Container& cont);
-std::queue<T>(const std::queue<T>& other);
-
-std::queue<T>& operator=(const std::queue<T>& other);
-```
-
-```cpp
-#include <deque>
-#include <iostream>
-#include <queue>
-
-int main() {
-	std::deque<int> source{10, 20, 30};
-	std::queue<int> values(source);
-	std::queue<int> copy{values};
-
-	std::cout << copy.front() << '\n';	// 10
-}
-```
-
-**Access and Modification**
-
-- `front()` accesses the first element
-- `back()` accesses the last element
-- `push()` and `emplace()` add an element at the back
-- `pop()` removes the first element
-- `empty()` and `size()` query the adaptor
-- `swap()` exchanges two queues
-
-```cpp
-bool empty() const;
-size_type size() const;
-
-T& front();
-const T& front() const;
-T& back();
-const T& back() const;
-
-void push(const T& value);
-void push(T&& value);
-template<class... Args>
-decltype(auto) emplace(Args&&... args);
-
-void pop();
-void swap(std::queue<T>& other);
-```
-
-```cpp
-#include <iostream>
-#include <queue>
-
-int main() {
-	std::queue<int> values;
-
-	values.push(10);
-	values.push(20);
-	values.emplace(30);
-
-	std::cout << values.size() << '\n';		// 3
-	std::cout << values.front() << '\n';	// 10
-	std::cout << values.back() << '\n';		// 30
-
-	values.pop();
-	std::cout << values.front() << '\n';	// 20
-
-	values.pop();
-	values.pop();
-	std::cout << values.empty() << '\n';	// 1
-}
-```

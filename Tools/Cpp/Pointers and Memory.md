@@ -239,6 +239,54 @@ reference = 20;  // Modifies value directly
 
 References provide alias syntax without explicit dereferencing. They are commonly used to modify caller-owned objects, avoid copies with `const T&`, and return existing objects.
 
+##### Move Semantics
+
+Move semantics allow resources to be transferred from an object that can be treated as an rvalue instead of copying those resources.
+
+`std::move` is defined in `<utility>`. It does not move an object by itself; it casts its argument to an xvalue so that move-aware overloads can be selected.
+
+```cpp
+#include <iostream>
+#include <string>
+#include <utility>
+
+int main() {
+	std::string source{"example"};
+	std::string copied{source};				// Deep copy
+	std::string moved{std::move(source)};	// Move
+
+	std::cout << copied << '\n';	// example
+	std::cout << moved << '\n';		// example
+
+	source = "reset";				// Assign before relying on its value again
+    
+    std::cout << copied << '\n';	// example
+	std::cout << moved << '\n';		// example
+}
+```
+
+For standard-library types, an object moved from remains valid, but its value is generally unspecified unless the type documents a stronger guarantee.
+
+A named rvalue-reference variable is an lvalue expression. Use `std::move` when its resources should be transferred again.
+
+```cpp
+#include <string>
+#include <utility>
+
+void consume(std::string&& text) {
+	std::string local{std::move(text)};
+}
+```
+
+Use `std::move` when ownership or resources should explicitly move to another scope. Do not add it to a local return value solely to force a move.
+
+```cpp
+std::string makeName() {
+	std::string name{"Alice"};
+	return name;	// Do not write: return std::move(name);
+}
+```
+
 ##### Structs, Enums, and Unions
 
 A `struct` defines a user-defined type that groups related members. Its members are public by default.
@@ -443,3 +491,262 @@ Match `new` with `delete` and `new[]` with `delete[]`.
 Failing to release dynamic storage causes a memory leak while the program runs. The operating system normally reclaims process memory at termination, but it does not replace correct resource management.
 
 Modern C++ uses Resource Acquisition Is Initialization (RAII): an object owns a resource and releases it in its destructor. Prefer standard containers and smart pointers for ownership instead of manual `new` and `delete`.
+
+##### Smart Pointers
+
+Smart pointers are RAII types defined in `<memory>`. They represent ownership and automatically release the owned object.
+
+Prefer `std::unique_ptr` for exclusive ownership; use `std::shared_ptr` when ownership must be shared. Raw pointers and references normally represent non-owning access.
+
+| Type | Ownership | Copyable | Movable |
+| --- | --- | --- | --- |
+| `std::unique_ptr<T>` | Exclusive | No | Yes |
+| `std::shared_ptr<T>` | Shared | Yes | Yes |
+| `std::weak_ptr<T>` | Non-owning observer of shared ownership | Yes | Yes |
+
+**`std::unique_ptr`**
+
+`std::unique_ptr` owns one object and destroys it when the pointer is destroyed or reset.
+
+**Creation**
+
+- `make_unique<T>(args...)` creates a `T` and returns a `unique_ptr<T>`
+- `make_unique<T[]>(size)` creates a dynamically allocated array
+- Prefer `make_unique` to an explicit `new` when creating an owned object
+
+```cpp
+template<class T, class... Args>
+std::unique_ptr<T> make_unique(Args&&... args);
+
+template<class T>
+std::unique_ptr<T> make_unique(std::size_t size);  // T is U[]
+```
+
+```cpp
+#include <memory>
+#include <string>
+
+int main() {
+	auto number = std::make_unique<int>(42);
+	auto text = std::make_unique<std::string>("hello");
+	auto values = std::make_unique<int[]>(3);
+
+	values[0] = 10;
+	values[1] = 20;
+	values[2] = 30;
+}
+```
+
+**Access and Modification**
+
+- `operator*` and `operator->` access the owned object
+- `operator[]` accesses an element of `unique_ptr<T[]>`
+- `get()` returns the stored pointer without releasing ownership
+- `operator bool()` tests whether a pointer is stored
+- `release()` returns the stored pointer and releases ownership
+- `reset()` replaces the owned object or makes the `unique_ptr` empty
+- `swap()` exchanges the stored pointers
+
+```cpp
+using pointer = typename std::unique_ptr<T>::pointer;
+
+T& operator*() const;
+pointer operator->() const noexcept;
+pointer get() const noexcept;
+explicit operator bool() const noexcept;
+
+pointer release() noexcept;
+void reset(pointer p = pointer{}) noexcept;
+void swap(std::unique_ptr& other) noexcept;
+
+// std::unique_ptr<T[]>
+T& operator[](std::size_t index) const;
+```
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <utility>
+
+int main() {
+	auto first = std::make_unique<int>(10);
+	auto second = std::make_unique<int>(20);
+
+	std::cout << *first << '\n';					// 10
+	std::cout << *first.get() << '\n';				// 10
+	std::cout << static_cast<bool>(first) << '\n';	// 1
+
+	first.swap(second);
+	std::cout << *first << '\n';					// 20
+
+	std::unique_ptr<int> third{first.release()};
+	std::cout << (first == nullptr) << '\n';		// 1
+	std::cout << *third << '\n';					// 20
+
+	third.reset();
+	std::cout << (third == nullptr) << '\n';		// 1
+
+	auto values = std::make_unique<int[]>(3);
+	values[1] = 42;
+	std::cout << values[1] << '\n';					// 42
+}
+```
+
+`release()` transfers responsibility for the returned raw pointer. Use it only when ownership must be transferred through a raw-pointer interface.
+
+**`std::shared_ptr`**
+
+`std::shared_ptr` implements shared ownership. The managed object is destroyed when the last owning `shared_ptr` releases it.
+
+**Creation**
+
+- `make_shared<T>(args...)` creates a `T` and returns a `shared_ptr<T>`
+- `make_shared<T[]>(size)` creates a dynamically allocated array since C++20
+- Copying a `shared_ptr` shares ownership; moving transfers one owner's handle
+
+```cpp
+template<class T, class... Args>
+std::shared_ptr<T> make_shared(Args&&... args);
+
+template<class T>
+std::shared_ptr<T> make_shared(std::size_t size);  // T is U[], since C++20
+```
+
+```cpp
+#include <memory>
+#include <string>
+
+int main() {
+	auto first = std::make_shared<std::string>("hello");
+	auto second = first;
+	auto values = std::make_shared<int[]>(3);
+
+	values[0] = 10;
+	values[1] = 20;
+	values[2] = 30;
+}
+```
+
+**Access and Modification**
+
+- `operator*` and `operator->` access the managed object
+- `operator[]` accesses an element of `shared_ptr<T[]>`
+- `get()` returns the stored pointer without changing ownership
+
+```cpp
+T& operator*() const noexcept;
+T* operator->() const noexcept;
+T* get() const noexcept;
+
+// std::shared_ptr<T[]>
+T& operator[](std::ptrdiff_t index) const;
+```
+
+**Observation and Modification**
+
+- `use_count()` returns the number of `shared_ptr` owners
+- `operator bool()` tests whether a pointer is stored
+- `reset()` releases this owner's current ownership
+- `swap()` exchanges the stored pointers and ownership state
+
+```cpp
+long use_count() const noexcept;
+explicit operator bool() const noexcept;
+
+void reset() noexcept;
+template<class Y>
+void reset(Y* p);
+void swap(std::shared_ptr& other) noexcept;
+```
+
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+	auto first = std::make_shared<int>(10);
+	auto second = first;
+
+	std::cout << *first << '\n';					// 10
+	std::cout << *first.get() << '\n';				// 10
+	std::cout << first.use_count() << '\n';			// 2
+
+	first.reset();
+	std::cout << static_cast<bool>(first) << '\n';	// 0
+	std::cout << second.use_count() << '\n';		// 1
+
+	auto third = std::make_shared<int>(30);
+	second.swap(third);
+	std::cout << *second << '\n';					// 30
+}
+```
+
+Prefer `make_shared` when creating a new shared object. The raw-pointer `reset(Y*)` overload is mainly useful when adopting an existing owning pointer.
+
+**`std::weak_ptr`**
+
+`std::weak_ptr` observes an object managed by `std::shared_ptr` without owning it. It cannot access the object directly; use `lock()` to obtain temporary shared ownership.
+
+**Creation**
+
+Common construction forms include:
+
+```cpp
+std::weak_ptr<T>();
+std::weak_ptr<T>(const std::weak_ptr<T>& other);
+std::weak_ptr<T>(std::weak_ptr<T>&& other) noexcept;
+
+template<class Y>
+std::weak_ptr<T>(const std::shared_ptr<Y>& owner) noexcept;
+```
+
+**Observation and Modification**
+
+- `use_count()` returns the number of `shared_ptr` owners
+- `expired()` tests whether the managed object has already been destroyed
+- `lock()` returns a `shared_ptr`; it is empty if the object has expired
+- `reset()` makes the `weak_ptr` empty
+- `swap()` exchanges observed ownership states
+
+```cpp
+long use_count() const noexcept;
+bool expired() const noexcept;
+std::shared_ptr<T> lock() const noexcept;
+
+void reset() noexcept;
+void swap(std::weak_ptr& other) noexcept;
+```
+
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+	auto owner = std::make_shared<int>(42);
+	std::weak_ptr<int> observer = owner;
+
+	std::cout << observer.use_count() << '\n';		// 1
+	std::cout << observer.expired() << '\n';		// 0
+
+	if (auto current = observer.lock()) {
+		std::cout << *current << '\n';				// 42
+	}
+
+	owner.reset();
+	std::cout << observer.expired() << '\n';		// 1
+	std::cout << static_cast<bool>(observer.lock()) << '\n';	// 0
+
+	observer.reset();
+}
+```
+
+A `weak_ptr` can be used to break cycles of shared ownership.
+
+```cpp
+struct Node {
+	std::shared_ptr<Node> next;
+	std::weak_ptr<Node> previous;	// Does not participate in ownership
+};
+```
+
+Use `get()` only when an API needs the underlying raw pointer without taking ownership. Do not `delete` a pointer obtained from `get()`.

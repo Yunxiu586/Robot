@@ -887,19 +887,19 @@ void runPart(const Memory& memory) {
 
 class Computer {
 public:
-	Computer(CPU* cpu, GPU* gpu, Memory* memory)
+	Computer(CPU& cpu, GPU& gpu, Memory& memory)
 		: cpu_{cpu}, gpu_{gpu}, memory_{memory} {}
 
 	void run() const {
-		runPart(*cpu_);
-		runPart(*gpu_);
-		runPart(*memory_);
+		runPart(cpu_);
+		runPart(gpu_);
+		runPart(memory_);
 	}
 
 private:
-	CPU* cpu_{};			// Base pointer to a CPU implementation
-	GPU* gpu_{};			// Base pointer to a GPU implementation
-	Memory* memory_{};		// Base pointer to a Memory implementation
+	CPU& cpu_;			// Base reference to a CPU implementation
+	GPU& gpu_;			// Base reference to a GPU implementation
+	Memory& memory_;		// Base reference to a Memory implementation
 };
 
 int main() {
@@ -911,9 +911,9 @@ int main() {
 	IntelGPU intel_gpu;
 	NvidiaMemory nvidia_memory;
 
-	Computer first{&intel_cpu, &nvidia_gpu, &amd_memory};		
-    // Derived-to-base pointer conversions
-	Computer second{&amd_cpu, &intel_gpu, &nvidia_memory};
+	Computer first{intel_cpu, nvidia_gpu, amd_memory};
+	// Derived objects bind to base-class references
+	Computer second{amd_cpu, intel_gpu, nvidia_memory};
 
 	first.run();
 	// Intel CPU

@@ -2,6 +2,225 @@
 
 [toc]
 
+### Container Adaptors
+
+Container adaptors expose a restricted interface over an underlying container. They do not expose iterators.
+
+##### `stack`
+
+`std::stack<T>` provides last-in, first-out access. Its default underlying container is `std::deque<T>`.
+
+**Data Structure**
+
+`stack` follows the **FILO (First In, Last Out)** principle. Elements are inserted and removed only at the stack top. The diagram below shows new elements growing downward:
+
+```text
+				+------+
+Stack Bottom -> |  10  |  First In / Last Out
+                +------+
+                |  20  |
+                +------+
+Stack Top    -> |  30  |  Last In / First Out
+                +------+
+                   |
+                   v
+             Growth Direction
+```
+
+`stack` has no independent element-storage structure. Its elements are stored by the underlying container `c`:
+
+```text
+top()   -> c.back()
+push()  -> c.push_back()
+pop()   -> c.pop_back()
+```
+
+**Construction and Assignment**
+
+```cpp
+std::stack<T>();
+explicit std::stack<T>(const Container& cont);
+std::stack<T>(const std::stack<T>& other);
+
+std::stack<T>& operator=(const std::stack<T>& other);
+```
+
+```cpp
+#include <deque>
+#include <iostream>
+#include <stack>
+
+int main() {
+	std::deque<int> source{10, 20, 30};
+	std::stack<int> values(source);
+	std::stack<int> copy(values);
+	std::stack<int> assigned;
+
+	assigned = values;
+
+	std::cout << copy.top() << '\n';		// 30
+	std::cout << assigned.top() << '\n';	// 30
+}
+```
+
+**Access and Modification**
+
+- `top()` accesses the top element
+- `push()` and `emplace()` add an element to the top
+- `pop()` removes the top element
+- `empty()` and `size()` query the adaptor
+- `swap()` exchanges two stacks
+
+```cpp
+bool empty() const;
+size_type size() const;
+
+T& top();
+const T& top() const;
+
+void push(const T& value);
+void push(T&& value);
+template<class... Args>
+decltype(auto) emplace(Args&&... args);
+
+void pop();
+void swap(std::stack<T>& other);
+```
+
+```cpp
+#include <iostream>
+#include <stack>
+
+int main() {
+	std::stack<int> values;
+
+	values.push(10);
+	values.push(20);
+	values.emplace(30);
+
+	std::cout << values.size() << '\n';		// 3
+	std::cout << values.top() << '\n';		// 30
+
+	values.pop();
+	std::cout << values.top() << '\n';		// 20
+
+	values.pop();
+	values.pop();
+	std::cout << values.empty() << '\n';	// 1
+}
+```
+
+`pop()` removes an element and does not return it. Read `top()` before `pop()` when the value is needed.
+
+##### `queue`
+
+`std::queue<T>` provides first-in, first-out access. Its default underlying container is `std::deque<T>`.
+
+**Data Structure**
+
+`queue` follows the **FIFO (First In, First Out)** principle. Elements enter at the queue back and leave from the queue front:
+
+```text
+                         Growth Direction
+                               ------>
+Queue Front -> +------+  +------+  +------+ <- Queue Back
+               |  10  |  |  20  |  |  30  |
+               +------+  +------+  +------+
+                  ^                             ^
+                  |                             |
+           First In / First Out              Last In
+                pop()                         push()
+```
+
+`queue` has no independent element-storage structure. Its elements are stored by the underlying container `c`:
+
+```text
+front() -> c.front()
+back()  -> c.back()
+push()  -> c.push_back()
+pop()   -> c.pop_front()
+```
+
+**Construction and Assignment**
+
+```cpp
+std::queue<T>();
+explicit std::queue<T>(const Container& cont);
+std::queue<T>(const std::queue<T>& other);
+
+std::queue<T>& operator=(const std::queue<T>& other);
+```
+
+```cpp
+#include <deque>
+#include <iostream>
+#include <queue>
+
+int main() {
+	std::deque<int> source{10, 20, 30};
+	std::queue<int> values(source);
+	std::queue<int> copy(values);
+	std::queue<int> assigned;
+
+	assigned = values;
+
+	std::cout << copy.front() << '\n';		// 10
+	std::cout << assigned.front() << '\n';	// 10
+}
+```
+
+**Access and Modification**
+
+- `front()` accesses the first element
+- `back()` accesses the last element
+- `push()` and `emplace()` add an element at the back
+- `pop()` removes the first element
+- `empty()` and `size()` query the adaptor
+- `swap()` exchanges two queues
+
+```cpp
+bool empty() const;
+size_type size() const;
+
+T& front();
+const T& front() const;
+T& back();
+const T& back() const;
+
+void push(const T& value);
+void push(T&& value);
+template<class... Args>
+decltype(auto) emplace(Args&&... args);
+
+void pop();
+void swap(std::queue<T>& other);
+```
+
+```cpp
+#include <iostream>
+#include <queue>
+
+int main() {
+	std::queue<int> values;
+
+	values.push(10);
+	values.push(20);
+	values.emplace(30);
+
+	std::cout << values.size() << '\n';		// 3
+	std::cout << values.front() << '\n';	// 10
+	std::cout << values.back() << '\n';		// 30
+
+	values.pop();
+	std::cout << values.front() << '\n';	// 20
+
+	values.pop();
+	values.pop();
+	std::cout << values.empty() << '\n';	// 1
+}
+```
+
+
 ### Associative Containers
 
 Associative containers organize elements according to a comparison object. `set`, `multiset`, `map`, and `multimap` provide bidirectional iterators and logarithmic key-based search and insertion.
@@ -26,7 +245,7 @@ int main() {
 	std::pair<std::string, int> first{"Alice", 90};
 	auto second = std::make_pair(std::string{"Bob"}, 85);
 
-	std::cout << first.first << ' ' << first.second << '\n';		// Alice 90
+	std::cout << first.first << ' ' << first.second << '\n';	// Alice 90
 	std::cout << second.first << ' ' << second.second << '\n';	// Bob 85
 }
 ```
@@ -35,10 +254,23 @@ Map-like containers store elements as pairs whose first member is the key and se
 
 ##### `set` and `multiset`
 
-- `std::set<Key>` stores unique keys
-- `std::multiset<Key>` permits equivalent keys
-- elements are ordered by the comparison object
-- elements cannot be modified through iterators because modifying a key could break the ordering
+`std::set<Key>` is an ordered associative container that stores **unique keys**; `std::multiset<Key>` permits equivalent keys. 
+
+Elements are arranged according to `Compare`, and key lookup and insertion have logarithmic complexity.
+
+Both provide bidirectional iterators. For `set` and `multiset`, the stored value is the key itself, so elements cannot be modified through iterators.
+
+**Data Structure**
+
+The standard does not require a particular tree representation. A typical implementation uses a **self-balancing binary search tree**; libstdc++ implements these associative containers with a **red-black tree**.
+
+```text
+                         [ key: 20 ]
+                         /         \
+                [ key: 10 ]     [ key: 30 ]
+```
+
+Each node stores a key together with tree links and balancing information. `Compare` guides traversal between branches, while rebalancing keeps the tree height controlled.
 
 **Construction and Assignment**
 
@@ -64,14 +296,14 @@ std::set<Key, Compare>& operator=(std::initializer_list<Key> init);
 
 int main() {
 	std::set<int> values{30, 10, 20, 20};	// Duplicate key is ignored
-	std::set<int> copy{values};
+	std::set<int> copy(values);
 	std::set<int> assigned;
 	assigned = values;
 
 	for (int value : values) {
 		std::cout << value << ' ';
 	}
-	std::cout << '\n';				// 10 20 30
+	std::cout << '\n';						// 10 20 30
 	std::cout << copy.size() << '\n';		// 3
 
 	std::set<int> other{100};
@@ -106,15 +338,19 @@ void swap(std::set& other);
 
 - `set::insert()` reports whether a new key was inserted
 - `multiset::insert()` inserts an element even when an equivalent key already exists
+- `insert()` supports single-element, hinted, iterator-range, and initializer-list insertion
 - `erase()` removes an element, range, or all elements equivalent to a key
 - `clear()` removes all elements
 
 ```cpp
 std::pair<iterator, bool> insert(const value_type& value);
+std::pair<iterator, bool> insert(value_type&& value);
 iterator insert(const_iterator hint, const value_type& value);
+iterator insert(const_iterator hint, value_type&& value);
 
 template<class InputIt>
 void insert(InputIt first, InputIt last);
+void insert(std::initializer_list<value_type> init);
 
 iterator erase(const_iterator pos);
 iterator erase(const_iterator first, const_iterator last);
@@ -129,23 +365,40 @@ For `multiset`, insertion of one value returns an `iterator` rather than `std::p
 #include <set>
 
 int main() {
-	std::set<int> values{10, 20, 30};
+	std::set<int> values{20, 40};
+	std::set<int> extra{50, 60};
 
-	auto [first, inserted] = values.insert(40);
+	auto [first, inserted] = values.insert(30);
 	auto [second, duplicate] = values.insert(20);
+	values.insert(values.end(), 70);
+	values.insert(extra.begin(), extra.end());
+	values.insert({10, 80});
 
-	std::cout << *first << ' ' << inserted << '\n';		// 40 1
+	std::cout << *first << ' ' << inserted << '\n';		// 30 1
 	std::cout << *second << ' ' << duplicate << '\n';	// 20 0
 
-	values.erase(10);
-	std::cout << values.size() << '\n';				// 3
+	for (int value : values) {
+		std::cout << value << ' ';
+	}
+	std::cout << '\n';	// 10 20 30 40 50 60 70 80
+
+	values.erase(values.begin());
+	auto range_first = values.find(30);
+	auto range_last = values.find(60);
+	values.erase(range_first, range_last);
+	values.erase(70);
+
+	for (int value : values) {
+		std::cout << value << ' ';
+	}
+	std::cout << '\n';	// 20 60 80
 
 	std::multiset<int> repeated{10, 20, 20, 30};
 	repeated.insert(20);
-	std::cout << repeated.count(20) << '\n';			// 3
+	std::cout << repeated.count(20) << '\n';	// 3
 
 	values.clear();
-	std::cout << values.empty() << '\n';				// 1
+	std::cout << values.empty() << '\n';		// 1
 }
 ```
 
@@ -226,10 +479,21 @@ int main() {
 
 ##### `map` and `multimap`
 
-- `std::map<Key, T>` stores ordered key/value pairs with unique keys
-- `std::multimap<Key, T>` permits equivalent keys
-- each element has type `std::pair<const Key, T>`
-- the key cannot be modified through an iterator
+`std::map<Key, T>` is an ordered associative container that associates **unique keys** with mapped values; `std::multimap<Key, T>` permits equivalent keys. Elements are arranged by key according to `Compare`, and key lookup and insertion have logarithmic complexity.
+
+Each element has type `std::pair<const Key, T>`. The mapped value can be modified through an iterator, but the key cannot.
+
+**Data Structure**
+
+As with `set`, the standard does not require a particular tree representation. A typical implementation uses a **self-balancing binary search tree**, with each node storing a key/value pair.
+
+```text
+                           [ 20 | "Bob" ]
+                           /            \
+              [ 10 | "Alice" ]      [ 30 | "Carol" ]
+```
+
+Each node also contains tree links and balancing information. Tree placement compares only the key (`first`) of each stored pair; the mapped value (`second`) does not affect the tree position.
 
 **Construction and Assignment**
 
@@ -259,7 +523,7 @@ int main() {
 		{"Alice", 90},
 		{"Bob", 85}
 	};
-	std::map<std::string, int> copy{scores};
+	std::map<std::string, int> copy(scores);
 	std::map<std::string, int> assigned;
 	assigned = scores;
 
@@ -331,15 +595,19 @@ int main() {
 
 - `map::insert()` inserts only when an equivalent key is absent and reports whether insertion occurred
 - `multimap::insert()` permits equivalent keys
+- `insert()` supports single-element, hinted, iterator-range, and initializer-list insertion
 - `erase()` removes an element, range, or all elements equivalent to a key
 - `clear()` removes all elements
 
 ```cpp
 std::pair<iterator, bool> insert(const value_type& value);
+std::pair<iterator, bool> insert(value_type&& value);
 iterator insert(const_iterator hint, const value_type& value);
+iterator insert(const_iterator hint, value_type&& value);
 
 template<class InputIt>
 void insert(InputIt first, InputIt last);
+void insert(std::initializer_list<value_type> init);
 
 iterator erase(const_iterator pos);
 iterator erase(const_iterator first, const_iterator last);
@@ -355,26 +623,40 @@ For `multimap`, insertion of one value returns an `iterator` rather than `std::p
 #include <string>
 
 int main() {
-	std::map<std::string, int> scores;
+	std::map<int, std::string> values{{2, "Bob"}, {4, "Dave"}};
+	std::map<int, std::string> extra{{5, "Eve"}, {6, "Frank"}};
 
-	auto [alice, inserted] = scores.insert({"Alice", 90});
-	auto [same, duplicate] = scores.insert({"Alice", 100});
-	scores.insert({"Bob", 85});
+	auto [first, inserted] = values.insert({1, "Alice"});
+	auto [second, duplicate] = values.insert({1, "Other"});
+	values.insert(values.end(), {3, "Carol"});
+	values.insert(extra.begin(), extra.end());
+	values.insert({{7, "Grace"}, {8, "Helen"}});
 
-	std::cout << alice->second << ' ' << inserted << '\n';		// 90 1
-	std::cout << same->second << ' ' << duplicate << '\n';		// 90 0
+	std::cout << first->second << ' ' << inserted << '\n';		// Alice 1
+	std::cout << second->second << ' ' << duplicate << '\n';	// Alice 0
 
-	scores.erase("Bob");
-	std::cout << scores.size() << '\n';						// 1
+	for (const auto& [key, value] : values) {
+		std::cout << key << ':' << value << ' ';
+	}
+	std::cout << '\n';	// 1:Alice 2:Bob 3:Carol 4:Dave 5:Eve 6:Frank 7:Grace 8:Helen
 
-	std::multimap<std::string, int> attempts{
-		{"Alice", 90},
-		{"Alice", 95}
-	};
-	std::cout << attempts.count("Alice") << '\n';			// 2
+	values.erase(values.find(2));
+	auto range_first = values.find(4);
+	auto range_last = values.find(7);
+	values.erase(range_first, range_last);
+	values.erase(8);
 
-	scores.clear();
-	std::cout << scores.empty() << '\n';					// 1
+	for (const auto& [key, value] : values) {
+		std::cout << key << ':' << value << ' ';
+	}
+	std::cout << '\n';	// 1:Alice 3:Carol 7:Grace
+
+	std::multimap<int, std::string> repeated{{1, "A"}, {1, "B"}};
+	repeated.insert({1, "C"});
+	std::cout << repeated.count(1) << '\n';		// 3
+
+	values.clear();
+	std::cout << values.empty() << '\n';		// 1
 }
 ```
 
@@ -407,23 +689,28 @@ int main() {
 		std::cout << found->first << ' ' << found->second << '\n';	// Bob 85
 	}
 
-	std::cout << scores.count("Alice") << '\n';					// 1
-	std::cout << scores.count("Carol") << '\n';					// 0
+	std::cout << scores.count("Alice") << '\n';						// 1
+	std::cout << scores.count("Carol") << '\n';						// 0
 }
 ```
 
 **Ordering**
 
-The comparison object orders elements by key.
+The comparison object orders elements by key and must define a strict weak ordering.
 
 ```cpp
-#include <functional>
 #include <iostream>
 #include <map>
 #include <string>
 
+struct DescendingKey {
+	bool operator()(int lhs, int rhs) const {
+		return lhs > rhs;
+	}
+};
+
 int main() {
-	std::map<int, std::string, std::greater<>> values{
+	std::map<int, std::string, DescendingKey> values{
 		{1, "one"},
 		{3, "three"},
 		{2, "two"}
@@ -500,7 +787,7 @@ int main() {
 
 	std::cout << *first << ' ' << inserted << '\n';		// 40 1
 	std::cout << *second << ' ' << duplicate << '\n';	// 20 0
-	std::cout << values.size() << '\n';				// 4
+	std::cout << values.size() << '\n';					// 4
 
 	auto found = values.find(30);
 	std::cout << (found != values.end()) << '\n';		// 1
@@ -567,7 +854,7 @@ int main() {
 	++counts["apple"];
 
 	std::cout << counts.at("apple") << '\n';		// 2
-	std::cout << counts.at("banana") << '\n';	// 1
+	std::cout << counts.at("banana") << '\n';		// 1
 
 	auto found = counts.find("apple");
 	std::cout << (found != counts.end()) << '\n';	// 1
@@ -576,7 +863,7 @@ int main() {
 		{"apple", 1},
 		{"apple", 2}
 	};
-	std::cout << values.count("apple") << '\n';	// 2
+	std::cout << values.count("apple") << '\n';		// 2
 }
 ```
 
@@ -608,13 +895,13 @@ int main() {
 	std::unordered_map<int, int> values;
 
 	values.reserve(100);
-	std::cout << values.size() << '\n';					// 0
+	std::cout << values.size() << '\n';						// 0
 
 	values.emplace(1, 10);
 	values.emplace(2, 20);
 	std::cout << (values.load_factor() <= values.max_load_factor()) << '\n';	// 1
 
 	values.rehash(200);
-	std::cout << (values.bucket_count() >= 200) << '\n';			// 1
+	std::cout << (values.bucket_count() >= 200) << '\n';	// 1
 }
 ```

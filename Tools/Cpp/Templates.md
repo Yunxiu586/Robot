@@ -103,6 +103,40 @@ auto add(T first, U second) {
 auto result = add(2, 3.5);			// T is int, U is double
 ```
 
+##### Forwarding References
+
+When a function-template parameter has the form `T&&` and `T` is deduced, it is a **forwarding reference**. It can bind to both lvalues and rvalues.
+
+Because a named parameter is an lvalue expression, use `std::forward<T>` to preserve the original argument's value category when forwarding it.
+
+```cpp
+#include <iostream>
+#include <string>
+#include <utility>
+
+void process(const std::string&) {
+	std::cout << "lvalue\n";
+}
+
+void process(std::string&&) {
+	std::cout << "rvalue\n";
+}
+
+template <typename T>
+void relay(T&& value) {
+	process(std::forward<T>(value));
+}
+
+int main() {
+	std::string text{"hello"};
+
+	relay(text);					// lvalue
+	relay(std::string{"world"});	// rvalue
+}
+```
+
+Use `std::move` for an object whose resources should be transferred; use `std::forward<T>` for a forwarding reference whose original value category should be preserved.
+
 ##### Overloading
 
 Function templates can be overloaded with other templates or non-template functions. 
@@ -475,7 +509,7 @@ print(box);			// 42
 
 A template definition normally has to be reachable where the corresponding specialization is instantiated. This is why general-purpose class templates are usually implemented in headers instead of placing only their declarations in a header and compiling their definitions as an ordinary `.cpp` translation unit.
 
-One inclusion model keeps declarations and definitions in separate files but includes the implementation file from the header.
+One inclusion model keeps declarations and definitions in separate files but includes a template implementation file from the header.
 
 ```cpp
 // Box.h
@@ -542,7 +576,7 @@ Explicit instantiation is another option when only a fixed set of specialization
 
 ##### Example
 
-The following example places the class template in `Array.hpp` and uses it from `main.cpp`. The `Array` class provides fixed-capacity storage, deep copy, copy assignment, tail insertion/removal, indexed access, and size/capacity queries.
+The following example places the class template in `Array.hpp` and uses it from `main.cpp`. The `Array` class provides fixed-capacity storage, deep copy, move support, tail insertion/removal, indexed access, and size/capacity queries.
 
 ```cpp
 // Array.hpp
@@ -551,30 +585,28 @@ The following example places the class template in `Array.hpp` and uses it from 
 
 #include <cstddef>
 #include <memory>
+#include <utility>
 
 template <typename T>
 class Array {
 public:
 	// Constructs an empty array with fixed capacity
 	explicit Array(std::size_t capacity)
-		: capacity_{capacity}, data_{new T[capacity]{}} {}
+		: capacity_{capacity}, data_{std::make_unique<T[]>(capacity)} {}
 
 	// Copy constructor
 	// Allocates independent storage and copies the elements
 	Array(const Array& other)
 		: capacity_{other.capacity_},
-		  size_{other.size_} {
-		auto new_data = std::make_unique<T[]>(capacity_);
-
+		  size_{other.size_},
+		  data_{std::make_unique<T[]>(other.capacity_)} {
 		for (std::size_t i = 0; i < size_; ++i) {
-			new_data[i] = other.data_[i];
+			data_[i] = other.data_[i];
 		}
-
-		data_ = new_data.release();
 	}
 
 	// Copy assignment operator
-	// Allocates independent storage before replacing the current storage
+	// Copies into new storage before replacing the current storage
 	Array& operator=(const Array& other) {
 		if (this != &other) {
 			auto new_data = std::make_unique<T[]>(other.capacity_);
@@ -583,9 +615,7 @@ public:
 				new_data[i] = other.data_[i];
 			}
 
-			delete[] data_;
-
-			data_ = new_data.release();
+			data_ = std::move(new_data);
 			capacity_ = other.capacity_;
 			size_ = other.size_;
 		}
@@ -593,19 +623,51 @@ public:
 		return *this;
 	}
 
-	// Releases the dynamically allocated array
-	~Array() {
-		delete[] data_;
+	// Move constructor
+	// Transfers ownership and leaves other empty
+	Array(Array&& other) noexcept
+		: capacity_{other.capacity_},
+		  size_{other.size_},
+		  data_{std::move(other.data_)} {
+		other.capacity_ = 0;
+		other.size_ = 0;
 	}
 
-	// Appends an element at the end
-	// Returns false when the array has reached its capacity
+	// Move assignment operator
+	// Replaces the current storage with ownership from other
+	Array& operator=(Array&& other) noexcept {
+		if (this != &other) {
+			capacity_ = other.capacity_;
+			size_ = other.size_;
+			data_ = std::move(other.data_);
+
+			other.capacity_ = 0;
+			other.size_ = 0;
+		}
+
+		return *this;
+	}
+
+	~Array() = default;
+
+	// Appends by copy
 	bool pushBack(const T& value) {
 		if (size_ == capacity_) {
 			return false;
 		}
 
 		data_[size_] = value;
+		++size_;
+		return true;
+	}
+
+	// Appends by move
+	bool pushBack(T&& value) {
+		if (size_ == capacity_) {
+			return false;
+		}
+
+		data_[size_] = std::move(value);
 		++size_;
 		return true;
 	}
@@ -643,19 +705,21 @@ public:
 	}
 
 private:
-	std::size_t capacity_{};	// Allocated element capacity
-	std::size_t size_{};		// Number of logically stored elements
-	T* data_{};					// Dynamically allocated storage
+	std::size_t capacity_{};			// Allocated element capacity
+	std::size_t size_{};				// Number of logically stored elements
+	std::unique_ptr<T[]> data_;		// Exclusive ownership of storage
 };
 
 #endif
 ```
 
-The copy constructor and copy assignment operator allocate separate storage and copy the stored elements, so each `Array` object owns its own dynamic array.
+The copy operations allocate independent storage. The move operations transfer the `std::unique_ptr` and reset the source size/capacity, so the moved-from `Array` remains a valid empty object. The destructor is defaulted because `std::unique_ptr` releases the allocation automatically.
 
 ```cpp
 // main.cpp
 #include <iostream>
+#include <string>
+#include <utility>
 
 #include "Array.hpp"
 
@@ -681,6 +745,15 @@ int main() {
 	assigned = scores;
 	std::cout << assigned[1] << '\n';		// 85
 
+	Array<int> moved{std::move(copied)};
+	std::cout << moved[0] << '\n';			// 100
+	std::cout << copied.size() << '\n';		// 0
+
+	Array<int> move_assigned{1};
+	move_assigned = std::move(assigned);
+	std::cout << move_assigned[1] << '\n';	// 85
+	std::cout << assigned.size() << '\n';	// 0
+
 	scores.popBack();
 	std::cout << scores.size() << '\n';		// 1
 
@@ -691,9 +764,16 @@ int main() {
 	std::cout << students[0].id << '\n';	// 1
 	std::cout << students[0].score << '\n';	// 92
 
+	Array<std::string> names{2};
+	std::string first_name{"Alice"};
+	names.pushBack(first_name);				// Copy overload
+	names.pushBack(std::string{"Bob"});		// Move overload
+
+	std::cout << names[0] << ' ' << names[1] << '\n';	// Alice Bob
+
 	return 0;
 }
 ```
 
-Built-in types and user-defined types can use the same class template when they support the operations required by the selected member functions. `operator[]` performs unchecked access, and `new T[capacity]{}` requires `T` to be usable as an array element and assignable by the operations above.
+Built-in and user-defined types can use the same class template when they support the operations required by the selected member functions. `operator[]` performs unchecked access. This fixed-capacity design creates `capacity` elements up front, so `T` must support the required array construction and assignments for the operations that are used.
 

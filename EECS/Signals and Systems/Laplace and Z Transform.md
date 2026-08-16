@@ -221,6 +221,19 @@ x'''(t)\xleftrightarrow{\mathcal{L}_+}
 s^3\tilde{X}(s)-s^2x(0^-)-sx'(0^-)-x''(0^-)
 $$
 
+In general,
+
+$$
+x^{(n)}(t)\xleftrightarrow{\mathcal{L}_+}
+s^n\tilde{X}(s)-\sum_{k=0}^{n-1}s^{n-1-k}x^{(k)}(0^-)
+$$
+
+Under zero initial conditions,
+
+$$
+x^{(n)}(t)\xleftrightarrow{\mathcal{L}_+}s^n\tilde{X}(s)
+$$
+
 The initial-value term follows directly from integration by parts
 
 $$
@@ -467,6 +480,19 @@ $$
 $$
 x[n-3]\xleftrightarrow{\mathcal{Z}_+}
 z^{-3}\tilde{X}(z)+z^{-2}x[-1]+z^{-1}x[-2]+x[-3]
+$$
+
+In general, for an integer $k>0$,
+
+$$
+x[n-k]\xleftrightarrow{\mathcal{Z}_+}
+z^{-k}\tilde{X}(z)+\sum_{r=1}^{k}z^{r-k}x[-r]
+$$
+
+Under zero initial conditions,
+
+$$
+x[n-k]\xleftrightarrow{\mathcal{Z}_+}z^{-k}\tilde{X}(z)
 $$
 
 For the first delay, let $m=n-1$:

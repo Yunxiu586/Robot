@@ -17,9 +17,10 @@ A function object is an object for which function-call syntax is defined, common
 
 class Accumulator {
 public:
-	void operator()(int value) {
+	int operator()(int value) {
 		total_ += value;
 		++calls_;
+		return total_;
 	}
 
 	int total() const {
@@ -42,7 +43,7 @@ void apply(Accumulator& accumulator, int value) {
 int main() {
 	Accumulator accumulator;
 
-	accumulator(10);
+	std::cout << accumulator(10) << '\n';		// 10
 	apply(accumulator, 20);
 
 	std::cout << accumulator.total() << '\n';	// 30
@@ -75,13 +76,6 @@ private:
 	int limit_{};
 };
 
-class Descending {
-public:
-	bool operator()(int lhs, int rhs) const {
-		return lhs > rhs;
-	}
-};
-
 int main() {
 	std::vector<int> values{10, 40, 20, 30};
 
@@ -94,13 +88,17 @@ int main() {
 	auto small = std::find_if(values.begin(), values.end(), [](int value) {
 		return value < 20;
 	});
-	std::cout << *small << '\n';		// 10
+	if (small != values.end()) {
+		std::cout << *small << '\n';	// 10
+	}
 
-	std::sort(values.begin(), values.end(), Descending{});
+	std::sort(values.begin(), values.end(), [](int lhs, int rhs) {
+		return lhs > rhs;
+	});
 	for (int value : values) {
 		std::cout << value << ' ';
 	}
-	std::cout << '\n';			// 40 30 20 10
+	std::cout << '\n';					// 40 30 20 10
 }
 ```
 
@@ -139,9 +137,9 @@ The empty template argument form uses the `void` specialization and performs tra
 #include <iostream>
 
 int main() {
-	std::cout << std::plus<>{}(10, 20) << '\n';			// 30
-	std::cout << std::negate<>{}(10) << '\n';			// -10
-	std::cout << std::greater<>{}(20, 10) << '\n';		// 1
+	std::cout << std::plus<>{}(10, 20) << '\n';				// 30
+	std::cout << std::negate<>{}(10) << '\n';				// -10
+	std::cout << std::greater<>{}(20, 10) << '\n';			// 1
 	std::cout << std::logical_and<>{}(true, false) << '\n';	// 0
 	std::cout << std::logical_not<>{}(false) << '\n';		// 1
 }
@@ -155,6 +153,7 @@ The algorithms below primarily use `<algorithm>`. `std::accumulate()` is declare
 
 - `for_each()` applies a callable to every element in a range
 - `transform()` applies an operation and writes each result to a destination range
+- the callable can be a function, function object, or lambda expression
 
 Common overloads used here:
 
@@ -177,20 +176,18 @@ void printValue(int value) {
 	std::cout << value << ' ';
 }
 
-int square(int value) {
-	return value * value;
-}
-
 int main() {
 	const std::vector<int> values{1, 2, 3, 4};
 	std::vector<int> squares(values.size());
 
 	std::for_each(values.begin(), values.end(), printValue);
-	std::cout << '\n';								// 1 2 3 4
+	std::cout << '\n';			// 1 2 3 4
 
-	std::transform(values.begin(), values.end(), squares.begin(), square);
+	std::transform(values.begin(), values.end(), squares.begin(), [](int value) {
+		return value * value;
+	});
 	std::for_each(squares.begin(), squares.end(), printValue);
-	std::cout << '\n';								// 1 4 9 16
+	std::cout << '\n';			// 1 4 9 16
 }
 ```
 
@@ -202,6 +199,7 @@ int main() {
 - `binary_search()` tests whether a value is present in an appropriately partitioned range; a normally sorted range satisfies this requirement
 - `count()` counts elements equal to a value
 - `count_if()` counts elements satisfying a predicate
+- for program-defined types, `find()` and `count()` use equality comparison; `find_if()` and `count_if()` use the supplied predicate
 
 Common overloads used here:
 
@@ -230,29 +228,57 @@ count_if(InputIt first, InputIt last, Predicate predicate);
 ```cpp
 #include <algorithm>
 #include <iostream>
+#include <string>
 #include <vector>
 
-class GreaterThanTwenty {
-public:
-	bool operator()(int value) const {
-		return value > 20;
-	}
+struct Person {
+	std::string name;
+	int age;
 };
+
+bool operator==(const Person& lhs, const Person& rhs) {
+	return lhs.name == rhs.name && lhs.age == rhs.age;
+}
 
 int main() {
 	const std::vector<int> values{10, 20, 20, 30, 40};
 
 	auto found = std::find(values.begin(), values.end(), 30);
-	auto conditional = std::find_if(values.begin(), values.end(), GreaterThanTwenty{});
 	auto adjacent = std::adjacent_find(values.begin(), values.end());
 
-	std::cout << *found << '\n';							// 30
-	std::cout << *conditional << '\n';					// 30
-	std::cout << *adjacent << '\n';						// 20
+	if (found != values.end()) {
+		std::cout << *found << '\n';		// 30
+	}
+	if (adjacent != values.end()) {
+		std::cout << *adjacent << '\n';		// 20
+	}
+
 	std::cout << std::boolalpha
 			  << std::binary_search(values.begin(), values.end(), 40) << '\n';	// true
 	std::cout << std::count(values.begin(), values.end(), 20) << '\n';		// 2
-	std::cout << std::count_if(values.begin(), values.end(), GreaterThanTwenty{}) << '\n';	// 2
+
+	const std::vector<Person> people{
+		{"Alice", 20},
+		{"Bob", 30},
+		{"Bob", 30}
+	};
+
+	auto bob = std::find(people.begin(), people.end(), Person{"Bob", 30});
+	auto older = std::find_if(people.begin(), people.end(), [](const Person& person) {
+		return person.age > 20;
+	});
+
+	if (bob != people.end()) {
+		std::cout << bob->name << '\n';		// Bob
+	}
+	if (older != people.end()) {
+		std::cout << older->name << '\n';	// Bob
+	}
+
+	std::cout << std::count(people.begin(), people.end(), Person{"Bob", 30}) << '\n';	// 2
+	std::cout << std::count_if(people.begin(), people.end(), [](const Person& person) {
+		return person.age > 20;
+	}) << '\n';	// 2
 }
 ```
 
@@ -373,13 +399,6 @@ void swap(T& first, T& second);
 #include <utility>
 #include <vector>
 
-class GreaterThanTen {
-public:
-	bool operator()(int value) const {
-		return value > 10;
-	}
-};
-
 int main() {
 	const std::vector<int> source{1, 2, 3, 2, 4};
 	std::vector<int> values(source.size());
@@ -388,7 +407,9 @@ int main() {
 	std::cout << values.front() << ' ' << values.back() << '\n';	// 1 4
 
 	std::replace(values.begin(), values.end(), 2, 20);
-	std::replace_if(values.begin(), values.end(), GreaterThanTen{}, 99);
+	std::replace_if(values.begin(), values.end(), [](int value) {
+		return value > 10;
+	}, 99);
 
 	for (int value : values) {
 		std::cout << value << ' ';
@@ -401,7 +422,7 @@ int main() {
 	std::cout << values.size() << '\n';		// 2
 	std::cout << values.front() << '\n';	// 7
 	std::cout << other.size() << '\n';		// 5
-	std::cout << other.front() << '\n';	// 1
+	std::cout << other.front() << '\n';		// 1
 }
 ```
 
@@ -476,8 +497,9 @@ Each algorithm returns the end of the output range that it produced.
 #include <iostream>
 #include <vector>
 
-void printRange(const std::vector<int>& values, std::vector<int>::const_iterator end) {
-	for (auto it = values.begin(); it != end; ++it) {
+template<class InputIt>
+void printRange(InputIt first, InputIt last) {
+	for (auto it = first; it != last; ++it) {
 		std::cout << *it << ' ';
 	}
 	std::cout << '\n';
@@ -493,7 +515,7 @@ int main() {
 		second.begin(), second.end(),
 		intersection.begin()
 	);
-	printRange(intersection, intersection_end);	// 3 4
+	printRange(intersection.begin(), intersection_end);	// 3 4
 
 	std::vector<int> union_values(first.size() + second.size());
 	auto union_end = std::set_union(
@@ -501,7 +523,7 @@ int main() {
 		second.begin(), second.end(),
 		union_values.begin()
 	);
-	printRange(union_values, union_end);			// 1 2 3 4 5
+	printRange(union_values.begin(), union_end);		// 1 2 3 4 5
 
 	std::vector<int> difference(first.size());
 	auto difference_end = std::set_difference(
@@ -509,6 +531,6 @@ int main() {
 		second.begin(), second.end(),
 		difference.begin()
 	);
-	printRange(difference, difference_end);		// 1 2
+	printRange(difference.begin(), difference_end);		// 1 2
 }
 ```
