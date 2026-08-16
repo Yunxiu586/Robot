@@ -14,14 +14,7 @@ $$
 
 where $f:\mathbb{R}^n\to\mathbb{R}$ is twice continuously differentiable.
 
-At iteration $k$, let
-$$
-\boldsymbol{g}_k=\nabla f(\boldsymbol{x}_k)
-$$
-
-$$
-\boldsymbol{G}_k=\nabla^2 f(\boldsymbol{x}_k)
-$$
+At iteration $k$, let $\boldsymbol{g}_k=\nabla f(\boldsymbol{x}_k)$ and $\boldsymbol{G}_k=\nabla^2 f(\boldsymbol{x}_k)$.
 
 Assume that $f$ is twice differentiable. Near $\boldsymbol{x}_k$, use the second-order Taylor approximation
 
@@ -40,34 +33,19 @@ f(\boldsymbol{x}_k)
 (\boldsymbol{x}-\boldsymbol{x}_k)
 $$
 
-Let
+Let $\boldsymbol{d}=\boldsymbol{x}-\boldsymbol{x}_k$; then the quadratic model is
 
 $$
-\boldsymbol{d}=\boldsymbol{x}-\boldsymbol{x}_k
+\psi_k(\boldsymbol{d}) = f(\boldsymbol{x}_k) + \boldsymbol{g}_k^T\boldsymbol{d} + \frac{1}{2} \boldsymbol{d}^T\boldsymbol{G}_k\boldsymbol{d}
 $$
 
-Then the quadratic model can be written as
+The stationary condition for the quadratic model is
 
 $$
-\psi_k(\boldsymbol{d})
-=
-f(\boldsymbol{x}_k)
-+
-\boldsymbol{g}_k^T\boldsymbol{d}
-+
-\frac{1}{2}
-\boldsymbol{d}^T\boldsymbol{G}_k\boldsymbol{d}
+\nabla \psi_k(\boldsymbol{d})= \boldsymbol{g}_k+ \boldsymbol{G}_k\boldsymbol{d}=\boldsymbol{0}
 $$
 
-To find the stationary point of the model, set
-
-$$
-\nabla \psi_k(\boldsymbol{d})=
-\boldsymbol{g}_k+
-\boldsymbol{G}_k\boldsymbol{d}=\boldsymbol{0}
-$$
-
-we obtain the Newton equation
+which gives the Newton equation
 
 $$
 \boldsymbol{G}_k\boldsymbol{d}_k=-\boldsymbol{g}_k
@@ -76,9 +54,7 @@ $$
 If $\boldsymbol{G}_k$ is nonsingular, then
 
 $$
-\boldsymbol{d}_k
-=
--\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
+\boldsymbol{d}_k = -\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
 $$
 
 ##### Newton iteration
@@ -86,20 +62,14 @@ $$
 The pure Newton method takes the full Newton step
 
 $$
-\boldsymbol{x}_{k+1}
-=
-\boldsymbol{x}_k+\boldsymbol{d}_k
-=
-\boldsymbol{x}_k
--
-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
+\boldsymbol{x}_{k+1} = \boldsymbol{x}_k+\boldsymbol{d}_k = \boldsymbol{x}_k - \boldsymbol{G}_k^{-1}\boldsymbol{g}_k
 $$
 
 The iteration is repeated by computing the new gradient and Hessian at $\boldsymbol{x}_{k+1}$.
 
 ##### Local convergence
 
-Let $\boldsymbol{x}^*$ satisfy
+**theorem.** Let $\boldsymbol{x}^*$ satisfy
 
 $$
 \nabla f(\boldsymbol{x}^*)=\boldsymbol{0}
@@ -110,41 +80,17 @@ Assume that $\nabla^2 f(\boldsymbol{x}^*)^{-1}$ exists and that the initial poin
 Define the Newton mapping
 
 $$
-\boldsymbol{A}(\boldsymbol{x})
-=
-\boldsymbol{x}
--
-\nabla^2 f(\boldsymbol{x})^{-1}\nabla f(\boldsymbol{x})
+\boldsymbol{A}(\boldsymbol{x}) = \boldsymbol{x} - \nabla^2 f(\boldsymbol{x})^{-1}\nabla f(\boldsymbol{x})
 $$
 
-Let
+Let $\boldsymbol{y}=\boldsymbol{A}(\boldsymbol{x})$. Using $\nabla f(\boldsymbol{x}^*)=\boldsymbol{0}$, we have
 
 $$
-\boldsymbol{y}=\boldsymbol{A}(\boldsymbol{x})
-$$
-
-Using $\nabla f(\boldsymbol{x}^*)=\boldsymbol{0}$, we have
-
-$$
-\boldsymbol{y}-\boldsymbol{x}^*
-=
-\boldsymbol{x}
--
-\nabla^2 f(\boldsymbol{x})^{-1}\nabla f(\boldsymbol{x})
--
-\boldsymbol{x}^*
+\boldsymbol{y}-\boldsymbol{x}^* = \boldsymbol{x} - \nabla^2 f(\boldsymbol{x})^{-1}\nabla f(\boldsymbol{x}) - \boldsymbol{x}^*
 $$
 
 $$
-\boldsymbol{y}-\boldsymbol{x}^*
-=
-(\boldsymbol{x}-\boldsymbol{x}^*)
--
-\nabla^2 f(\boldsymbol{x})^{-1}
-\left[
-\nabla f(\boldsymbol{x})-
-\nabla f(\boldsymbol{x}^*)
-\right]
+\boldsymbol{y}-\boldsymbol{x}^* = (\boldsymbol{x}-\boldsymbol{x}^*) - \nabla^2 f(\boldsymbol{x})^{-1} \left[ \nabla f(\boldsymbol{x})- \nabla f(\boldsymbol{x}^*) \right]
 $$
 
 $$
@@ -160,16 +106,7 @@ $$
 \right]
 $$
 
-If there exist constants $k_1,k_2>0$ such that
-
-$$
-\left\|
-\nabla^2 f(\boldsymbol{x})^{-1}
-\right\|
-\le k_1
-$$
-
-and
+If there exist constants $k_1,k_2>0$ such that $\left\|\nabla^2 f(\boldsymbol{x})^{-1}\right\|\le k_1$ and
 
 $$
 \frac{
@@ -188,49 +125,23 @@ $$
 \le k_2
 $$
 
-with
+and $k_1k_2<1$, then
 
 $$
-k_1k_2<1
+\left\| \boldsymbol{y}-\boldsymbol{x}^* \right\| \le k_1k_2 \left\| \boldsymbol{x}^*-\boldsymbol{x} \right\| < \left\| \boldsymbol{x}^*-\boldsymbol{x} \right\|
 $$
 
-then
+Thus the Newton mapping decreases the distance to $\boldsymbol{x}^*$ locally. If $\nabla^2 f$ is Lipschitz continuous near $\boldsymbol{x}^*$, Newton method has quadratic convergence locally, namely
 
 $$
-\left\|
-\boldsymbol{y}-\boldsymbol{x}^*
-\right\|
-\le
-k_1k_2
-\left\|
-\boldsymbol{x}^*-\boldsymbol{x}
-\right\|
-<
-\left\|
-\boldsymbol{x}^*-\boldsymbol{x}
-\right\|
-$$
-
-Thus the Newton mapping decreases the distance to $\boldsymbol{x}^*$ locally.
-
-If $\nabla^2 f$ is Lipschitz continuous near $\boldsymbol{x}^*$, Newton method has quadratic convergence locally, namely
-
-$$
-\left\|
-\boldsymbol{x}_{k+1}-\boldsymbol{x}^*
-\right\|
-\le
-c
-\left\|
-\boldsymbol{x}_k-\boldsymbol{x}^*
-\right\|^2
+\left\| \boldsymbol{x}_{k+1}-\boldsymbol{x}^* \right\| \le c \left\| \boldsymbol{x}_k-\boldsymbol{x}^* \right\|^2
 $$
 
 where $c$ is a positive constant.
 
 ##### Example
 
-Solve
+**eg.** Solve
 $$
 \min f(\boldsymbol{x})=(x_1-1)^4+x_2^2
 $$
@@ -285,7 +196,7 @@ $$
 \end{bmatrix}
 $$
 
-Thus
+The first Newton step gives
 
 $$
 \boldsymbol{x}_2
@@ -333,7 +244,7 @@ $$
 \end{bmatrix}
 $$
 
-Therefore
+The second Newton step gives
 
 $$
 \boldsymbol{x}_3
@@ -380,25 +291,14 @@ $$
 
 ##### Quadratic termination
 
-For the strictly convex quadratic function
+**theorem.** For the strictly convex quadratic function
 
 $$
-f(\boldsymbol{x})
-=
-\frac{1}{2}\boldsymbol{x}^T\boldsymbol{A}\boldsymbol{x}
-+
-\boldsymbol{b}^T\boldsymbol{x}
-+
-c
+f(\boldsymbol{x}) = \frac{1}{2}\boldsymbol{x}^T\boldsymbol{A}\boldsymbol{x} + \boldsymbol{b}^T\boldsymbol{x} + c
 $$
 
-where
+where $\boldsymbol{A}\succ\boldsymbol{0}$. The following identities hold:
 
-$$
-\boldsymbol{A}\succ\boldsymbol{0}
-$$
-
-we have
 $$
 \begin{aligned}
 \frac{\partial}{\partial \boldsymbol{x}}
@@ -434,18 +334,10 @@ $$
 $$
 
 $$
-\nabla f(\boldsymbol{x})
-=
-\frac{1}{2}(\boldsymbol{A}+\boldsymbol{A}^T)\boldsymbol{x}+\boldsymbol{b}
-=
-\boldsymbol{A}\boldsymbol{x}+\boldsymbol{b}
+\nabla f(\boldsymbol{x}) = \frac{1}{2}(\boldsymbol{A}+\boldsymbol{A}^T)\boldsymbol{x}+\boldsymbol{b} = \boldsymbol{A}\boldsymbol{x}+\boldsymbol{b}
 $$
 
-The stationary condition gives
-
-$$
-\boldsymbol{A}\boldsymbol{x}+\boldsymbol{b}=\boldsymbol{0}
-$$
+The stationary condition $\boldsymbol{A}\boldsymbol{x}+\boldsymbol{b}=\boldsymbol{0}$ therefore gives the minimizer
 
 $$
 \boldsymbol{x}^*=-\boldsymbol{A}^{-1}\boldsymbol{b}
@@ -454,21 +346,11 @@ $$
 For any initial point $\boldsymbol{x}_1$,
 
 $$
-\boldsymbol{x}_2
-=
-\boldsymbol{x}_1
--
-\boldsymbol{A}^{-1}\nabla f(\boldsymbol{x}_1)
+\boldsymbol{x}_2 = \boldsymbol{x}_1 - \boldsymbol{A}^{-1}\nabla f(\boldsymbol{x}_1)
 $$
 
 $$
-\boldsymbol{x}_2
-=
-\boldsymbol{x}_1
--
-\boldsymbol{A}^{-1}(\boldsymbol{A}\boldsymbol{x}_1+\boldsymbol{b})
-=
--\boldsymbol{A}^{-1}\boldsymbol{b}
+\boldsymbol{x}_2 = \boldsymbol{x}_1 - \boldsymbol{A}^{-1}(\boldsymbol{A}\boldsymbol{x}_1+\boldsymbol{b}) = -\boldsymbol{A}^{-1}\boldsymbol{b}
 $$
 
 Hence Newton method reaches the minimizer in one iteration for a strictly convex quadratic function. This property is called quadratic termination.
@@ -480,11 +362,7 @@ First, when the initial point is **far** from the minimizer, the Newton method m
 The Newton direction
 
 $$
-\boldsymbol{d}
-=
--
-\nabla^2 f(\boldsymbol{x})^{-1}
-\nabla f(\boldsymbol{x})
+\boldsymbol{d} = - \nabla^2 f(\boldsymbol{x})^{-1} \nabla f(\boldsymbol{x})
 $$
 
 is **not necessarily a descent direction**. The objective function value may increase. Even if the function value decreases, the full Newton step may not be the best point along the Newton direction.
@@ -492,30 +370,12 @@ is **not necessarily a descent direction**. The objective function value may inc
 Second, the computational cost can be high. At each iteration, Newton method needs to compute the Hessian matrix and solve the Newton equation
 
 $$
-\boldsymbol{G}_k\boldsymbol{d}_k
-=
--
-\boldsymbol{g}_k
+\boldsymbol{G}_k\boldsymbol{d}_k = - \boldsymbol{g}_k
 $$
 
 For large-scale problems, forming and storing $\boldsymbol{G}_k$ and solving the linear system can be expensive.
 
-Third, the Hessian matrix may be singular. If
-
-$$
-\det(\boldsymbol{G}_k)=0
-$$
-
-then $\boldsymbol{G}_k^{-1}$ does not exist, and the Newton direction
-
-$$
-\boldsymbol{d}_k
-=
--
-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
-$$
-
-cannot be computed directly.
+Third, the Hessian matrix may be singular. If $\det(\boldsymbol{G}_k)=0$, then $\boldsymbol{G}_k^{-1}$ does not exist, and the Newton direction $\boldsymbol{d}_k=-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k$ cannot be computed directly.
 
 ### Damped Newton Method
 
@@ -526,30 +386,13 @@ The damped Newton method adds a one-dimensional search along the Newton directio
 The iteration is
 
 $$
-\boldsymbol{x}_{k+1}
-=
-\boldsymbol{x}_k+
-\alpha_k\boldsymbol{d}_k
+\boldsymbol{x}_{k+1} = \boldsymbol{x}_k+ \alpha_k\boldsymbol{d}_k
 $$
 
-where
+where $\boldsymbol{d}_k=-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k$ and $\alpha_k$ is chosen by line search
 
 $$
-\boldsymbol{d}_k
-=
--
-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
-$$
-
-and $\alpha_k$ is chosen by line search
-
-$$
-f(\boldsymbol{x}_k+
-\alpha_k\boldsymbol{d}_k)
-=
-\min_{\alpha\ge 0}
-f(\boldsymbol{x}_k+
-\alpha\boldsymbol{d}_k)
+f(\boldsymbol{x}_k+ \alpha_k\boldsymbol{d}_k) = \min_{\alpha\ge 0} f(\boldsymbol{x}_k+ \alpha\boldsymbol{d}_k)
 $$
 
 ##### Algorithm
@@ -568,41 +411,22 @@ $$
 \boldsymbol{G}_k=\nabla^2 f(\boldsymbol{x}_k)
 $$
 
-If
+If $\|\boldsymbol{g}_k\|<\varepsilon$, stop. Otherwise set
 
 $$
-\|\boldsymbol{g}_k\|<\varepsilon
-$$
-
-stop.
-
-Otherwise set
-
-$$
-\boldsymbol{d}_k
-=
--
-\boldsymbol{G}_k^{-1}\boldsymbol{g}_k
+\boldsymbol{d}_k = - \boldsymbol{G}_k^{-1}\boldsymbol{g}_k
 $$
 
 Choose $\alpha_k$ by line search
 
 $$
-\min_{\alpha\ge 0}
-f(\boldsymbol{x}_k+
-\alpha\boldsymbol{d}_k)
-=
-f(\boldsymbol{x}_k+
-\alpha_k\boldsymbol{d}_k)
+\min_{\alpha\ge 0} f(\boldsymbol{x}_k+ \alpha\boldsymbol{d}_k) = f(\boldsymbol{x}_k+ \alpha_k\boldsymbol{d}_k)
 $$
 
 Update
 
 $$
-\boldsymbol{x}_{k+1}
-=
-\boldsymbol{x}_k+
-\alpha_k\boldsymbol{d}_k
+\boldsymbol{x}_{k+1} = \boldsymbol{x}_k+ \alpha_k\boldsymbol{d}_k
 $$
 
 Set $k:=k+1$ and repeat.
@@ -621,12 +445,10 @@ Second, even if the Hessian is nonsingular, it may not be positive definite. The
 
 ##### Failure example
 
-Consider
+**eg.** Consider
 
 $$
-\min f(\boldsymbol{x})
-=
-x_1^4+x_1x_2+(1+x_2)^2
+\min f(\boldsymbol{x}) = x_1^4+x_1x_2+(1+x_2)^2
 $$
 
 Take
@@ -686,109 +508,40 @@ $$
 Along this direction,
 
 $$
-\phi(\alpha)
-=
-f(\boldsymbol{x}_1+
-\alpha\boldsymbol{d}_1)
-=
-16\alpha^4+1
+\phi(\alpha) = f(\boldsymbol{x}_1+ \alpha\boldsymbol{d}_1) = 16\alpha^4+1
 $$
 
-Thus
-
-$$
-\phi'(\alpha)=64\alpha^3=0
-$$
-
-The one-dimensional minimizer is
-
-$$
-\alpha_1=0
-$$
-
-So the damped Newton method cannot generate a new point, although $\boldsymbol{x}_1$ is not a minimizer. The reason is that $\boldsymbol{G}_1$ is not positive definite.
+Since $\phi'(\alpha)=64\alpha^3=0$, the one-dimensional minimizer is $\alpha_1=0$. Hence the damped Newton method cannot generate a new point although $\boldsymbol{x}_1$ is not a minimizer; the reason is that $\boldsymbol{G}_1$ is not positive definite.
 
 ##### Positive definite modification
 
 This positive definite modification is also known as the Goldfeld modified Newton method.
 
-The Newton equation is
-$$
-\boldsymbol{G}_k\boldsymbol{d}_k
-=
--
-\boldsymbol{g}_k
-$$
+The Newton equation is $\boldsymbol{G}_k\boldsymbol{d}_k=-\boldsymbol{g}_k$.
 
 The basic idea of modified Newton methods is to replace $\boldsymbol{G}_k$ by a symmetric positive definite matrix $\boldsymbol{M}_k$.
 
 Solve
 
 $$
-\boldsymbol{M}_k\boldsymbol{d}_k
-=
--
-\boldsymbol{g}_k
+\boldsymbol{M}_k\boldsymbol{d}_k = - \boldsymbol{g}_k
 $$
 
 $$
-\boldsymbol{d}_k
-=
--
-\boldsymbol{M}_k^{-1}\boldsymbol{g}_k
+\boldsymbol{d}_k = - \boldsymbol{M}_k^{-1}\boldsymbol{g}_k
 $$
 
-If
+If $\boldsymbol{M}_k\succ\boldsymbol{0}$ and $\boldsymbol{g}_k\ne\boldsymbol{0}$, then
 
 $$
-\boldsymbol{M}_k\succ\boldsymbol{0}
+\boldsymbol{g}_k^T\boldsymbol{d}_k = - \boldsymbol{g}_k^T\boldsymbol{M}_k^{-1}\boldsymbol{g}_k <0
 $$
 
-$$
-\boldsymbol{g}_k\ne\boldsymbol{0}
-$$
-
-then
-
-$$
-\boldsymbol{g}_k^T\boldsymbol{d}_k
-=
--
-\boldsymbol{g}_k^T\boldsymbol{M}_k^{-1}\boldsymbol{g}_k
-<0
-$$
-
-Thus $\boldsymbol{d}_k$ is a descent direction.
-
-A simple choice is
-
-$$
-\boldsymbol{M}_k
-=
-\boldsymbol{G}_k+
-\varepsilon_k\boldsymbol{I}
-$$
-
-where $\varepsilon_k>0$ is chosen so that $\boldsymbol{M}_k$ is positive definite.
-
-If $\mu_i$ is an eigenvalue of $\boldsymbol{G}_k$, then $\mu_i+\varepsilon_k$ is an eigenvalue of $\boldsymbol{M}_k$. Choosing $\varepsilon_k$ sufficiently large makes all eigenvalues positive.
+Thus $\boldsymbol{d}_k$ is a descent direction. A simple choice is $\boldsymbol{M}_k=\boldsymbol{G}_k+\varepsilon_k\boldsymbol{I}$, where $\varepsilon_k>0$ is chosen so that $\boldsymbol{M}_k$ is positive definite. If $\mu_i$ is an eigenvalue of $\boldsymbol{G}_k$, then $\mu_i+\varepsilon_k$ is an eigenvalue of $\boldsymbol{M}_k$; choosing $\varepsilon_k$ sufficiently large makes all eigenvalues positive.
 
 ##### Saddle point case
 
-If $\boldsymbol{x}_k$ is a saddle point, then it may happen that
-
-$$
-\boldsymbol{g}_k=\boldsymbol{0}
-$$
-
-and
-
-$$
-\boldsymbol{G}_k
-\text{ is indefinite}
-$$
-
-Then the equation
+At a saddle point $\boldsymbol{x}_k$, it may happen that $\boldsymbol{g}_k=\boldsymbol{0}$ while $\boldsymbol{G}_k \text{ is indefinite}$. In that case, the equation
 
 $$
 \boldsymbol{M}_k\boldsymbol{d}_k=-\boldsymbol{g}_k
