@@ -126,7 +126,7 @@ $$
 \angle H(j\omega)=\operatorname{atan2}(\omega,-1)-\operatorname{atan2}(\omega,2)
 $$
 
-<img src="../../Figures/Ctrl_theory_demo1.png" style="zoom: 30%;" />
+<img src="/home/yunxiu/Desktop/ROS2_study/Notes/Figures/Ctrl_theory_demo1.png" style="zoom: 30%;" />
 
 As $\omega\to0^+$, the vector from the right-half-plane zero approaches the negative real axis from above, so its angle approaches $180^\circ$. The pole vector approaches the positive real axis, so its angle approaches $0^\circ$. Thus
 $$
@@ -139,14 +139,7 @@ As $\omega\to\infty$, both vector angles approach $90^\circ$, so $|H(j\omega)|\t
 
 ##### Proportional Factor
 
-For
-
-$$
-G(s)=K
-$$
-
-If $K>0$,
-
+For $G(s)=K$, if $K>0$,
 $$
 G(j\omega)=K=Ke^{j0}
 $$
@@ -163,11 +156,7 @@ $$
 L(\omega)=20\log_{10}K
 $$
 
-In general,
-
-$$
-A(\omega)=|K|
-$$
+In general, $A(\omega)=|K|$.
 
 ##### Integral and Derivative Factors
 
@@ -422,7 +411,6 @@ L(\omega)=0\ \mathrm{dB}
 $$
 
 A time delay changes only the phase. For small $\tau\omega$,
-
 $$
 e^{-j\tau\omega}\approx 1-j\tau\omega\approx\frac{1}{1+j\tau\omega}
 $$
@@ -447,23 +435,7 @@ $$
 L_{\mathrm{low}}(\omega)=20\log_{10}K-20\nu\log_{10}\omega
 $$
 
-The initial slope is
-
-$$
--20\nu\ \mathrm{dB/dec}
-$$
-
-At $\omega=1$,
-
-$$
-L_{\mathrm{low}}(1)=20\log_{10}K
-$$
-
-For $\nu>0$, the low-frequency asymptote crosses $0\ \mathrm{dB}$ at
-
-$$
-\omega=K^{1/\nu}
-$$
+The initial slope is $-20\nu\ \mathrm{dB/dec}$. At $\omega=1$, $L_{\mathrm{low}}(1)=20\log_{10}K$. For $\nu>0$, the low-frequency asymptote crosses $0\ \mathrm{dB}$ at $\omega=K^{1/\nu}$.
 
 Each factor changes the slope after its corner frequency.
 

@@ -14,11 +14,7 @@ Standard test inputs are used because the actual input is often unknown. They pr
 | parabolic | $\dfrac{A}{2}t^2u(t)$ | $\dfrac{A}{s^3}$ |
 | common | $A t^n u(t)$ | $A\dfrac{n!}{s^{n+1}}$ |
 
-The unit impulse has unit area
-
-$$
-\int_{-\infty}^{\infty}\delta(t)\,dt=1
-$$
+The unit impulse has unit area $\int_{-\infty}^{\infty}\delta(t)\,dt=1$.
 
 ### Time Response
 
@@ -57,45 +53,13 @@ $$
 
 Stability is the most important requirement of a control system. A linear time-invariant system is Bounded-Input Bounded-Output(BIBO)  stable if every bounded input produces a bounded output.
 
-A proper rational continuous-time LTI transfer function is BIBO stable if and only if all poles of the reduced transfer function lie in the open left-half $s$-plane. A finite-dimensional closed-loop realization is internally asymptotically stable if and only if all roots of its characteristic equation lie in the open left-half $s$-plane. Pole–zero cancellation can hide unstable internal modes, so BIBO stability of the reduced transfer function does not by itself guarantee internal stability.
+A proper rational continuous-time LTI transfer function is BIBO stable if and only if all poles of the reduced transfer function lie in the open left-half $s$-plane, $\operatorname{Re}(s_i)<0$. A finite-dimensional closed-loop realization is internally asymptotically stable if and only if all roots of its characteristic equation lie in the open left-half $s$-plane. Pole–zero cancellation can hide unstable internal modes, so BIBO stability of the reduced transfer function does not by itself guarantee internal stability.
 
-$$
-\operatorname{Re}(s_i)<0
-$$
-
-For a pole
-
-$$
-s_i=\sigma_i+j\omega_i
-$$
-
-the corresponding time-domain mode has the form
-
-$$
-t^k e^{s_i t}
-=
-t^k e^{\sigma_i t}e^{j\omega_i t}
-$$
-
-where $k\geq 0$ accounts for repeated poles. Its magnitude is
-
-$$
-\left|t^k e^{s_i t}\right|
-=
-t^k e^{\sigma_i t}
-$$
-
-If $\sigma_i<0$, the exponential decay dominates any finite power of $t$, so
-
+For a pole $s_i=\sigma_i+j\omega_i$, the corresponding time-domain mode is $t^k e^{s_i t}=t^k e^{\sigma_i t}e^{j\omega_i t}$, where $k\geq 0$ accounts for repeated poles, and its magnitude is $\left|t^k e^{s_i t}\right|=t^k e^{\sigma_i t}$. If $\sigma_i<0$, the exponential decay dominates any finite power of $t$, so
 $$
 \lim_{t\to\infty}t^k e^{\sigma_i t}=0
 $$
-
-Thus, every natural mode decays to zero. For a proper rational transfer function, the impulse response is a finite sum of these modes. Therefore,
-
-$$
-\int_0^\infty |h(t)|\,dt<\infty
-$$
+Thus, every natural mode decays to zero. For a proper rational transfer function, the impulse response is a finite sum of these modes, so $\int_0^\infty |h(t)|\,dt<\infty$.
 
 For any bounded input satisfying $|u(t)|\leq M$,
 
@@ -183,27 +147,7 @@ $$
 y(t)=K\left(1-e^{-t/T}\right)u(t)
 $$
 
-The time constant $T$ determines the speed of response. At $t=T$, the response reaches $63.2\%$ of its final value.
-
-$$
-y(T)=0.632K
-$$
-
-For a stable first-order system with $K>0$ and $T>0$, the unit-step response is monotonic, so there is no overshoot.
-
-$$
-M_p=0
-$$
-
-Common settling-time approximations are
-
-$$
-t_s\approx3T\quad \text{for the }5\%\text{ criterion}
-$$
-
-$$
-t_s\approx4T\quad \text{for the }2\%\text{ criterion}
-$$
+The time constant $T$ determines the speed of response. At $t=T$, the response reaches $63.2\%$ of its final value, $y(T)=0.632K$. For a stable first-order system with $K>0$ and $T>0$, the unit-step response is monotonic, so $M_p=0$. Common settling-time approximations are $t_s\approx3T\quad \text{for the }5\%\text{ criterion}$ and $t_s\approx4T\quad \text{for the }2\%\text{ criterion}$.
 
 The unit-impulse response is
 

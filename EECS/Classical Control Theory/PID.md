@@ -6,11 +6,7 @@
 
 ##### Continuous Form
 
-For a negative-feedback system, the control error is
-
-$$
-e(t)=r(t)-y(t)
-$$
+For a negative-feedback system, the control error is $e(t)=r(t)-y(t)$.
 
 The ideal parallel-form PID control law is
 
@@ -30,11 +26,7 @@ $$
 C(s)=K_p\left(1+\frac{1}{T_is}+T_ds\right)
 $$
 
-where
-
-$$
-K_i=\frac{K_p}{T_i},\qquad K_d=K_pT_d
-$$
+where $K_i={K_p}/{T_i}, K_d=K_pT_d$.
 
 ##### Control Actions
 
@@ -134,11 +126,7 @@ The pole at the origin raises the low-frequency gain and improves steady-state a
 
 ##### Position Form
 
-With sampling period $T_s$, let
-
-$$
-e[k]=r[k]-y[k]
-$$
+With sampling period $T_s$, let $e[k]=r[k]-y[k]$.
 
 A basic discrete PID implementation is
 
@@ -158,11 +146,7 @@ $$
 
 ##### Increment Form
 
-The change in controller output is
-
-$$
-\Delta u[k]=u[k]-u[k-1]
-$$
+The change in controller output is $\Delta u[k]=u[k]-u[k-1]$.
 
 For the same rectangular integration and backward-difference derivative,
 
@@ -173,11 +157,7 @@ $$
 \end{aligned}
 $$
 
-Then
-
-$$
-u[k]=u[k-1]+\Delta u[k]
-$$
+Then $u[k]=u[k-1]+\Delta u[k]$.
 
 ##### Sampling Period
 
@@ -189,15 +169,7 @@ The controller gains and $T_s$ form one design. Changing the sampling period wit
 
 Actuator saturation can keep the error nonzero even though the control output cannot increase further. Continued integration then causes integrator windup, which can increase overshoot and delay recovery from saturation.
 
-**Integral clamping** limits the integral contribution to a prescribed range
-
-$$
-I_{\mathrm{raw}}[k]=I[k-1]+K_iT_se[k]
-$$
-
-$$
-I[k]=\operatorname{clip}\left(I_{\mathrm{raw}}[k],I_{\min},I_{\max}\right)
-$$
+**Integral clamping** limits the integral contribution to a prescribed range: $I_{\mathrm{raw}}[k]=I[k-1]+K_iT_se[k]$, followed by $I[k]=\operatorname{clip}\left(I_{\mathrm{raw}}[k],I_{\min},I_{\max}\right)$.
 
 The bounds should be consistent with the available control effort. Limiting only the final output does not prevent the internal integral state from continuing to grow.
 
@@ -225,28 +197,9 @@ Because differentiating $e[k]=r[k]-y[k]$ includes the setpoint change, a step in
 
 A practical basic procedure is
 
-1. Set $K_i=0$ and $K_d=0$.
-2. Increase $K_p$ until the response is sufficiently fast without unacceptable oscillation.
-3. Increase $K_i$ gradually until the required steady-state accuracy is obtained.
-4. Add $K_d$ only when additional damping or overshoot reduction is needed.
-5. Recheck rise time, overshoot, settling time, steady-state error, and stability after each change.
++ Set $K_i=0$ and $K_d=0$. Increase $K_p$ until the response is sufficiently fast without unacceptable oscillation.
++ Increase $K_i$ gradually until the required steady-state accuracy is obtained.
++ Add $K_d$ only when additional damping or overshoot reduction is needed.
++ Recheck rise time, overshoot, settling time, steady-state error, and stability after each change.
 
 Only one gain should be changed at a time during the first tuning pass. The final gains are a compromise among response speed, overshoot, accuracy, and robustness.
-
-##### Ultimate-Gain Rule
-
-For the classical Ziegler–Nichols closed-loop method, set $K_i=K_d=0$ and increase the proportional gain until sustained oscillation occurs. Let $K_u$ be the ultimate gain and $T_u$ the oscillation period.
-
-| controller | $K_p$ | $T_i$ | $T_d$ |
-|---|---:|---:|---:|
-| P | $0.5K_u$ | — | — |
-| PI | $0.45K_u$ | $T_u/1.2$ | — |
-| PID | $0.6K_u$ | $T_u/2$ | $T_u/8$ |
-
-For the parallel form,
-
-$$
-K_i=\frac{K_p}{T_i},\qquad K_d=K_pT_d
-$$
-
-These values are initial estimates rather than final settings. The method often gives an aggressive response, so the gains should be refined according to the required performance and stability margin.

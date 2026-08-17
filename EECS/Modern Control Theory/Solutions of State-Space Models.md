@@ -2,7 +2,7 @@
 
 [toc]
 
-### Solution of the LTI State Equation
+### Solving the Time-Invariant State Equation
 
 ##### Response Decomposition
 
@@ -216,16 +216,16 @@ This method is especially simple when powers of $A$ terminate or repeat in a sim
 
 ##### Canonical-Form Method
 
-If $A=MJM^{-1}$, then $A^k=MJ^kM^{-1}$ for every nonnegative integer $k$. Hence
+If $A=SJS^{-1}$, then $A^k=SJ^kS^{-1}$ for every nonnegative integer $k$. Hence
 
 $$
-e^{At}=M e^{Jt}M^{-1}
+e^{At}=S e^{Jt}S^{-1}
 $$
 
 If $A$ has $n$ distinct eigenvalues, it is diagonalizable. With
 
 $$
-A=M\Lambda M^{-1}
+A=P\Lambda P^{-1}
 \qquad
 \Lambda=\operatorname{diag}(\lambda_1,\lambda_2,\ldots,\lambda_n)
 $$
@@ -236,8 +236,8 @@ $$
 \begin{aligned}
 e^{At}
 &=\sum_{k=0}^{\infty}\frac{A^kt^k}{k!}
-=M\left(\sum_{k=0}^{\infty}\frac{\Lambda^kt^k}{k!}\right)M^{-1}\\
-&=M\operatorname{diag}\left(e^{\lambda_1t},e^{\lambda_2t},\ldots,e^{\lambda_nt}\right)M^{-1}
+=P\left(\sum_{k=0}^{\infty}\frac{\Lambda^kt^k}{k!}\right)P^{-1}\\
+&=P\operatorname{diag}\left(e^{\lambda_1t},e^{\lambda_2t},\ldots,e^{\lambda_nt}\right)P^{-1}
 \end{aligned}
 $$
 
@@ -275,9 +275,9 @@ $$
 For $\lambda=-1$, there is only one linearly independent eigenvector, so a Jordan form is required. Choose
 
 $$
-M=\begin{bmatrix}1&2&1\\-1&-1&2\\1&0&4\end{bmatrix}
+S=\begin{bmatrix}1&2&1\\-1&-1&2\\1&0&4\end{bmatrix}
 \qquad
-J=M^{-1}AM=
+J=S^{-1}AS=
 \begin{bmatrix}-1&1&0\\0&-1&0\\0&0&2\end{bmatrix}
 $$
 
@@ -291,7 +291,7 @@ e^{-t}&te^{-t}&0\\
 \end{bmatrix}
 $$
 
-and $e^{At}=Me^{Jt}M^{-1}$ gives
+and $e^{At}=Se^{Jt}S^{-1}$ gives
 
 $$
 e^{At}=\frac{e^{-t}}{9}

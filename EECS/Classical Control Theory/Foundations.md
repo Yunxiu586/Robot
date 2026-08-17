@@ -64,23 +64,7 @@ $$
 G(s)=\frac{Y(s)}{R(s)}
 $$
 
-The transfer function is a property of the system and is independent of the particular input signal. It is also the Laplace transform of the **impulse response**.
-
-$$
-G(s)=\mathcal{L}\{g(t)\}
-$$
-
-For a **single-input, single-output (SISO)** system,
-
-$$
-Y(s)=G(s)R(s)
-$$
-
-For a **multiple-input, multiple-output (MIMO)** system,
-
-$$
-\boldsymbol{Y}(s)=\mathbf{G}(s)\boldsymbol{R}(s)
-$$
+The transfer function is a property of the system and is independent of the particular input signal. It is also the Laplace transform of the **impulse response**, $G(s)=\mathcal{L}\{g(t)\}$. For a **single-input, single-output (SISO)** system, $Y(s)=G(s)R(s)$; for a **multiple-input, multiple-output (MIMO)** system, $\boldsymbol{Y}(s)=\mathbf{G}(s)\boldsymbol{R}(s)$.
 
 ##### Polynomial Form
 
@@ -179,11 +163,7 @@ $$
 
 <img src="../../Figures/Automatic_Control_block_diagram.png" alt="block diagram" style="zoom: 24%;" />
 
-Here $E(s)$ is the error signal, $B(s)$ is the feedback signal, $G(s)$ is the forward-path transfer function, and $H(s)$ is the feedback-path transfer function. For unity feedback,
-
-$$
-H(s)=1
-$$
+Here $E(s)$ is the error signal, $B(s)$ is the feedback signal, $G(s)$ is the forward-path transfer function, and $H(s)$ is the feedback-path transfer function. For unity feedback, $H(s)=1$.
 
 For **negative feedback**,
 

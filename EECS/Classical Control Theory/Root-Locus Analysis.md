@@ -97,17 +97,13 @@ Complex-conjugate poles and zeros do not change this real-axis rule because thei
 Breakaway and break-in points occur when multiple closed-loop poles meet at the same point. Let
 
 $$
-M(s)=\prod_{j=1}^{m}(s-z_j)
-$$
-
-$$
-N(s)=\prod_{i=1}^{n}(s-p_i)
+M(s)=\prod_{j=1}^{m}(s-z_j) \qquad N(s)=\prod_{i=1}^{n}(s-p_i)
 $$
 
 Since
 
 $$
-L(s)=k\frac{M(s)}{N(s)}
+L(s)=k\frac{M(s)}{N(s)}= -1
 $$
 
 the characteristic equation gives
@@ -121,8 +117,6 @@ Possible breakaway or break-in points satisfy
 $$
 \frac{dk}{ds}=0
 $$
-
-or
 
 $$
 N'(s)M(s)-N(s)M'(s)=0
@@ -259,27 +253,7 @@ $$
 =180^\circ+\angle(p_1-z_1)-\angle(p_1-p_2)
 $$
 
-Since
-
-$$
-\angle(p_1-z_1)=\angle(1+j)=45^\circ
-$$
-
-$$
-\angle(p_1-p_2)=\angle(2j)=90^\circ
-$$
-
-we obtain
-
-$$
-\theta_{d,1}=135^\circ
-$$
-
-By symmetry, the departure angle from the lower pole is
-
-$$
-\theta_{d,2}=-135^\circ
-$$
+Since $\angle(p_1-z_1)=\angle(1+j)=45^\circ$ and $\angle(p_1-p_2)=\angle(2j)=90^\circ$, we obtain $\theta_{d,1}=135^\circ$. By symmetry, the departure angle from the lower pole is $\theta_{d,2}=-135^\circ$.
 
 From the characteristic equation, the gain at a point on the locus is
 
@@ -290,40 +264,12 @@ $$
 A break-in point satisfies
 
 $$
-\frac{dk}{ds}=0
-$$
-
-Therefore,
-
-$$
 \frac{dk}{ds}
 =-\frac{(2s+2)(s+2)-(s^2+2s+2)}{(s+2)^2}
 =-\frac{s^2+4s+2}{(s+2)^2}=0
 $$
 
-Hence,
-
-$$
-s=-2\pm\sqrt{2}
-$$
-
-For $s=-2+\sqrt{2}$,
-
-$$
-k=2-2\sqrt{2}<0
-$$
-
-so this point is not on the positive-gain root locus. The valid break-in point is
-
-$$
-d=-2-\sqrt{2}\approx-3.414
-$$
-
-and the corresponding gain is
-
-$$
-k_d=2+2\sqrt{2}\approx4.828
-$$
+Hence, $s=-2\pm\sqrt{2}$. For $s=-2+\sqrt{2}$, $k=2-2\sqrt{2}<0$, so this point is not on the positive-gain root locus. The valid break-in point is $d=-2-\sqrt{2}\approx-3.414$, with corresponding gain $k_d=2+2\sqrt{2}\approx4.828$.
 
 The closed-loop roots can also be written explicitly as
 
@@ -333,29 +279,7 @@ s_{1,2}
 \pm\frac{1}{2}\sqrt{k^2-4k-4}
 $$
 
-For
-
-$$
-0\le k<2+2\sqrt{2}
-$$
-
-the roots are complex. Let
-
-$$
-s=\sigma+j\omega
-$$
-
-Then
-
-$$
-\sigma=-\frac{k+2}{2}
-$$
-
-and
-
-$$
-\omega^2=\frac{-k^2+4k+4}{4}
-$$
+For $0\le k<2+2\sqrt{2}$, the roots are complex. Let $s=\sigma+j\omega$; then $\sigma=-\frac{k+2}{2}$ and $\omega^2=\frac{-k^2+4k+4}{4}$.
 
 Eliminating $k$ gives
 
@@ -365,18 +289,10 @@ $$
 
 Therefore, the complex portion of the root locus lies on the circle centered at $-2$ with radius $\sqrt{2}$. The branches start at $-1\pm j$ and meet at $d=-2-\sqrt{2}$. For $k>k_d$, the two roots are real: one branch moves from $d$ toward the zero at $-2$, while the other moves from $d$ toward $-\infty$.
 
-Because $n-m=1$, there is one asymptote. Its angle and centroid are
-
+Because $n-m=1$, there is one asymptote. Its angle is $\phi_a=180^\circ$, and its centroid is
 $$
-\phi_a=180^\circ
+\sigma_a=\frac{(-1+j)+(-1-j)-(-2)}{1}=0
 $$
-
-$$
-\sigma_a
-=\frac{(-1+j)+(-1-j)-(-2)}{1}
-=0
-$$
-
 Thus, the branch going to infinity approaches the negative real axis. The second-order Routh conditions are
 
 $$
@@ -396,31 +312,11 @@ $$
 L(s)=\frac{k}{s(s+4)(s+6)}
 $$
 
-The open-loop poles are
+The open-loop poles are $p_1=0,p_2=-4,p_3=-6$.There are no finite open-loop zeros. Therefore, there are three branches and all three branches end at infinity.
 
-$$
-p_1=0,\qquad p_2=-4,\qquad p_3=-6
-$$
+The real-axis segments are $(-\infty,-6),(-4,0)$.
 
-There are no finite open-loop zeros. Therefore, there are three branches and all three branches end at infinity.
-
-The real-axis segments are
-
-$$
-(-\infty,-6),\qquad (-4,0)
-$$
-
-From the characteristic equation,
-
-$$
-1+\frac{k}{s(s+4)(s+6)}=0
-$$
-
-so
-
-$$
-k=-s(s+4)(s+6)
-$$
+From the characteristic equation $1+L(s)=0$, $k=-s(s+4)(s+6)$.
 
 The breakaway points satisfy
 
@@ -428,17 +324,7 @@ $$
 \frac{dk}{ds}=-(3s^2+20s+24)=0
 $$
 
-Thus,
-
-$$
-s=\frac{-10\pm2\sqrt{7}}{3}
-$$
-
-The valid breakaway point is
-
-$$
-s\approx-1.57,\qquad k\approx16.9
-$$
+Thus, $s=\frac{-10\pm2\sqrt{7}}{3}$. The valid breakaway point is $s\approx-1.57,k\approx16.9$.
 
 The asymptote centroid is
 
@@ -481,23 +367,7 @@ $$
 0<k<240
 $$
 
-At the stability boundary,
-
-$$
-k=240
-$$
-
-The auxiliary equation is
-
-$$
-10s^2+240=0
-$$
-
-so the imaginary-axis crossing is
-
-$$
-s=\pm j2\sqrt{6}
-$$
+At the stability boundary, $k=240$. The auxiliary equation $10s^2+240=0$ gives the imaginary-axis crossing $s=\pm j2\sqrt{6}$.
 
 The figure below summarizes the complete construction. The real-axis breakaway occurs at $s\approx-1.57$ with $k\approx16.9$; the asymptotes intersect the real axis at $\sigma_a=-10/3$; and the locus crosses the imaginary axis at $s=\pm j2\sqrt{6}$ when $k=240$. The $60^\circ$ line from the negative real axis is used to impose the damping-ratio and overshoot requirement.
 
