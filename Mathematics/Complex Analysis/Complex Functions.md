@@ -6,13 +6,7 @@
 
 ##### Algebraic and polar forms
 
-For
-
-$$
-z=x+iy=re^{i\theta}
-$$
-
-we have
+For $z=x+iy=re^{i\theta}$, we have
 
 $$
 z^2=x^2-y^2+2ixy=r^2e^{2i\theta}
@@ -59,9 +53,9 @@ $$
 \operatorname{Arg}\overline z=-\operatorname{Arg}z\pmod{2\pi}
 $$
 
-For the principal argument this identity holds away from the negative real axis
+For the principal argument this identity holds away from the negative real axis. 
 
-At $z=0$ the argument is undefined
+At $z=0$ the argument is undefined.
 
 The full set of arguments is
 
@@ -89,21 +83,17 @@ z_k=\sqrt[n]{r}\left[
 \qquad k=0,1,\ldots,n-1
 $$
 
-De Moivre's formula follows from Euler's formula
-
-$$
-(e^{i\theta})^n=e^{in\theta}=\cos n\theta+i\sin n\theta
-$$
+De Moivre's formula follows from Euler's formula, since $(e^{i\theta})^n=e^{in\theta}=\cos n\theta+i\sin n\theta$.
 
 ##### Rotation factors
 
-Multiplication by $i$ rotates by $\pi/2$
+Multiplication by $i$ rotates by $\pi/2$.
 
 $$
 ire^{i\theta}=re^{i(\theta+\pi/2)}
 $$
 
-Multiplication by $-1$ rotates by $\pi$
+Multiplication by $-1$ rotates by $\pi$.
 
 $$
 -re^{i\theta}=re^{i(\theta\pm\pi)}
@@ -119,7 +109,7 @@ $$
 \lim_{\Delta z\to0}\frac{\Delta\overline z}{\Delta z}
 $$
 
-does not exist
+does not exist.
 
 **Solution.**
 
@@ -162,35 +152,27 @@ f'(z_0)=\lim_{\Delta z\to0}
 \Delta z)-f(z_0)}{\Delta z}
 $$
 
-The limit must be independent of the path by which $\Delta z\to0$
+The limit must be independent of the path by which $\Delta z\to0$.
 
 ##### Holomorphicity
 
-If $f$ is differentiable in a neighborhood of $z_0$ then $f$ is holomorphic at $z_0$
+If $f$ is differentiable in a neighborhood of $z_0$ then $f$ is holomorphic at $z_0$.
 
-If $f$ is not holomorphic at $z_0$ then $z_0$ is a singular point of $f$
+If $f$ is not holomorphic at $z_0$ then $z_0$ is a singular point of $f$.
 
-If $f$ is holomorphic at every point of a domain $D$ then $f$ is holomorphic in $D$
+If $f$ is holomorphic at every point of a domain $D$ then $f$ is holomorphic in $D$.
 
 In common terminology
 
 $$
 \text{holomorphic}\approx\text{complex differentiable on a domain}
-$$
-
-$$
+\qquad
 \text{analytic}\approx\text{locally expandable as a power series}
 $$
 
 ##### Cauchy-Riemann equations
 
-Let
-
-$$
-f(z)=u(x,y)+iv(x,y)
-$$
-
-The Cauchy-Riemann equations are
+Let $f(z)=u(x,y)+iv(x,y)$. The Cauchy-Riemann equations are
 
 $$
 \frac{\partial u}{\partial x}=\frac{\partial v}{\partial y}
@@ -228,7 +210,7 @@ $$
 \Delta u=u_{xx}+u_{yy}=0
 $$
 
-If $f(z)=u+iv$ is holomorphic then $u$ and $v$ are conjugate harmonic functions
+If $f(z)=u+iv$ is holomorphic then $u$ and $v$ are conjugate harmonic functions.
 
 ##### Elementary holomorphic functions
 
@@ -250,9 +232,7 @@ e^{z+2k\pi i}=e^z
 (e^z)'=e^z
 \qquad
 0\ne e^z
-$$
-
-$$
+\qquad
 e^{z_1+z_2}=e^{z_1}e^{z_2}
 $$
 
@@ -268,7 +248,7 @@ $$
 \log z=\ln|z|+i\arg z
 $$
 
-It is holomorphic in the slit plane excluding the origin and the negative real axis
+It is holomorphic in the slit plane excluding the origin and the negative real axis.
 
 $$
 (\operatorname{Ln}z)'=\frac{1}{z}
@@ -276,9 +256,7 @@ $$
 
 $$
 \operatorname{Ln}(z_1z_2)=\operatorname{Ln}z_1+\operatorname{Ln}z_2
-$$
-
-$$
+\qquad
 \operatorname{Ln}\frac{z_1}{z_2}=\operatorname{Ln}z_1-\operatorname{Ln}z_2
 \qquad z_1z_2\ne0
 $$
@@ -293,11 +271,11 @@ $$
 (z^b)'=bz^{b-1}
 $$
 
-If $b=n\in\mathbb Z$ then $z^b$ is single-valued
+If $b=n\in\mathbb Z$ then $z^b$ is single-valued.
 
-If $b=p/q$ with $(p,q)=1$ then $z^b$ has $q$ values
+If $b=p/q$ with $(p,q)=1$ then $z^b$ has $q$ values.
 
-If $b$ is irrational or complex non-real then $z^b$ has infinitely many values
+If $b$ is irrational or complex non-real then $z^b$ has infinitely many values.
 
 The trigonometric functions are
 
@@ -307,7 +285,7 @@ $$
 \sin z=\frac{e^{iz}-e^{-iz}}{2i}
 $$
 
-They are entire functions with period $2\pi$
+They are entire functions with period $2\pi$.
 
 $$
 (\sin z)'=\cos z
@@ -327,7 +305,7 @@ $$
 |\sin z|\to\infty
 $$
 
-where $z=x+iy$
+where $z=x+iy$.
 
 **Solution.**
 
@@ -449,38 +427,18 @@ $$
 
 ##### Real integral form
 
-Let
-
-$$
-f(z)=u(x,y)+iv(x,y)
-\qquad
-z=x+iy
-$$
-
-Then
+Let $f(z)=u(x,y)+iv(x,y)$ and $z=x+iy$. Then
 
 $$
 \int_C f(z)\,dz
 =\int_C (u+iv)(dx+i\,dy)
-$$
-
-$$
-\int_C f(z)\,dz
 =\int_C u\,dx-v\,dy
 +i\int_C v\,dx+u\,dy
 $$
 
 ##### Parametric form
 
-If
-
-$$
-C:z=z(t)
-\qquad
-\alpha\le t\le\beta
-$$
-
-then
+If $C:z=z(t)$ with $\alpha\le t\le\beta$, then
 
 $$
 \int_C f(z)\,dz
@@ -489,13 +447,13 @@ $$
 
 ##### Domains
 
-A simple closed curve is a continuous closed curve without self-intersections
+A simple closed curve is a continuous closed curve without self-intersections.
 
-A domain is a connected open set
+A domain is a connected open set.
 
-A domain is simply connected if every simple closed curve in it has its interior contained in the domain
+A domain is simply connected if every simple closed curve in it has its interior contained in the domain.
 
-A multiply connected domain has holes or removed subregions
+A multiply connected domain has holes or removed subregions.
 
 ##### Cauchy's integral theorem
 
@@ -505,19 +463,13 @@ $$
 \oint_C f(z)\,dz=0
 $$
 
-for every simple closed curve $C\subset D$
+for every simple closed curve $C\subset D$.
 
 ##### Path independence
 
-If $f$ is holomorphic in a simply connected domain $D$ then the integral depends only on the endpoints
+If $f$ is holomorphic in a simply connected domain $D$ then the integral depends only on the endpoints.
 
-Define
-
-$$
-F(z)=\int_{z_0}^{z}f(\zeta)\,d\zeta
-$$
-
-Then
+Define $F(z)=\int_{z_0}^{z}f(\zeta)\,d\zeta$. Then
 
 $$
 F'(z)=f(z)
@@ -531,9 +483,9 @@ $$
 
 ##### Composite path theorem
 
-Let $D$ be a multiply connected domain bounded by an outer boundary $C$ and inner boundaries $C_k^{-}$
+Let $D$ be a multiply connected domain bounded by an outer boundary $C$ and inner boundaries $C_k^{-}$.
 
-The positive direction keeps $D$ on the left side
+The positive direction keeps $D$ on the left side.
 
 $$
 \oint_C f(z)\,dz+
@@ -593,7 +545,7 @@ $$
 \oint_C\frac{dz}{(z-z_0)^{n+1}}
 $$
 
-where $C$ is the counterclockwise circle centered at $z_0$ with radius $r$ and $n\in\mathbb Z$
+where $C$ is the counterclockwise circle centered at $z_0$ with radius $r$ and $n\in\mathbb Z$.
 
 **Solution.**
 
@@ -682,13 +634,7 @@ $$
 
 ##### Complex sequences
 
-For
-
-$$
-\alpha_n=a_n+ib_n
-$$
-
-we have
+For $\alpha_n=a_n+ib_n$, we have
 
 $$
 \alpha_n\to a+ib
@@ -700,27 +646,11 @@ $$
 
 ##### Complex series
 
-Let
-
+Let $S_n=\sum_{k=1}^{n}\alpha_k$. If $S_n$ converges then 
 $$
-S_n=\sum_{k=1}^{n}\alpha_k
+\sum_{n=1}^{\infty}\alpha_n \text{ converges}
 $$
-
-If $S_n$ converges then
-
-$$
-\sum_{n=1}^{\infty}\alpha_n
-$$
-
-converges
-
-If
-
-$$
-\sum_{n=1}^{\infty}\alpha_n
-$$
-
-converges then
+If $\sum_{n=1}^{\infty}\alpha_n$ converges then
 
 $$
 \lim_{n\to\infty}\alpha_n=0
@@ -734,21 +664,9 @@ $$
 \sum_{n=1}^{\infty}a_n\text{ and }\sum_{n=1}^{\infty}b_n\text{ converge}
 $$
 
-If either real series diverges then the complex series diverges
+If either real series diverges then the complex series diverges.
 
-If
-
-$$
-\sum_{n=1}^{\infty}|\alpha_n|
-$$
-
-converges then
-
-$$
-\sum_{n=1}^{\infty}\alpha_n
-$$
-
-converges absolutely and
+If $\sum_{n=1}^{\infty}|\alpha_n|$ converges then $\sum_{n=1}^{\infty}\alpha_n$ converges absolutely and
 
 $$
 \left|\sum_{n=1}^{\infty}\alpha_n\right|
@@ -758,13 +676,7 @@ $$
 
 ##### Power series
 
-For
-
-$$
-f(z)=\sum_{n=0}^{\infty}c_nz^n
-$$
-
-if the series converges at $z_0\ne0$ then it converges absolutely for
+For $f(z)=\sum_{n=0}^{\infty}c_nz^n$, if the series converges at $z_0\ne0$ then it converges absolutely for
 
 $$
 |z|<|z_0|
@@ -776,11 +688,11 @@ $$
 |z|>|z_0|
 $$
 
-The series always converges at $z=0$
+The series always converges at $z=0$.
 
-If the power series converges absolutely at one point on its circle of convergence then it converges absolutely inside the circle
+If the power series converges absolutely at one point on its circle of convergence then it converges absolutely inside the circle.
 
-If it converges conditionally at $z_0$ then the radius of convergence is $|z_0|$
+If it converges conditionally at $z_0$ then the radius of convergence is $|z_0|$.
 
 ##### Radius of convergence
 
@@ -788,11 +700,7 @@ If
 
 $$
 \lim_{n\to\infty}\left|\frac{c_{n+1}}{c_n}\right|=\lambda\ne0
-$$
-
-or
-
-$$
+\qquad\text{or}\qquad
 \lim_{n\to\infty}\sqrt[n]{|c_n|}=\lambda\ne0
 $$
 
@@ -808,16 +716,10 @@ If
 
 $$
 f(z)=\sum_{n=0}^{\infty}a_nz^n
+\qquad |z|<r_1
 \qquad
-|z|<r_1
-$$
-
-and
-
-$$
 g(z)=\sum_{n=0}^{\infty}b_nz^n
-\qquad
-|z|<r_2
+\qquad |z|<r_2
 $$
 
 then
@@ -871,7 +773,7 @@ $$
 
 **Problem.**
 
-Find the power series of $\sin z$ at $z=1$
+Find the power series of $\sin z$ at $z=1$.
 
 **Solution.**
 
@@ -904,7 +806,7 @@ $$
 \frac{1}{(1-z)^2}
 $$
 
-at $z=i$
+at $z=i$.
 
 **Solution.**
 
@@ -938,13 +840,7 @@ $$
 
 ##### Taylor series
 
-If $f$ is holomorphic in
-
-$$
-|z-z_0|<R
-$$
-
-then
+If $f$ is holomorphic in $|z-z_0|<R$, then
 
 $$
 f(z)=\sum_{n=0}^{\infty}c_n(z-z_0)^n
@@ -957,17 +853,11 @@ c_n=\frac{f^{(n)}(z_0)}{n!}
 =\frac{1}{2\pi i}\oint_C\frac{f(z)}{(z-z_0)^{n+1}}\,dz
 $$
 
-If the radius of convergence is finite, then at least one singularity of $f$ lies on the circle of convergence
+If the radius of convergence is finite, then at least one singularity of $f$ lies on the circle of convergence.
 
 ##### Laurent series
 
-If $f$ is holomorphic in the annulus
-
-$$
-R_1<|z-z_0|<R_2
-$$
-
-then
+If $f$ is holomorphic in the annulus $R_1<|z-z_0|<R_2$, then
 
 $$
 f(z)=\sum_{n=-\infty}^{\infty}c_n(z-z_0)^n
@@ -1001,27 +891,22 @@ $$
 f(z)=\frac{1}{(z+1)(z-3)}
 $$
 
-at $z=0$
+at $z=0$.
 
 **Solution.**
 
 $$
+\begin{aligned}
 \frac{1}{(z+1)(z-3)}
-=\frac{1}{4}\left(\frac{1}{z-3}-\frac{1}{z+1}\right)
-$$
-
-$$
-=-\frac{1}{4}\left(
+&=\frac{1}{4}\left(\frac{1}{z-3}-\frac{1}{z+1}\right)=-\frac{1}{4}\left(
 \frac{1}{3}\frac{1}{1-z/3}+\frac{1}{1+z}
-\right)
-$$
-
-$$
-=-\frac{1}{4}\left(
+\right)\\
+&=-\frac{1}{4}\left(
 \sum_{n=0}^{\infty}\frac{z^n}{3^{n+1}}
 +
 \sum_{n=0}^{\infty}(-1)^nz^n
 \right)
+\end{aligned}
 $$
 
 $$
@@ -1038,7 +923,7 @@ $$
 f(z)=\ln(1+z)
 $$
 
-at $z=1$
+at $z=1$.
 
 **Solution.**
 
@@ -1050,9 +935,6 @@ $$
 \frac{1}{1+\zeta}
 =\frac{1}{2+\zeta-1}
 =\frac{1}{2}\frac{1}{1+(\zeta-1)/2}
-$$
-
-$$
 =\frac{1}{2}\sum_{n=0}^{\infty}(-1)^n\left(\frac{\zeta-1}{2}\right)^n
 $$
 
@@ -1084,17 +966,10 @@ $$
 $$
 
 **Solution.**
-
 $$
 \frac{1}{1-z}
 =-\frac{1}{z}\frac{1}{1-1/z}
-$$
-
-$$
 =-\frac{1}{z}\sum_{n=0}^{\infty}\left(\frac{1}{z}\right)^n
-$$
-
-$$
 =-\sum_{n=0}^{\infty}\frac{1}{z^{n+1}}
 =-\sum_{n=-\infty}^{-1}z^n
 $$
@@ -1107,17 +982,11 @@ $$
 
 ##### Isolated singularities
 
-If $f$ is not holomorphic at $z_0$ but is holomorphic in
-
-$$
-0<|z-z_0|<\delta
-$$
-
-then $z_0$ is an isolated singularity
+If $f$ is not holomorphic at $z_0$ but is holomorphic in $0<|z-z_0|<\delta$, then $z_0$ is an isolated singularity.
 
 ##### Removable singularity
 
-If the Laurent series has no negative powers then $z_0$ is removable
+If the Laurent series has no negative powers then $z_0$ is removable.
 
 Equivalently
 
@@ -1127,7 +996,7 @@ $$
 
 ##### Poles
 
-If the principal part has finitely many terms and the highest negative power is $-m$ then $z_0$ is a pole of order $m$
+If the principal part has finitely many terms and the highest negative power is $-m$ then $z_0$ is a pole of order $m$.
 
 Equivalently
 
@@ -1135,11 +1004,7 @@ $$
 f(z)=\frac{g(z)}{(z-z_0)^m}
 $$
 
-where $g$ is holomorphic at $z_0$ and
-
-$$
-g(z_0)\ne0
-$$
+where $g$ is holomorphic at $z_0$ and $g(z_0)\ne0$.
 
 For a pole
 
@@ -1147,11 +1012,11 @@ $$
 \lim_{z\to z_0}f(z)=\infty
 $$
 
-A pole of order $1$ is a simple pole
+A pole of order $1$ is a simple pole.
 
 ##### Essential singularity
 
-If the principal part has infinitely many terms then $z_0$ is an essential singularity
+If the principal part has infinitely many terms then $z_0$ is an essential singularity.
 
 Equivalently
 
@@ -1159,7 +1024,7 @@ $$
 \lim_{z\to z_0}f(z)
 $$
 
-does not exist and is not infinite
+does not exist and is not infinite.
 
 ##### Zeros and poles
 
@@ -1169,13 +1034,7 @@ $$
 f(z)=(z-z_0)^m\varphi(z)
 $$
 
-where
-
-$$
-\varphi(z_0)\ne0
-$$
-
-Then $z_0$ is a zero of order $m$
+where $\varphi(z_0)\ne0$. Then $z_0$ is a zero of order $m$.
 
 Equivalently
 
@@ -1209,7 +1068,7 @@ $$
 f(z)=\cos\frac{1}{z}
 $$
 
-has an essential singularity at $z=0$
+has an essential singularity at $z=0$.
 
 $$
 f(z)=\cos\left(\frac{e^z-1}{z}\right)
@@ -1223,7 +1082,7 @@ $$
 
 ##### Residue
 
-The residue of $f$ at $z_0$ is the coefficient of $(z-z_0)^{-1}$ in the Laurent series
+The residue of $f$ at $z_0$ is the coefficient of $(z-z_0)^{-1}$ in the Laurent series.
 
 $$
 \operatorname{Res}(f,z_0)=c_{-1}
@@ -1273,23 +1132,7 @@ $$
 =\lim_{z\to z_0}(z-z_0)f(z)
 $$
 
-If
-
-$$
-f(z)=\frac{P(z)}{Q(z)}
-$$
-
-and
-
-$$
-P(z_0)\ne0
-\qquad
-Q(z_0)=0
-\qquad
-Q'(z_0)\ne0
-$$
-
-then
+If $f(z)=\frac{P(z)}{Q(z)}$ and $P(z_0)\ne0$, $Q(z_0)=0$, $Q'(z_0)\ne0$, then
 
 $$
 \operatorname{Res}(f,z_0)=\frac{P(z_0)}{Q'(z_0)}
@@ -1328,7 +1171,7 @@ z=e^{i\theta}
  d\theta=\frac{dz}{iz}
 $$
 
-Then residues inside $|z|=1$ are used
+Then residues inside $|z|=1$ are used.
 
 For Fourier-type integrals
 
@@ -1337,7 +1180,7 @@ $$
 =2\pi i\sum\operatorname{Res}\left(R(z)e^{iaz},z_k\right)
 $$
 
-where $a>0$ and $z_k$ are singularities in the upper half-plane
+where $a>0$ and $z_k$ are singularities in the upper half-plane.
 
 For rational integrals with no real poles
 
@@ -1346,7 +1189,7 @@ $$
 =2\pi i\sum\operatorname{Res}(R,z_k)
 $$
 
-If there are simple poles on the real axis then the principal value contains half-residue terms on the real axis
+If there are simple poles on the real axis then the principal value contains half-residue terms on the real axis.
 
 **eg.**
 
@@ -1370,7 +1213,7 @@ $$
 f(z)=\frac{z^3}{z^4-1}
 $$
 
-Inside $|z|<2$ there are four simple poles
+Inside $|z|<2$ there are four simple poles.
 
 $$
 z_k=e^{k\pi i/2}
@@ -1503,9 +1346,6 @@ $$
 $$
 I=\frac{1}{2}\oint_{|z|=1}
 \frac{z^3+z^{-3}}{5-2(z+z^{-1})}\frac{dz}{iz}
-$$
-
-$$
 =\frac{1}{4i}\oint_{|z|=1}\frac{z^6+1}{z^3(-2z^2+5z-2)}\,dz
 $$
 
@@ -1513,7 +1353,7 @@ $$
 -2z^2+5z-2=-(2z-1)(z-2)
 $$
 
-The poles inside $|z|=1$ are $z=0$ and $z=1/2$
+The poles inside $|z|=1$ are $z=0$ and $z=1/2$.
 
 Let
 
@@ -1548,27 +1388,19 @@ I=\int_{-\infty}^{+\infty}\frac{x\cos x}{x^2-2x+10}\,dx
 $$
 
 **Solution.**
-
 $$
 x^2-2x+10=(x-1-3i)(x-1+3i)
 $$
 
 $$
+\begin{aligned}
 \int_{-\infty}^{+\infty}\frac{xe^{ix}}{x^2-2x+10}\,dx
-=2\pi i\operatorname{Res}\left(\frac{ze^{iz}}{(z-1-3i)(z-1+3i)},1+3i\right)
-$$
-
-$$
-=2\pi i\lim_{z\to1+3i}
+&=2\pi i\operatorname{Res}\left(\frac{ze^{iz}}{(z-1-3i)(z-1+3i)},1+3i\right)\\
+&=2\pi i\lim_{z\to1+3i}
 \frac{ze^{iz}}{z-1+3i}
-$$
-
-$$
-=2\pi i\frac{(1+3i)e^{i(1+3i)}}{6i}
-$$
-
-$$
-=\frac{\pi}{3}e^{-3}(1+3i)(\cos1+i\sin1)
+=2\pi i\frac{(1+3i)e^{i(1+3i)}}{6i}\\
+&=\frac{\pi}{3}e^{-3}(1+3i)(\cos1+i\sin1)
+\end{aligned}
 $$
 
 $$
@@ -1595,7 +1427,7 @@ $$
 I=\frac{1}{2}\int_{-\infty}^{+\infty}\frac{\sin x}{x}\,dx=\frac{1}{2}\operatorname{Im}\int_{-\infty}^{+\infty}\frac{e^{ix}}{x}\,dx
 $$
 
-Using the indentation contour at $z=0$. Here `PV` denotes the Cauchy principal value
+Using the indentation contour at $z=0$. Here `PV` denotes the Cauchy principal value.
 
 $$
 \operatorname{PV}\int_{-\infty}^{+\infty}\frac{e^{ix}}{x}\,dx

@@ -36,23 +36,11 @@ $$
 =(\boldsymbol{A}\cdot\boldsymbol{C})\boldsymbol{B}-(\boldsymbol{A}\cdot\boldsymbol{B})\boldsymbol{C}
 $$
 
-Let
-
-$$
-\boldsymbol{A}=A_x\boldsymbol{e}_x+A_y\boldsymbol{e}_y+A_z\boldsymbol{e}_z
-\qquad
-\boldsymbol{B}=B_x\boldsymbol{e}_x+B_y\boldsymbol{e}_y+B_z\boldsymbol{e}_z
-$$
-
-Then
+Let $\boldsymbol{A}=A_x\boldsymbol{e}_x+A_y\boldsymbol{e}_y+A_z\boldsymbol{e}_z$ and $\boldsymbol{B}=B_x\boldsymbol{e}_x+B_y\boldsymbol{e}_y+B_z\boldsymbol{e}_z$. Then
 
 $$
 \boldsymbol{A}+\boldsymbol{B}
-=(A_x+B_x)\boldsymbol{e}_x+(A_y+B_y)\boldsymbol{e}_y+(A_z+B_z)\boldsymbol{e}_z
-$$
-
-$$
-\boldsymbol{A}\cdot\boldsymbol{B}=A_xB_x+A_yB_y+A_zB_z
+=(A_x+B_x)\boldsymbol{e}_x+(A_y+B_y)\boldsymbol{e}_y+(A_z+B_z)\boldsymbol{e}_z\qquad\boldsymbol{A}\cdot\boldsymbol{B}=A_xB_x+A_yB_y+A_zB_z
 $$
 
 $$
@@ -119,13 +107,10 @@ d=\frac{|Ax_1+By_1+Cz_1+D|}{\sqrt{A^2+B^2+C^2}}
 $$
 
 Distance from $P$ to the line
-
 $$
 \frac{x-x_0}{l}=\frac{y-y_0}{m}=\frac{z-z_0}{n}
 $$
-
-is
-
+ is
 $$
 d=\lVert\overrightarrow{QP}\rVert\sin\theta
 =\frac{\lVert\overrightarrow{QP}\times\boldsymbol{s}\rVert}{\lVert\boldsymbol{s}\rVert}
@@ -141,8 +126,7 @@ where $Q(x_0,y_0,z_0)$ is a point on the line and $\boldsymbol{s}=(l,m,n)$.
 | Between line and plane | $\displaystyle \sin\theta=\frac{\left\lvert\boldsymbol{s}\cdot\boldsymbol{n}\right\rvert}{\lVert\boldsymbol{s}\rVert\lVert\boldsymbol{n}\rVert}$ | $\theta\in\left[0,\frac{\pi}{2}\right]$ |
 | Between lines | $\displaystyle \cos\theta=\frac{\left\lvert\boldsymbol{s}_1\cdot\boldsymbol{s}_2\right\rvert}{\lVert\boldsymbol{s}_1\rVert\lVert\boldsymbol{s}_2\rVert}$ | $\theta\in\left[0,\frac{\pi}{2}\right]$ |
 
-The unit vector in the direction of $\boldsymbol{v}$ is
-
+The unit vector in the direction of $\boldsymbol{v}$ is 
 $$
 \boldsymbol{e}_v=\frac{\boldsymbol{v}}{\lVert\boldsymbol{v}\rVert}
 $$
@@ -200,24 +184,11 @@ P(3t-1,2t+1,-t)
 $$
 
 $$
-\boldsymbol{s}_2=P-A=(3t-3,2t,-t-3)
-\qquad
-\boldsymbol{s}_1\cdot\boldsymbol{s}_2=0
+\boldsymbol{s}_2=P-A=(3t-3,2t,-t-3) \qquad \boldsymbol{s}_1\cdot\boldsymbol{s}_2=0\qquad 3(3t-3)+2\cdot 2t+(-1)(-t-3)=0 \qquad t=\frac{3}{7}
 $$
 
 $$
-3(3t-3)+2\cdot 2t+(-1)(-t-3)=0
-\qquad
-t=\frac{3}{7}
-$$
-
-$$
-\boldsymbol{s}_2=\left(-\frac{12}{7},-\frac{6}{7},-\frac{24}{7}\right)
-=\frac{6}{7}(-2,-1,-4)
-$$
-
-$$
-L_2:\frac{x-2}{-2}=\frac{y-1}{-1}=\frac{z-3}{-4}
+\boldsymbol{s}_2=\left(-\frac{12}{7},-\frac{6}{7},-\frac{24}{7}\right) =\frac{6}{7}(-2,-1,-4)\qquad L_2:\frac{x-2}{-2}=\frac{y-1}{-1}=\frac{z-3}{-4}
 $$
 
 **eg.**
@@ -241,30 +212,10 @@ Find the tangent plane of the surface at $P$
 **Solution.**
 
 $$
-\boldsymbol{n}=(f_x,f_y,-1)
-\qquad
-f(tu,tv)=t^2f(u,v)
+\boldsymbol{n}=(f_x,f_y,-1) \qquad f(tu,tv)=t^2f(u,v)\qquad u f_1(tu,tv)+v f_2(tu,tv)=2t f(u,v) \qquad tu=1 \quad tv=-1
 $$
 
 $$
-u f_1(tu,tv)+v f_2(tu,tv)=2t f(u,v)
-\qquad
-tu=1
-\quad
-tv=-1
-$$
-
-$$
-f_1(1,-1)-f_2(1,-1)=2f(1,-1)
-\qquad
-3-f_2(1,-1)=4
-\qquad
-f_2(1,-1)=-1
-$$
-
-$$
-3(x-1)-(y+1)-(z-2)=0
-\qquad
-3x-y-z-2=0
+f_1(1,-1)-f_2(1,-1)=2f(1,-1) \qquad 3-f_2(1,-1)=4 \\ f_2(1,-1)=-1\qquad 3(x-1)-(y+1)-(z-2)=0 \qquad 3x-y-z-2=0
 $$
 

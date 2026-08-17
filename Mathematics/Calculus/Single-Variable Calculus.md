@@ -23,41 +23,22 @@ $$
 ##### Common derivatives
 
 $$
-(a^x)'=a^x\ln a
-\\
-(\ln x)'=\frac{1}{x}
+(a^x)'=a^x\ln a\qquad (\ln x)'=\frac{1}{x}\qquad (\log_a x)'=\frac{1}{x\ln a},\ a>0,\ a\ne1
 $$
 
 $$
-(\log_a x)'=\frac{1}{x\ln a}, a>0, a\ne1.
+(\sec x)'=\sec x\tan x\qquad (\tan x)'=\sec^2x\qquad (\csc x)'=-\csc x\cot x\qquad (\cot x)'=-\csc^2x
 $$
 
 $$
-(\sec x)'=\sec x\tan x
-\\
-(\tan x)'=\sec^2x
+(\arctan x)'=\frac{1}{1+x^2}\qquad (\operatorname{arccot}x)'=-\frac{1}{1+x^2}
 $$
 
 $$
-(\csc x)'=-\csc x\cot x
-\\
-(\cot x)'=-\csc^2x
-$$
-
-$$
-(\arctan x)'=\frac{1}{1+x^2}
-\\
-(\arcsin x)'=\frac{1}{\sqrt{1-x^2}}
-$$
-
-$$
-(\operatorname{arccot}x)'=-\frac{1}{1+x^2}
-\\
-(\arccos x)'=-\frac{1}{\sqrt{1-x^2}}
+(\arcsin x)'=\frac{1}{\sqrt{1-x^2}}\qquad (\arccos x)'=-\frac{1}{\sqrt{1-x^2}}
 $$
 
 For integer $n\ge0$,
-
 $$
 (\sin x)^{(n)}=\sin\left(x+\frac{n\pi}{2}\right)
 \\
@@ -68,13 +49,7 @@ $$
 
 **Rolle's theorem**
 
-If $f$ is continuous on $[a,b]$, differentiable on $(a,b)$, and
-
-$$
-f(a)=f(b)
-$$
-
-then there exists $\xi\in(a,b)$ such that
+If $f$ is continuous on $[a,b]$, differentiable on $(a,b)$, and $f(a)=f(b)$, then there exists $\xi\in(a,b)$ such that
 
 $$
 f'(\xi)=0
@@ -199,7 +174,6 @@ $$
 **eg.**
 
 **Problem.** Find the tangent line of $y=f(x)$ at $(1,f(1))$ under the given condition.
-
 $$
 f(1+x)-3f(1-x)=4+2x+o(x),
 \qquad
@@ -209,24 +183,11 @@ $$
 **Solution.**
 
 $$
-f(1+x)=f(1)+f'(1)x+o(x),
-f(1-x)=f(1)-f'(1)x+o(x)
+f(1+x)=f(1)+f'(1)x+o(x), f(1-x)=f(1)-f'(1)x+o(x)\\ f(1)+f'(1)x+o(x)-3\left[f(1)-f'(1)x+o(x)\right]=4+2x+o(x)
 $$
 
 $$
-f(1)+f'(1)x+o(x)-3\left[f(1)-f'(1)x+o(x)\right]=4+2x+o(x)
-$$
-
-$$
-x\to0:
--2f(1)=4,
-f(1)=-2
-$$
-
-$$
-4f'(1)=2,
-\qquad
-f'(1)=\frac{1}{2}.
+x\to0: -2f(1)=4, f(1)=-2\qquad 4f'(1)=2, \qquad f'(1)=\frac{1}{2}.
 $$
 
 $$
@@ -254,17 +215,7 @@ $$
 Since $g(x)=x^ne^{-(x-1)^2}$, the value $g^{(n)}(0)$ is determined by the coefficient of $x^n$ in the Taylor expansion of $g(x)$ at $0$.
 
 $$
-e^{-(x-1)^2}=e^{-1}+O(x),
-\qquad
-g(x)=e^{-1}x^n+O(x^{n+1})
-$$
-
-$$
-g^{(n)}(0)=\frac{n!}{e}
-$$
-
-$$
-f^{(n)}(-1)=\frac{n!}{e}
+e^{-(x-1)^2}=e^{-1}+O(x), \qquad g(x)=e^{-1}x^n+O(x^{n+1})\qquad g^{(n)}(0)=\frac{n!}{e}\qquad\Longrightarrow\qquad f^{(n)}(-1)=\frac{n!}{e}
 $$
 
 **eg.**
@@ -280,11 +231,7 @@ $$
 **Solution.**
 
 $$
-f(x)=\frac{1}{x^2-3x+2}=\frac{1}{x-2}-\frac{1}{x-1}
-$$
-
-$$
-f^{(n)}(x)=\frac{(-1)^n n!}{(x-2)^{n+1}}-\frac{(-1)^n n!}{(x-1)^{n+1}}
+f(x)=\frac{1}{x^2-3x+2}=\frac{1}{x-2}-\frac{1}{x-1}\Longrightarrow f^{(n)}(x)=\frac{(-1)^n n!}{(x-2)^{n+1}}-\frac{(-1)^n n!}{(x-1)^{n+1}}
 $$
 
 $$
@@ -294,7 +241,6 @@ $$
 **eg.**
 
 **Problem.** For $n\le2023$, find $f^{(n)}(0)$ for the following function.
-
 $$
 f(x)=e^{-x}\int_0^x\frac{t^{2023}}{1+t^2}\,dt,
 \qquad
@@ -308,8 +254,8 @@ $$
 $$
 \begin{aligned}
 f(x)
-&=e^{-x}\int_0^x\frac{t^{2023}}{1+t^2}\,dt\\
-&=
+&=e^{-x}\int_0^x\frac{t^{2023}}{1+t^2}\,dt
+=
 \left[\sum_{n=0}^{\infty}\frac{(-1)^n}{n!}x^n\right]
 \int_0^x t^{2023}\sum_{n=0}^{\infty}(-t^2)^n\,dt\\
 &=
@@ -334,7 +280,6 @@ $$
 **eg.**
 
 **Problem.** Given the following assumptions, evaluate the limit.
-
 $$
 \lim_{x\to0}f(x)=\lim_{x\to0}g(x)=a>0,
 \qquad
@@ -348,17 +293,7 @@ $$
 **Solution.**
 
 $$
-h(t)=t^{g(x)},
-h'(\xi)=\frac{h(f(x))-h(g(x))}{f(x)-g(x)}
-$$
-
-$$
-\text{original limit}
-=
-\lim_{x\to0}h'(\xi)
-=
-\lim_{x\to0}g(x)\xi^{g(x)-1}
-=a\cdot a^{a-1}=a^a
+h(t)=t^{g(x)}, h'(\xi)=\frac{h(f(x))-h(g(x))}{f(x)-g(x)}\qquad \text{original limit} = \lim_{x\to0}h'(\xi) = \lim_{x\to0}g(x)\xi^{g(x)-1} =a\cdot a^{a-1}=a^a
 $$
 
 ### Indefinite Integrals
@@ -375,13 +310,7 @@ $$
 
 ##### Universal tangent half-angle substitution
 
-Let
-
-$$
-u=\tan\frac{x}{2}
-$$
-
-Then
+Let $u=\tan\frac{x}{2}$. Then
 
 $$
 \sin x=\frac{2u}{1+u^2}
@@ -416,45 +345,21 @@ In general, the right-hand side may differ by an integer multiple of $\pi$ becau
 Sum-to-product formulas
 
 $$
-\sin\alpha+\sin\beta
-=2\sin\frac{\alpha+\beta}{2}\cos\frac{\alpha-\beta}{2}
+\sin\alpha+\sin\beta=2\sin\frac{\alpha+\beta}{2}\cos\frac{\alpha-\beta}{2}\qquad \sin\alpha-\sin\beta=2\cos\frac{\alpha+\beta}{2}\sin\frac{\alpha-\beta}{2}
 $$
 
 $$
-\sin\alpha-\sin\beta
-=2\cos\frac{\alpha+\beta}{2}\sin\frac{\alpha-\beta}{2}
-$$
-
-$$
-\cos\alpha+\cos\beta
-=2\cos\frac{\alpha+\beta}{2}\cos\frac{\alpha-\beta}{2}
-$$
-
-$$
-\cos\alpha-\cos\beta
-=-2\sin\frac{\alpha+\beta}{2}\sin\frac{\alpha-\beta}{2}
+\cos\alpha+\cos\beta=2\cos\frac{\alpha+\beta}{2}\cos\frac{\alpha-\beta}{2}\qquad \cos\alpha-\cos\beta=-2\sin\frac{\alpha+\beta}{2}\sin\frac{\alpha-\beta}{2}
 $$
 
 Product-to-sum formulas
 
 $$
-\sin\alpha\cos\beta
-=\frac{1}{2}\left[\sin(\alpha+\beta)+\sin(\alpha-\beta)\right]
+\sin\alpha\cos\beta=\frac{1}{2}\left[\sin(\alpha+\beta)+\sin(\alpha-\beta)\right]\qquad \cos\alpha\sin\beta=\frac{1}{2}\left[\sin(\alpha+\beta)-\sin(\alpha-\beta)\right]
 $$
 
 $$
-\cos\alpha\sin\beta
-=\frac{1}{2}\left[\sin(\alpha+\beta)-\sin(\alpha-\beta)\right]
-$$
-
-$$
-\cos\alpha\cos\beta
-=\frac{1}{2}\left[\cos(\alpha+\beta)+\cos(\alpha-\beta)\right]
-$$
-
-$$
-\sin\alpha\sin\beta
-=-\frac{1}{2}\left[\cos(\alpha+\beta)-\cos(\alpha-\beta)\right]
+\cos\alpha\cos\beta=\frac{1}{2}\left[\cos(\alpha+\beta)+\cos(\alpha-\beta)\right]\qquad \sin\alpha\sin\beta=-\frac{1}{2}\left[\cos(\alpha+\beta)-\cos(\alpha-\beta)\right]
 $$
 
 ##### Examples
@@ -498,15 +403,7 @@ $$
 **Solution.**
 
 $$
-\int\tan x\,dx=-\ln|\cos x|+C
-$$
-
-$$
-\int\tan x\,dx
-=
-\int\frac{\sin x}{\cos x}\,dx
-=-\int\frac{d\cos x}{\cos x}
-=-\ln|\cos x|+C
+\int\tan x\,dx=-\ln|\cos x|+C\qquad \int\tan x\,dx = \int\frac{\sin x}{\cos x}\,dx =-\int\frac{d\cos x}{\cos x} =-\ln|\cos x|+C
 $$
 
 **eg.**
@@ -529,8 +426,8 @@ $$
 \begin{aligned}
 \int\sec x\,dx
 &=
-\int\sec x\frac{\sec x+\tan x}{\sec x+\tan x}\,dx\\
-&=
+\int\sec x\frac{\sec x+\tan x}{\sec x+\tan x}\,dx
+=
 \int\frac{\sec^2x+\sec x\tan x}{\sec x+\tan x}\,dx\\
 &=
 \int\frac{d(\tan x+\sec x)}{\sec x+\tan x}
@@ -545,8 +442,8 @@ $$
 \begin{aligned}
 \int\sec x\,dx
 &=
-\int\sec x\frac{\sec x-\tan x}{\sec x-\tan x}\,dx\\
-&=
+\int\sec x\frac{\sec x-\tan x}{\sec x-\tan x}\,dx
+=
 \int\frac{\sec^2x-\sec x\tan x}{\sec x-\tan x}\,dx\\
 &=
 \int\frac{d(\tan x-\sec x)}{\sec x-\tan x}
@@ -568,8 +465,8 @@ $$
 \begin{aligned}
 \int\sec x\,dx
 &=\int\frac{1+u^2}{1-u^2}\frac{2\,du}{1+u^2}
-=\int\frac{2\,du}{1-u^2}\\
-&=\int\left(\frac{1}{1-u}+\frac{1}{1+u}\right)du
+=\int\frac{2\,du}{1-u^2}
+=\int\left(\frac{1}{1-u}+\frac{1}{1+u}\right)du
 =\ln\left|\frac{1+u}{1-u}\right|+C\\
 &=
 \ln\left|\frac{1+\tan(x/2)}{1-\tan(x/2)}\right|+C
@@ -579,7 +476,6 @@ $$
 **eg.**
 
 **Problem.** Evaluate the following indefinite integral.
-
 $$
 \int\frac{dx}{2^x(1+4^x)}
 $$
@@ -592,9 +488,6 @@ $$
 \int\frac{2^x\,dx}{4^x(1+4^x)}
 =
 \frac{1}{\ln2}\int\left(\frac{1}{4^x}-\frac{1}{1+4^x}\right)d(2^x)
-$$
-
-$$
 =
 -\frac{1}{\ln2}\left(\frac{1}{2^x}+\arctan2^x\right)+C
 $$
@@ -602,7 +495,6 @@ $$
 **eg.**
 
 **Problem.** Evaluate the following indefinite integral.
-
 $$
 \int\frac{x^2+1}{x^4+1}\,dx
 $$
@@ -615,8 +507,8 @@ $$
 &=
 \int\frac{1+\dfrac{1}{x^2}}{x^2+\dfrac{1}{x^2}}\,dx
 =
-\int\frac{d\left(x-\dfrac{1}{x}\right)}{\left(x-\dfrac{1}{x}\right)^2+2}\\
-&=
+\int\frac{d\left(x-\dfrac{1}{x}\right)}{\left(x-\dfrac{1}{x}\right)^2+2}
+=
 \frac{1}{\sqrt2}\int
 \frac{d\left[\left(x-\dfrac{1}{x}\right)\dfrac{1}{\sqrt2}\right]}
 {\left[\left(x-\dfrac{1}{x}\right)\dfrac{1}{\sqrt2}\right]^2+1}\\
@@ -628,7 +520,6 @@ $$
 **eg.**
 
 **Problem.** Evaluate the following indefinite integral.
-
 $$
 \int\frac{dx}{x^4(1+x^2)}
 $$
@@ -842,13 +733,7 @@ $$
 
 ### Definite Integrals
 
-If
-
-$$
-F(x)=\int_{a(x)}^{b(x)}f(t)\,dt
-$$
-
-then
+If $F(x)=\int_{a(x)}^{b(x)}f(t)\,dt$, then
 
 $$
 F'(x)=f(b(x))b'(x)-f(a(x))a'(x)
@@ -897,17 +782,7 @@ $$
 Basic values
 
 $$
-\int_0^\pi \sin x\,dx=2
-\\
-\int_0^\pi \cos x\,dx=0
-$$
-
-$$
-\int_0^{\pi/2}\sin x\,dx=1
-\\
-\int_0^{\pi/2}\sin^2x\,dx=\frac{\pi}{4}
-\\
-\int_0^{\pi/2}\sin^3x\,dx=\frac{2}{3}
+\int_0^\pi \sin x\,dx=2\qquad \int_0^\pi \cos x\,dx=0\qquad \int_0^{\pi/2}\sin x\,dx=1\\ \int_0^{\pi/2}\sin^2x\,dx=\frac{\pi}{4}\qquad \int_0^{\pi/2}\sin^3x\,dx=\frac{2}{3}
 $$
 
 For $n\ge1$,
@@ -1036,12 +911,7 @@ $$
 $$
 
 $$
-=0+
-\int_0^{+\infty}\frac{3x(\sin x)^2\cos x-(\sin x)^3}{x^3}\,dx
-$$
-
-$$
-I=\int_0^{+\infty}\left(\frac{\sin x}{x}\right)^3dx
+=0+ \int_0^{+\infty}\frac{3x(\sin x)^2\cos x-(\sin x)^3}{x^3}\,dx\qquad I=\int_0^{+\infty}\left(\frac{\sin x}{x}\right)^3dx
 $$
 
 $$
@@ -1090,8 +960,8 @@ I_n
 =
 \int_{1/a}^{1}\frac{nt^{n-2}}{1+t^n}\,dt
 =
-\int_{1/a}^{1}\frac{dt^n}{t(1+t^n)}\\
-&=
+\int_{1/a}^{1}\frac{dt^n}{t(1+t^n)}
+=
 \int_{1/a}^{1}\frac{d\ln(1+t^n)}{t}\\
 &=
 \frac{1}{t}\ln(1+t^n)\Big|_{1/a}^{1}
@@ -1121,7 +991,6 @@ $$
 **eg.**
 
 **Problem.** Find the volume bounded by the cone and the ellipsoid.
-
 $$
 \Sigma_1:\text{ cone with vertex }(0,4,0),
 \qquad
@@ -1136,15 +1005,7 @@ $$
 **Solution.**
 
 $$
-(x_0,y_0,z_0):\text{ tangent point},
-\qquad
-\frac{x_0x}{3}+\frac{y_0y}{4}+\frac{z_0z}{3}=1
-$$
-
-$$
-(0,4,0)\Rightarrow y_0=1,
-\qquad
-\text{tangent points lie in }y=1
+(x_0,y_0,z_0):\text{ tangent point}, \qquad \frac{x_0x}{3}+\frac{y_0y}{4}+\frac{z_0z}{3}=1\qquad (0,4,0)\Rightarrow \\ y_0=1, \qquad \text{tangent points lie in }y=1
 $$
 
 $$
@@ -1200,18 +1061,7 @@ $$
 **Solution.**
 
 $$
-\int_0^x t|\sin t|\,dt
-=
-\int_0^{n\pi}t|\sin t|\,dt+
-\int_{n\pi}^{x}t|\sin t|\,dt
-$$
-
-$$
-\int_{k\pi}^{(k+1)\pi}t|\sin t|\,dt,
-\qquad
-u=t-k\pi,
-\qquad
-u\in(0,\pi)
+\int_0^x t|\sin t|\,dt = \int_0^{n\pi}t|\sin t|\,dt+ \int_{n\pi}^{x}t|\sin t|\,dt\qquad \int_{k\pi}^{(k+1)\pi}t|\sin t|\,dt, \qquad u=t-k\pi, \qquad u\in(0,\pi)
 $$
 
 $$

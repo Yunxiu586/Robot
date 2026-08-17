@@ -6,26 +6,11 @@
 
 ##### Definition of convergence
 
-For the series
-
-$$
-\sum_{n=1}^{\infty}a_n
-$$
-
-let
-
-$$
-S_n=\sum_{i=1}^{n}a_i
-$$
-
-If the limit
-
+For the series $\sum_{n=1}^{\infty}a_n$, let $S_n=\sum_{i=1}^{n}a_i$. If the limit
 $$
 \lim_{n\to\infty}S_n
 $$
-
 exists, then the series converges and
-
 $$
 \sum_{n=1}^{\infty}a_n=\lim_{n\to\infty}S_n
 $$
@@ -43,13 +28,7 @@ $$
 
 ##### Cauchy criterion
 
-A necessary condition for
-
-$$
-\sum_{n=1}^{\infty}u_n
-$$
-
-to converge is
+A necessary condition for $\sum_{n=1}^{\infty}u_n$ to converge is
 
 $$
 \lim_{n\to\infty}u_n=0
@@ -80,57 +59,13 @@ Assume $a_n>0$ and $b_n>0$ for all  $n$.
 
 ##### P-series
 
-If
+If $\lim_{n\to\infty}nu_n=l>0$ or $\lim_{n\to\infty}nu_n=+\infty$, then $\sum_{n=1}^{\infty}u_n$ diverges.
 
-$$
-\lim_{n\to\infty}nu_n=l>0
-$$
-
-or
-
-$$
-\lim_{n\to\infty}nu_n=+\infty
-$$
-
-then
-
-$$
-\sum_{n=1}^{\infty}u_n
-$$
-
-diverges
-
-If $p>1$ and
-
-$$
-\lim_{n\to\infty}n^p u_n=l
-\qquad
-0\le l<+\infty
-$$
-
-then
-
-$$
-\sum_{n=1}^{\infty}u_n
-$$
-
-converges
+If $p>1$ and $\lim_{n\to\infty}n^p u_n=l$ with $0\le l<+\infty$, then $\sum_{n=1}^{\infty}u_n$ converges.
 
 ##### Leibniz theorem
 
-For the alternating series
-
-$$
-\sum_{n=1}^{\infty}(-1)^n u_n
-$$
-
-if $u_n\ge0$, $\{u_n\}$ is monotone decreasing, and
-
-$$
-\lim_{n\to\infty}u_n=0
-$$
-
-then the series converges
+For the alternating series $\sum_{n=1}^{\infty}(-1)^n u_n$, if $u_n\ge0$, $\{u_n\}$ is monotone decreasing, and $\lim_{n\to\infty}u_n=0$, then the series converges.
 
 Moreover
 
@@ -158,33 +93,14 @@ $$
 
 ##### Definition
 
-A series of the form
-
-$$
-\sum_{n=0}^{\infty}a_nx^n
-=a_0+a_1x+a_2x^2+\cdots+a_nx^n+\cdots
-$$
-
-is called a power series
+A series of the form $\sum_{n=0}^{\infty}a_nx^n=a_0+a_1x+a_2x^2+\cdots+a_nx^n+\cdots$ is called a power series.
 
 ##### Radius of convergence
 
-For the power series
+For the power series $\sum_{n=0}^{\infty}a_nx^n$, let
 
 $$
-\sum_{n=0}^{\infty}a_nx^n
-$$
-
-let
-
-$$
-l=\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|
-$$
-
-or
-
-$$
-l=\lim_{n\to\infty}\sqrt[n]{|a_n|}
+l=\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|\qquad\text{or}\qquad l=\lim_{n\to\infty}\sqrt[n]{|a_n|}
 $$
 
 provided the corresponding limit exists. For the ratio formula, assume $a_n\ne0$ for all sufficiently large $n$.
@@ -192,15 +108,7 @@ provided the corresponding limit exists. For the ratio formula, assume $a_n\ne0$
 Then the radius of convergence is
 
 $$
-R=\frac{1}{l}\quad l\ne0
-$$
-
-$$
-R=+\infty\quad l=0
-$$
-
-$$
-R=0\quad l=+\infty
+R=\frac{1}{l}\quad l\ne0\qquad R=+\infty\quad l=0\qquad R=0\quad l=+\infty
 $$
 
 If $0<R<+\infty$, the endpoints $x=\pm R$ must be checked separately.
@@ -209,27 +117,11 @@ If $0<R<+\infty$, the endpoints $x=\pm R$ must be checked separately.
 
 **Abel's theorem and absolute convergence**
 
-If a power series converges at $x=x_1\ne0$, then it converges absolutely for
-
-$$
-|x|<|x_1|
-$$
-
-If a power series diverges at $x=x_2\ne0$, then it diverges for
-
-$$
-|x|>|x_2|
-$$
+If a power series converges at $x=x_1\ne0$, then it converges absolutely for $|x|<|x_1|$. If it diverges at $x=x_2\ne0$, then it diverges for $|x|>|x_2|$.
 
 **Termwise integration and differentiation**
 
-If $x\in(-R,R)$ and
-
-$$
-S(x)=\sum_{n=0}^{\infty}a_nx^n
-$$
-
-then
+If $x\in(-R,R)$ and $S(x)=\sum_{n=0}^{\infty}a_nx^n$, then
 
 $$
 \int_0^x S(t)\,dt
@@ -298,13 +190,11 @@ a=\sqrt{2022}-1
 a^2+2a-2021=0
 $$
 
-Then
-
 $$
 \begin{aligned}
 x_{n+1}-a
-&=\frac{x_n^2+2021}{2(x_n+1)}-a \\
-&=\frac{x_n^2+2021-2a(x_n+1)}{2(x_n+1)} \\
+&=\frac{x_n^2+2021}{2(x_n+1)}-a
+=\frac{x_n^2+2021-2a(x_n+1)}{2(x_n+1)} \\
 &=\frac{x_n^2+a^2+2a-2a(x_n+1)}{2(x_n+1)} \\
 &=\frac{(x_n-a)^2}{2(x_n+1)}\ge0
 \end{aligned}
@@ -321,9 +211,9 @@ Moreover,
 $$
 \begin{aligned}
 x_{n+1}-x_n
-&=\frac{x_n^2+2021}{2(x_n+1)}-x_n \\
-&=\frac{-x_n^2-2x_n+2021}{2(x_n+1)} \\
-&=-\frac{(x_n-a)(x_n+a+2)}{2(x_n+1)}\le0.
+=\frac{x_n^2+2021}{2(x_n+1)}-x_n
+=\frac{-x_n^2-2x_n+2021}{2(x_n+1)}
+=-\frac{(x_n-a)(x_n+a+2)}{2(x_n+1)}\le0.
 \end{aligned}
 $$
 
@@ -332,13 +222,7 @@ Therefore $\{x_n\}$ is monotone decreasing and bounded below by $a$, so it conve
 Let
 
 $$
-\lim_{n\to\infty}x_n=L.
-$$
-
-Then
-
-$$
-L^2-2(L+1)L+2021=0
+\lim_{n\to\infty}x_n=L\Longrightarrow L^2-2(L+1)L+2021=0
 $$
 
 that is
@@ -399,11 +283,7 @@ $$
 $$
 
 $$
-\lim_{n\to\infty}b_n=\frac{1}{e}
-$$
-
-$$
-\lim_{n\to\infty}n!a_n=\frac{1}{e}
+\lim_{n\to\infty}b_n=\frac{1}{e}\qquad\lim_{n\to\infty}n!a_n=\frac{1}{e}
 $$
 
 **eg.**
@@ -434,9 +314,9 @@ $$
 $$
 \begin{aligned}
 \sum_{n=1}^{\infty}n^2x^n
-&=x\left(\sum_{n=1}^{\infty}nx^n\right)' \\
-&=x\left(\frac{x}{(1-x)^2}\right)' \\
-&=\frac{x(1+x)}{(1-x)^3}
+=x\left(\sum_{n=1}^{\infty}nx^n\right)' 
+=x\left(\frac{x}{(1-x)^2}\right)' 
+=\frac{x(1+x)}{(1-x)^3}
 \end{aligned}
 $$
 
@@ -471,11 +351,7 @@ $$
 For $|x|<1$,
 
 $$
-S'(x)=\sum_{n=1}^{\infty}\frac{2(-1)^{n-1}x^{2n-1}}{2n-1}
-$$
-
-$$
-S''(x)=2\sum_{n=1}^{\infty}(-x^2)^{n-1}
+S'(x)=\sum_{n=1}^{\infty}\frac{2(-1)^{n-1}x^{2n-1}}{2n-1}\qquad S''(x)=2\sum_{n=1}^{\infty}(-x^2)^{n-1}
 =\frac{2}{1+x^2}
 $$
 
@@ -505,9 +381,7 @@ S'(x)=2\arctan x
 $$
 
 $$
-S(x)=\int_0^x2\arctan t\,dt
-=2x\arctan x-2\int_0^x\frac{t}{1+t^2}\,dt
-=2x\arctan x-\ln(1+x^2)
+S(x)=\int_0^x2\arctan t\,dt =2x\arctan x-2\int_0^x\frac{t}{1+t^2}\,dt =2x\arctan x-\ln(1+x^2)
 $$
 
 By continuity, the same sum function holds on $[-1,1]$.
@@ -549,50 +423,21 @@ $$
 $$
 
 $$
-x_n=\frac{1}{x_{n+1}-1}-\frac{1}{x_n-1}
-$$
-
-$$
-\sum_{k=0}^{n}x_k
+x_n=\frac{1}{x_{n+1}-1}-\frac{1}{x_n-1}\qquad\sum_{k=0}^{n}x_k
 =\frac{1}{x_{n+1}-1}-\frac{1}{x_0-1}
 =\frac{1}{x_{n+1}-1}+\frac{3}{2}
 $$
 
 $$
-x_0=\frac13\ge0
-\qquad
-x_{n+1}=\frac{x_n^2}{1-x_n+x_n^2}\ge0
-\qquad
-x_n\ge0
+x_0=\frac13\ge0 \qquad x_{n+1}=\frac{x_n^2}{1-x_n+x_n^2}\ge0 \qquad x_n\ge0\qquad x_{n+1}-x_n =\frac{-x_n(x_n-1)^2}{1-x_n+x_n^2}\le0
 $$
 
 $$
-x_{n+1}-x_n
-=\frac{-x_n(x_n-1)^2}{1-x_n+x_n^2}\le0
+\{x_n\}\text{ is monotone decreasing} \qquad \{x_n\}\text{ converges}\qquad \lim_{n\to\infty}x_n=x \qquad 0\le x<\frac13
 $$
 
 $$
-\{x_n\}\text{ is monotone decreasing}
-\qquad
-\{x_n\}\text{ converges}
-$$
-
-$$
-\lim_{n\to\infty}x_n=x
-\qquad
-0\le x<\frac13
-$$
-
-$$
-x(1-x+x^2)=x^2
-\qquad
-x(x-1)^2=0
-\qquad
-x=0
-$$
-
-$$
-\sum_{k=0}^{\infty}x_k=-1+\frac32=\frac12
+x(1-x+x^2)=x^2 \qquad x(x-1)^2=0 \qquad x=0\qquad \sum_{k=0}^{\infty}x_k=-1+\frac32=\frac12
 $$
 
 **eg.**
@@ -620,23 +465,11 @@ $$
 **Solution.**
 
 $$
-R_n=\sum_{i=n}^{\infty}a_i
-\qquad
- a_n=R_n-R_{n+1}
+R_n=\sum_{i=n}^{\infty}a_i \qquad a_n=R_n-R_{n+1}\qquad \{R_n\}\text{ is monotone decreasing} \qquad \lim_{n\to\infty}R_n=0
 $$
 
 $$
-\{R_n\}\text{ is monotone decreasing}
-\qquad
-\lim_{n\to\infty}R_n=0
-$$
-
-$$
-b_n=\sqrt{R_n}-\sqrt{R_{n+1}}
-$$
-
-$$
-\sum_{k=1}^{n}b_k
+b_n=\sqrt{R_n}-\sqrt{R_{n+1}}\qquad\sum_{k=1}^{n}b_k
 =\sqrt{R_1}-\sqrt{R_{n+1}}
 $$
 
@@ -704,13 +537,7 @@ $$
 Letting $\varepsilon\to0^+$ gives
 
 $$
-\lim_{n\to\infty}u_n=0.
-$$
-
-Hence
-
-$$
-\sum_{n=1}^{\infty}(-1)^n u_n
+\lim_{n\to\infty}u_n=0.\qquad \sum_{n=1}^{\infty}(-1)^n u_n
 $$
 
 converges by Leibniz theorem.

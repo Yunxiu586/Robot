@@ -15,14 +15,7 @@
 
 **Squeeze theorem**.
 
-If
-$$
-y_n\le x_n\le z_n
-\\
-\lim_{n\to\infty}y_n=\lim_{n\to\infty}z_n=a
-$$
-
-then
+If $y_n\le x_n\le z_n$ and $\lim_{n\to\infty}y_n=\lim_{n\to\infty}z_n=a$, then
 
 $$
 \lim_{n\to\infty}x_n=a
@@ -60,28 +53,16 @@ $$
 \lim_{x\to\infty}\left(1+\frac{1}{x}\right)^x=e
 $$
 
-Equivalent forms are
+Equivalent forms include
 
 $$
-\lim_{x\to0}(1+x)^{1/x}=e
+\lim_{x\to0}(1+x)^{1/x}=e\qquad \lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n=e
 $$
 
-and, if $\lim\limits_{x\to x_0}g(x)=\infty$,
+If $\lim\limits_{x\to x_0}g(x)=\infty$ or $\lim\limits_{x\to x_0}g(x)=0$, respectively,
 
 $$
-\lim_{x\to x_0}\left(1+\frac{1}{g(x)}\right)^{g(x)}=e
-$$
-
-If $\lim\limits_{x\to x_0}g(x)=0$, then
-
-$$
-\lim_{x\to x_0}\left(1+g(x)\right)^{1/g(x)}=e
-$$
-
-For sequences,
-
-$$
-\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n=e
+\lim_{x\to x_0}\left(1+\frac{1}{g(x)}\right)^{g(x)}=e\qquad \lim_{x\to x_0}\left(1+g(x)\right)^{1/g(x)}=e
 $$
 
 ##### L'Hospital's rule
@@ -90,14 +71,14 @@ L'Hospital's rule applies to indeterminate forms of type
 $$
 \frac{0}{0},
 \qquad
-\frac{\infty}{\infty}.
+\frac{\infty}{\infty}
 $$
 
 Assume that $f$ and $g$ are differentiable in a punctured neighborhood of the limiting point, $g'(x)\ne0$, and
 $$
 f(x),g(x)\to0
 \quad\text{or}\quad
-|f(x)|,|g(x)|\to\infty.
+|f(x)|,|g(x)|\to\infty
 $$
 
 Other forms can often be transformed into these forms:
@@ -108,42 +89,20 @@ Other forms can often be transformed into these forms:
 | $\infty-\infty$               | Combine terms by a common denominator or rationalization. |
 | $1^\infty$, $0^0$, $\infty^0$ | Take logarithms first.                                    |
 
-If
+If $\lim_{x\to x_0}\frac{f'(x)}{g'(x)}=k$, where $k$ is finite or infinite, then
 
 $$
-\lim_{x\to x_0}\frac{f'(x)}{g'(x)}=k,
-$$
-
-where $k$ is finite or infinite, then
-
-$$
-\lim_{x\to x_0}\frac{f(x)}{g(x)}=k.
+\lim_{x\to x_0}\frac{f(x)}{g(x)}=k
 $$
 
 ##### Equivalent infinitesimals as $x\to0$
 
 $$
-\sin x\sim \arcsin x\sim x
+\sin x\sim \arcsin x\sim x\qquad \tan x\sim \arctan x\sim x\qquad \ln(1+x)\sim e^x-1\sim x
 $$
 
 $$
-\tan x\sim \arctan x\sim x
-$$
-
-$$
-\ln(1+x)\sim e^x-1\sim x
-$$
-
-$$
-x-\sin x\sim \frac{x^3}{6}
-$$
-
-$$
-1-\cos x\sim \frac{x^2}{2}
-$$
-
-$$
-(1+x)^a-1\sim ax
+x-\sin x\sim \frac{x^3}{6}\qquad 1-\cos x\sim \frac{x^2}{2}\qquad (1+x)^a-1\sim ax
 $$
 
 A more precise first-order form is
@@ -530,8 +489,6 @@ A(x)=\int_0^x f(t)\,dt,
 \qquad
 B(x)=\int_0^x tf(t)\,dt.
 $$
-
-Then
 $$
 \begin{aligned}
 \lim_{x\to0}\frac{2\int_0^x(x-t)f(t)\,dt}{x\int_0^x f(x-t)\,dt}

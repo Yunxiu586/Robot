@@ -14,10 +14,7 @@ $$
 \text{existence of the limit}
 $$
 
-Also
-$$
-\text{differentiability}\Longrightarrow\text{existence of partial derivatives}
-$$
+Also, $\text{differentiability}\Longrightarrow\text{existence of partial derivatives}$.
 
 Remarks:
 
@@ -80,29 +77,7 @@ Partial derivatives of $u$ and $v$ are found by differentiating the system direc
 
 **Lagrange multipliers**
 
-To find extrema of
-
-$$
-z=f(x,y)
-$$
-
-subject to
-
-$$
-\varphi(x,y)=0
-$$
-
-At a regular constrained extremum, assume
-
-$$
-\nabla\varphi(x_0,y_0)\ne\boldsymbol{0}.
-$$
-
-Construct
-
-$$
-L(x,y,\lambda)=f(x,y)+\lambda\varphi(x,y)
-$$
+To find extrema of $z=f(x,y)$ subject to $\varphi(x,y)=0$, at a regular constrained extremum assume $\nabla\varphi(x_0,y_0)\ne\boldsymbol{0}$. Construct $L(x,y,\lambda)=f(x,y)+\lambda\varphi(x,y)$ and solve
 
 Solve
 
@@ -148,46 +123,21 @@ $$
 +\frac{1}{h_3}\frac{\partial u}{\partial q_3}\boldsymbol{e}_3
 $$
 
-The directional derivative in the direction $\boldsymbol{e}_l$ is
-
-$$
-\frac{\partial u}{\partial l}=\boldsymbol{e}_l\cdot\nabla u
-$$
+The directional derivative in the direction $\boldsymbol{e}_l$ is $\frac{\partial u}{\partial l}=\boldsymbol{e}_l\cdot\nabla u$.
 
 The gradient is normal to a level surface and points in the direction of fastest increase.
 
 Useful identities
 
 $$
-\nabla(Cu)=C\nabla u
-\qquad
-\nabla(u+v)=\nabla u+\nabla v
+\nabla(Cu)=C\nabla u\qquad \nabla(u+v)=\nabla u+\nabla v\qquad \nabla(uv)=v\nabla u+u\nabla v
 $$
 
 $$
-\nabla(uv)=v\nabla u+u\nabla v
+\nabla\left(\frac{u}{v}\right)=\frac{v\nabla u-u\nabla v}{v^2}\qquad \nabla f(u)=f'(u)\nabla u
 $$
 
-$$
-\nabla\left(\frac{u}{v}\right)
-=\frac{v\nabla u-u\nabla v}{v^2}
-$$
-
-$$
-\nabla f(u)=f'(u)\nabla u
-$$
-
-Let
-
-$$
-\boldsymbol{R}=\boldsymbol{r}-\boldsymbol{r}',
-\qquad
-R=\lVert\boldsymbol{R}\rVert
-\qquad
-\boldsymbol{e}_R=\frac{\boldsymbol{R}}{R}
-$$
-
-Then
+Let $\boldsymbol{R}=\boldsymbol{r}-\boldsymbol{r}'$, $R=\lVert\boldsymbol{R}\rVert$, and $\boldsymbol{e}_R=\frac{\boldsymbol{R}}{R}$. Then
 
 $$
 \nabla R=\boldsymbol{e}_R
@@ -199,11 +149,7 @@ $$
 
 **Divergence**
 
-For
-
-$$
-\boldsymbol{F}=F_x\boldsymbol{e}_x+F_y\boldsymbol{e}_y+F_z\boldsymbol{e}_z
-$$
+For $\boldsymbol{F}=F_x\boldsymbol{e}_x+F_y\boldsymbol{e}_y+F_z\boldsymbol{e}_z$,
 
 $$
 \operatorname{div}\boldsymbol{F}=\nabla\cdot\boldsymbol{F}
@@ -240,13 +186,7 @@ $$
 Useful identities
 
 $$
-\nabla\cdot(C\boldsymbol{F})=C\nabla\cdot\boldsymbol{F}
-\qquad
-\nabla\cdot(\boldsymbol{F}+\boldsymbol{G})=\nabla\cdot\boldsymbol{F}+\nabla\cdot\boldsymbol{G}
-$$
-
-$$
-\nabla\cdot(u\boldsymbol{F})=\nabla u\cdot\boldsymbol{F}+u\nabla\cdot\boldsymbol{F}
+\nabla\cdot(C\boldsymbol{F})=C\nabla\cdot\boldsymbol{F}\qquad \nabla\cdot(\boldsymbol{F}+\boldsymbol{G})=\nabla\cdot\boldsymbol{F}+\nabla\cdot\boldsymbol{G}\qquad \nabla\cdot(u\boldsymbol{F})=\nabla u\cdot\boldsymbol{F}+u\nabla\cdot\boldsymbol{F}
 $$
 
 For $R=|\boldsymbol{r}-\boldsymbol{r}'|$
@@ -300,14 +240,11 @@ $$
 Useful identities
 
 $$
-\nabla\times(C\boldsymbol{F})=C\nabla\times\boldsymbol{F}
-\qquad
-\nabla\times(\boldsymbol{F}+\boldsymbol{G})=\nabla\times\boldsymbol{F}+\nabla\times\boldsymbol{G}
+\nabla\times(C\boldsymbol{F})=C\nabla\times\boldsymbol{F}\qquad \nabla\times(\boldsymbol{F}+\boldsymbol{G})=\nabla\times\boldsymbol{F}+\nabla\times\boldsymbol{G}
 $$
 
 $$
-\nabla\times(u\boldsymbol{F})
-=\nabla u\times\boldsymbol{F}+u\nabla\times\boldsymbol{F}
+\nabla\times(u\boldsymbol{F})=\nabla u\times\boldsymbol{F}+u\nabla\times\boldsymbol{F}
 $$
 
 Solenoidal and irrotational fields
@@ -397,23 +334,11 @@ $$
 
 **Triple integrals**
 
-Cylindrical coordinates.
-
-Use cylindrical coordinates especially for expressions involving $x^2+y^2$
+Cylindrical coordinates are useful especially for expressions involving $x^2+y^2$, with
 
 $$
-x=\rho\cos\theta
-\qquad
-y=\rho\sin\theta
-\qquad
-z=z
+x=\rho\cos\theta\qquad y=\rho\sin\theta\qquad z=z\qquad dV=\rho\,d\rho\,d\theta\,dz
 $$
-
-$$
-dV=\rho\,d\rho\,d\theta\,dz
-$$
-
-Thus
 
 $$
 \iiint_\Omega f(x,y,z)\,dV
@@ -424,19 +349,10 @@ $$
 
 Spherical coordinates.
 
-Use spherical coordinates especially for expressions involving $x^2+y^2+z^2$.
-Here $\varphi$ is the polar angle and $\theta$ is the azimuthal angle
+Use spherical coordinates especially for expressions involving $x^2+y^2+z^2$. Here $\varphi$ is the polar angle and $\theta$ is the azimuthal angle.
 
 $$
-x=r\sin\varphi\cos\theta
-\qquad
-y=r\sin\varphi\sin\theta
-\qquad
-z=r\cos\varphi
-$$
-
-$$
-dV=r^2\sin\varphi\,dr\,d\varphi\,d\theta
+x=r\sin\varphi\cos\theta\qquad y=r\sin\varphi\sin\theta\qquad z=r\cos\varphi\qquad dV=r^2\sin\varphi\,dr\,d\varphi\,d\theta
 $$
 
 **Direction cosines**
@@ -452,13 +368,7 @@ $$
 
 Differentiation of iterated integrals
 
-Let
-
-$$
-G(x)=\int_{a(x)}^{b(x)}\int_{c(x,s)}^{d(x,s)} f(s,t,x)\,dt\,ds
-$$
-
-Then
+Let $G(x)=\int_{a(x)}^{b(x)}\int_{c(x,s)}^{d(x,s)} f(s,t,x)\,dt\,ds$. Then
 
 $$
 \begin{aligned}
@@ -575,10 +485,7 @@ $$
 \iint_{D_{xy}} f(x,y,z(x,y))|\sec\gamma|\,dx\,dy
 $$
 
-where $\gamma$ is the angle between the normal and the positive $z$-axis. Equivalently,
-$$
-dS=\sqrt{1+z_x^2+z_y^2}\,dx\,dy
-$$
+where $\gamma$ is the angle between the normal and the positive $z$-axis; equivalently, $dS=\sqrt{1+z_x^2+z_y^2}\,dx\,dy$.
 
 **Second kind** : with respect to coordinates
 $$
@@ -639,11 +546,7 @@ $$
 
 $$
 w_x=-\frac{z_x}{z^2}+\frac{1}{x^2}=w_u u_x+w_v v_x
-=w_u+\frac{1}{x^2}w_v
-$$
-
-$$
-w_y=-\frac{z_y}{z^2}=w_u u_y+w_v v_y
+=w_u+\frac{1}{x^2}w_v\qquad w_y=-\frac{z_y}{z^2}=w_u u_y+w_v v_y
 =-\frac{1}{y^2}w_v
 $$
 
@@ -720,8 +623,6 @@ Let
 $$
 s=\frac{y}{a}.
 $$
-
-Then
 $$
 f''(s)+\frac{2}{s^3}f''\left(\frac{1}{s}\right)=a^3bs.
 $$
@@ -735,8 +636,6 @@ Solving the two equations,
 $$
 f''(s)=\frac{a^3b}{3}\left(\frac{2}{s^4}-s\right).
 $$
-
-Thus
 $$
 f''(y)=\frac{a^3b}{3}\left(\frac{2}{y^4}-y\right).
 $$
@@ -822,16 +721,7 @@ $$
 **Solution.**
 
 $$
-x=a\cos^3t
-\qquad
-y=a\sin^3t
-\qquad
-0\le t\le\frac{\pi}{2}
-$$
-
-$$
-ds=\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt
-=3a\sin t\cos t\,dt
+x=a\cos^3t \qquad y=a\sin^3t \qquad 0\le t\le\frac{\pi}{2}\qquad ds=\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt =3a\sin t\cos t\,dt
 $$
 
 $$
@@ -854,15 +744,7 @@ $$
 **Solution.**
 
 $$
-\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=0
-\qquad
-L':4x^2+y^2=r^2
-$$
-
-$$
-x=\frac{r}{2}\cos\theta
-\qquad
-y=r\sin\theta
+\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=0 \qquad L':4x^2+y^2=r^2\qquad x=\frac{r}{2}\cos\theta \qquad y=r\sin\theta
 $$
 
 $$
@@ -932,11 +814,7 @@ $$
 
 For
 $$
-\boldsymbol{F}=(y^2+z^2,\ z^2+x^2,\ x^2+y^2),
-$$
-
-$$
-\nabla\times\boldsymbol{F}
+\boldsymbol{F}=(y^2+z^2,\ z^2+x^2,\ x^2+y^2),\qquad\nabla\times\boldsymbol{F}
 =2(y-z)\boldsymbol{e}_x+2(z-x)\boldsymbol{e}_y+2(x-y)\boldsymbol{e}_z.
 $$
 
@@ -1017,13 +895,7 @@ $$
 
 Let $u=\theta-\dfrac{\pi}{6}$. Then
 $$
-I=-8\int_0^{2\pi}|\sin u|\sin\left(u+\frac{\pi}{6}\right)du
-$$
-
-$$
-=-8\int_0^{2\pi}|\sin u|
-\left(\frac{\sqrt3}{2}\sin u+\frac{1}{2}\cos u\right)du
-=0
+I=-8\int_0^{2\pi}|\sin u|\sin\left(u+\frac{\pi}{6}\right)du=-8\int_0^{2\pi}|\sin u| \left(\frac{\sqrt3}{2}\sin u+\frac{1}{2}\cos u\right)du =0
 $$
 
 **eg.**
@@ -1070,8 +942,6 @@ For $0<x<1$ and $0<t<x^2$,
 $$
 0\le\sqrt t\le x.
 $$
-
-Hence
 $$
 \int_0^{x^2}dt\int_x^{\sqrt t}f(t,u)\,du
 =-\int_0^xdu\int_0^{u^2}f(t,u)\,dt.
@@ -1082,8 +952,6 @@ $$
 f(t,u)=3t+2u+o(u),
 \qquad 0\le t\le u^2.
 $$
-
-Therefore
 $$
 \int_0^{x^2}dt\int_x^{\sqrt t}f(t,u)\,du
 =-\int_0^xdu\int_0^{u^2}\left[3t+2u+o(u)\right]dt
@@ -1092,11 +960,7 @@ $$
 
 Since
 $$
-1-\sqrt[4]{1-x^4}\sim\frac{x^4}{4},
-$$
-
-$$
-\text{original expression}=-2.
+1-\sqrt[4]{1-x^4}\sim\frac{x^4}{4},\qquad\Longrightarrow\qquad \text{original expression}=-2.
 $$
 
 **eg.**
@@ -1139,25 +1003,14 @@ $$
 \oint_{C_\rho} f_xdy-f_ydx
 =\rho\int_0^{2\pi}\left(f_x\cos\theta+f_y\sin\theta\right)d\theta.
 $$
-
-Thus
 $$
-\iint_{x^2+y^2\le r^2}(xf_x+yf_y)dx\,dy
-=\int_0^r\rho\,d\rho\oint_{C_\rho} f_xdy-f_ydx
-$$
-
-$$
-=\int_0^r\rho\,d\rho\iint_{x^2+y^2\le\rho^2}(f_{xx}+f_{yy})dx\,dy
+\iint_{x^2+y^2\le r^2}(xf_x+yf_y)dx\,dy =\int_0^r\rho\,d\rho\oint_{C_\rho} f_xdy-f_ydx=\int_0^r\rho\,d\rho\iint_{x^2+y^2\le\rho^2}(f_{xx}+f_{yy})dx\,dy
 $$
 
 $$
 =\int_0^r\rho\,d\rho\iint_{x^2+y^2\le\rho^2}(x^2+y^2)dx\,dy
 =\int_0^r\rho\cdot\frac{\pi\rho^4}{2}d\rho
-=\frac{\pi r^6}{12}
-$$
-
-$$
-\text{original expression}=\frac{\pi}{3}
+=\frac{\pi r^6}{12}\Longrightarrow \text{original expression}=\frac{\pi}{3}
 $$
 
 **eg.**
@@ -1215,15 +1068,7 @@ $$
 **Solution.**
 
 $$
-x=r\sin\varphi\cos\theta
-\qquad
-y=r\sin\varphi\sin\theta
-\qquad
-z=r\cos\varphi
-$$
-
-$$
-\Omega:r^2\le\sin^2\varphi\sin2\theta
+x=r\sin\varphi\cos\theta \qquad y=r\sin\varphi\sin\theta \qquad z=r\cos\varphi\qquad \Omega:r^2\le\sin^2\varphi\sin2\theta
 $$
 
 $$
@@ -1251,17 +1096,7 @@ $$
 **Solution.**
 
 $$
-x=\sin\varphi\cos\theta
-\qquad
-y=\sin\varphi\sin\theta
-\qquad
-z=\cos\varphi
-$$
-
-$$
-\Sigma:x^2+y^2+z^2=1
-\qquad
-I=\iint_\Sigma e^{x-y}\,dS
+x=\sin\varphi\cos\theta \qquad y=\sin\varphi\sin\theta \qquad z=\cos\varphi\qquad \Sigma:x^2+y^2+z^2=1 \qquad I=\iint_\Sigma e^{x-y}\,dS
 $$
 
 $$
@@ -1346,23 +1181,11 @@ Find $f(x)$
 **Solution.**
 
 $$
-f'(x)+xf''(x)+xf(x)-f'(x)-x\sin x-xf'(x)=0
+f'(x)+xf''(x)+xf(x)-f'(x)-x\sin x-xf'(x)=0\qquad f(x)-f'(x)+f''(x)=\sin x
 $$
 
 $$
-f(x)-f'(x)+f''(x)=\sin x
-$$
-
-$$
-r^2-r+1=0
-\qquad
-r=\frac{1}{2}\pm\frac{\sqrt3}{2}i
-$$
-
-$$
-f_h(x)=e^{x/2}\left(C_1\cos\frac{\sqrt3}{2}x+C_2\sin\frac{\sqrt3}{2}x\right)
-\qquad
-f_p(x)=\cos x
+r^2-r+1=0 \qquad r=\frac{1}{2}\pm\frac{\sqrt3}{2}i\qquad f_h(x)=e^{x/2}\left(C_1\cos\frac{\sqrt3}{2}x+C_2\sin\frac{\sqrt3}{2}x\right) \qquad f_p(x)=\cos x
 $$
 
 $$

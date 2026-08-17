@@ -48,8 +48,6 @@ f(x-\varepsilon h)
 \end{aligned}
 $$
 
-Therefore
-
 $$
 h\lvert f'(x)\rvert
 \le
@@ -57,35 +55,13 @@ f(x)+\left|\int_x^{x-\varepsilon h}\bigl[f'(t)-f'(x)\bigr]dt\right|
 $$
 
 $$
-\left|\int_x^{x-\varepsilon h}\bigl[f'(t)-f'(x)\bigr]dt\right|
-\le
-M\int_0^h s\,ds
-=
-\frac{M}{2}h^2
-$$
-
-Thus
-
-$$
-\lvert f'(x)\rvert
-\le
-\frac{f(x)}{h}+\frac{M}{2}h
+\left|\int_x^{x-\varepsilon h}\bigl[f'(t)-f'(x)\bigr]dt\right| \le M\int_0^h s\,ds = \frac{M}{2}h^2\qquad \lvert f'(x)\rvert \le \frac{f(x)}{h}+\frac{M}{2}h
 $$
 
 Take
 
 $$
-h=\sqrt{\frac{2f(x)}{M}}
-$$
-
-Then
-
-$$
-\lvert f'(x)\rvert\le\sqrt{2Mf(x)}
-$$
-
-$$
-\bigl(f'(x)\bigr)^2\le 2Mf(x)
+h=\sqrt{\frac{2f(x)}{M}}\qquad\Longrightarrow\qquad \lvert f'(x)\rvert\le\sqrt{2Mf(x)}\qquad \bigl(f'(x)\bigr)^2\le 2Mf(x)
 $$
 
 ---
@@ -121,15 +97,7 @@ $$
 Let
 
 $$
-F(x)=f^2(x)-\bigl(f'(x)\bigr)^2
-$$
-
-Then
-
-$$
-F'(x)=2f(x)f'(x)-2f'(x)f''(x)
-=2f'(x)\bigl[f(x)-f''(x)\bigr]
-\le0
+F(x)=f^2(x)-\bigl(f'(x)\bigr)^2\qquad F'(x)=2f(x)f'(x)-2f'(x)f''(x) =2f'(x)\bigl[f(x)-f''(x)\bigr] \le0
 $$
 
 Hence $F$ is decreasing on $(0,1)$.
@@ -153,13 +121,7 @@ $$
 we have
 
 $$
-0\le f(a)\le1
-$$
-
-Thus
-
-$$
-\lvert f'(\xi_a)\rvert\le\frac1a
+0\le f(a)\le1\Longrightarrow \lvert f'(\xi_a)\rvert\le\frac1a
 $$
 
 Since $F$ is decreasing,
@@ -171,15 +133,7 @@ $$
 Also
 
 $$
-F(\xi_a)=f^2(\xi_a)-\bigl(f'(\xi_a)\bigr)^2
-\ge
--\frac1{a^2}
-$$
-
-Therefore
-
-$$
-1-\bigl(f'(0)\bigr)^2\ge -\frac1{a^2}
+F(\xi_a)=f^2(\xi_a)-\bigl(f'(\xi_a)\bigr)^2 \ge -\frac1{a^2}\qquad 1-\bigl(f'(0)\bigr)^2\ge -\frac1{a^2}
 $$
 
 $$
@@ -225,8 +179,8 @@ Find all functions for which equality holds
 $$
 \begin{aligned}
 \int_0^1 f^2(x)\,dx
-&=\int_0^1 f^2(x)d(x-1)\\
-&=(x-1)f^2(x)\Big|_0^1-
+&=\int_0^1 f^2(x)d(x-1)
+=(x-1)f^2(x)\Big|_0^1-
 \int_0^1 2(x-1)f(x)f'(x)\,dx\\
 &=\int_0^1 2(1-x)f(x)f'(x)\,dx
 \end{aligned}
@@ -341,17 +295,7 @@ $$
 Let
 
 $$
-A=\int_0^1 f(x)\,dx
-\qquad
-B=\int_0^1\frac1{f(x)}\,dx
-$$
-
-Then
-
-$$
-AB=\frac13A(3B)
-\le
-\frac1{12}(A+3B)^2
+A=\int_0^1 f(x)\,dx \qquad B=\int_0^1\frac1{f(x)}\,dx\qquad AB=\frac13A(3B) \le \frac1{12}(A+3B)^2
 $$
 
 $$
@@ -365,8 +309,6 @@ Since $1\le f(x)\le3$,
 $$
 f(x)+\frac3{f(x)}\le4
 $$
-
-Therefore
 
 $$
 \begin{aligned}
@@ -382,8 +324,6 @@ AB
 =\frac43
 \end{aligned}
 $$
-
-Thus
 
 $$
 1\le
@@ -464,13 +404,7 @@ $$
 Construct
 
 $$
-F(x)=f(x)e^{\int_0^x3f^2(t)\,dt}
-$$
-
-Then
-
-$$
-F'(x)=\bigl[f'(x)+3f^3(x)\bigr]e^{\int_0^x3f^2(t)\,dt}
+F(x)=f(x)e^{\int_0^x3f^2(t)\,dt}\qquad F'(x)=\bigl[f'(x)+3f^3(x)\bigr]e^{\int_0^x3f^2(t)\,dt}
 $$
 
 Since
@@ -482,13 +416,7 @@ $$
 by Rolle's theorem, there exists $\xi\in(x_1,x_2)$ such that
 
 $$
-F'(\xi)=0
-$$
-
-Therefore
-
-$$
-f'(\xi)+3f^3(\xi)=0
+F'(\xi)=0\Longrightarrow f'(\xi)+3f^3(\xi)=0
 $$
 
 ---
@@ -510,8 +438,8 @@ Prove that $f(x)$ has exactly two real roots in $(-1,1)$
 $$
 \begin{aligned}
 f(-1)
-&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}(t+1)e^{-t^2}\,dt\\
-&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}e^{-t^2}\,dt\\
+&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}(t+1)e^{-t^2}\,dt
+=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}e^{-t^2}\,dt\\
 &>-\frac12\left(1+\frac1e\right)+\frac2e
 =\frac{3-e}{2e}>0
 \end{aligned}
@@ -520,8 +448,8 @@ $$
 $$
 \begin{aligned}
 f(1)
-&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}(1-t)e^{-t^2}\,dt\\
-&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}e^{-t^2}\,dt\\
+&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}(1-t)e^{-t^2}\,dt
+=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}e^{-t^2}\,dt\\
 &>-\frac12\left(1+\frac1e\right)+\frac2e
 =\frac{3-e}{2e}>0
 \end{aligned}
@@ -530,10 +458,9 @@ $$
 $$
 \begin{aligned}
 f(0)
-&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}\lvert t\rvert e^{-t^2}\,dt\\
-&=-\frac12\left(1+\frac1e\right)+2\int_0^1te^{-t^2}\,dt\\
-&=-\frac12\left(1+\frac1e\right)+1-\frac1e\\
-&=\frac{e-3}{2e}<0
+&=-\frac12\left(1+\frac1e\right)+\int_{-1}^{1}\lvert t\rvert e^{-t^2}\,dt
+=-\frac12\left(1+\frac1e\right)+2\int_0^1te^{-t^2}\,dt\\
+&=-\frac12\left(1+\frac1e\right)+1-\frac1e=\frac{e-3}{2e}<0
 \end{aligned}
 $$
 
@@ -550,18 +477,13 @@ f(x)
 \end{aligned}
 $$
 
-Thus
-
 $$
 \begin{aligned}
 f'(x)
-&=\int_{-1}^x e^{-t^2}\,dt-
-\int_x^1e^{-t^2}\,dt\\
-&=\int_{-x}^x e^{-t^2}\,dt
+=\int_{-1}^x e^{-t^2}\,dt-
+\int_x^1e^{-t^2}\,dt=\int_{-x}^x e^{-t^2}\,dt
 \end{aligned}
 $$
-
-Hence
 
 $$
 -1<x<0\Rightarrow f'(x)<0
@@ -602,15 +524,7 @@ $$
 For $x\ge0$,
 
 $$
-f(x)=\int_0^x f'(t)\,dt
-$$
-
-Thus
-
-$$
-\lvert f(x)\rvert
-\le
-A\int_0^x\lvert f(t)\rvert\,dt
+f(x)=\int_0^x f'(t)\,dt\qquad \lvert f(x)\rvert \le A\int_0^x\lvert f(t)\rvert\,dt
 $$
 
 Let $x_0>0$ and let
@@ -674,13 +588,7 @@ $$
 Let
 
 $$
-u=y'+y
-$$
-
-Then
-
-$$
-u'+13u=f(x)
+u=y'+y\qquad u'+13u=f(x)
 $$
 
 Since $f$ is bounded, there exists $M>0$ such that
@@ -695,15 +603,13 @@ $$
 u(x)=e^{-13x}\left[u(0)+\int_0^x f(t)e^{13t}\,dt\right]
 $$
 
-Hence
-
 $$
 \begin{aligned}
 \lvert u(x)\rvert
-&\le
+\le
 \lvert u(0)\rvert e^{-13x}
-+e^{-13x}\int_0^x Me^{13t}\,dt\\
-&\le
++e^{-13x}\int_0^x Me^{13t}\,dt
+\le
 \lvert u(0)\rvert+\frac{M}{13}
 \end{aligned}
 $$
@@ -810,27 +716,13 @@ $$
 Let
 
 $$
-g(x)=f(x)+3x-2
-$$
-
-Then
-
-$$
-g(0)=-2
-\qquad
- g(1)=2
+g(x)=f(x)+3x-2\qquad g(0)=-2 \qquad g(1)=2
 $$
 
 By the intermediate value theorem, there exists $x_0\in(0,1)$ such that
 
 $$
-g(x_0)=0
-$$
-
-Thus
-
-$$
-f(x_0)=2-3x_0
+g(x_0)=0\qquad\Longrightarrow\qquad f(x_0)=2-3x_0
 $$
 
 Let
@@ -850,16 +742,8 @@ $$
 such that
 
 $$
-f'(\xi)=\frac{f(c)-f(0)}{c}
-=\frac{f(c)}{c}
+f'(\xi)=\frac{f(c)-f(0)}{c} =\frac{f(c)}{c}\qquad f'(\eta)=\frac{f(1)-f(c)}{1-c} =\frac{1-f(c)}{1-c}
 $$
-
-$$
-f'(\eta)=\frac{f(1)-f(c)}{1-c}
-=\frac{1-f(c)}{1-c}
-$$
-
-Therefore
 
 $$
 \begin{aligned}
@@ -915,27 +799,13 @@ $$
 Let
 
 $$
-h(x)=f(x)+x-1
-$$
-
-Then
-
-$$
-h(0)=-1
-\qquad
-h(1)=2
+h(x)=f(x)+x-1\qquad h(0)=-1 \qquad h(1)=2
 $$
 
 By the intermediate value theorem, there exists $a\in(0,1)$ such that
 
 $$
-h(a)=0
-$$
-
-Thus
-
-$$
-f(a)=1-a
+h(a)=0\qquad\Longrightarrow\qquad f(a)=1-a
 $$
 
 By the Lagrange mean value theorem, there exist
@@ -949,36 +819,13 @@ $$
 such that
 
 $$
-f'(\xi_1)=\frac{f(a)-f(0)}{a}
-=\frac{1-a}{a}
-$$
-
-$$
-f'(\xi_2)=\frac{f(1)-f(a)}{1-a}
-=\frac{1+a}{1-a}
-$$
-
-Therefore
-
-$$
-f'(\xi_1)f'(\xi_2)
-=
-\frac{1+a}{a}
->2
+f'(\xi_1)=\frac{f(a)-f(0)}{a} =\frac{1-a}{a}\qquad f'(\xi_2)=\frac{f(1)-f(a)}{1-a} =\frac{1+a}{1-a}\qquad f'(\xi_1)f'(\xi_2) = \frac{1+a}{a} >2
 $$
 
 Choose $\xi_3\in(0,1)$, distinct from $\xi_1$ and $\xi_2$, such that
 
 $$
-\sqrt{1-\xi_3}
-\ge
-\frac{2}{f'(\xi_1)f'(\xi_2)}
-$$
-
-Then
-
-$$
-f'(\xi_1)f'(\xi_2)\sqrt{1-\xi_3}\ge2
+\sqrt{1-\xi_3} \ge \frac{2}{f'(\xi_1)f'(\xi_2)}\qquad f'(\xi_1)f'(\xi_2)\sqrt{1-\xi_3}\ge2
 $$
 
 ---
@@ -1026,18 +873,8 @@ $$
 Take
 
 $$
-t=\frac{\pi}{2n}
+t=\frac{\pi}{2n}\qquad \frac12t^2n^4+\frac{\pi^4}{32t^2}-\frac{\pi^2}{8} = \left(\frac{n^2}{4}-\frac18\right)\pi^2
 $$
-
-Then
-
-$$
-\frac12t^2n^4+\frac{\pi^4}{32t^2}-\frac{\pi^2}{8}
-=
-\left(\frac{n^2}{4}-\frac18\right)\pi^2
-$$
-
-Therefore
 
 $$
 \int_0^{\pi/2}x\left(\frac{\sin nx}{\sin x}\right)^4dx
@@ -1077,8 +914,6 @@ N=[x]
 N\le x<N+1
 $$
 
-Then
-
 $$
 \begin{aligned}
 f(x)
@@ -1090,8 +925,6 @@ f(x)
 \end{aligned}
 $$
 
-Thus
-
 $$
 e^{f(x)}=\frac{N!e^x}{x^N}
 $$
@@ -1101,8 +934,6 @@ By Stirling's formula,
 $$
 N!\sim\sqrt{2\pi N}\left(\frac Ne\right)^N
 $$
-
-Hence
 
 $$
 e^{f(x)}
@@ -1117,8 +948,6 @@ $$
 \left(\frac Nx\right)^Ne^{x-N}
 \le e
 $$
-
-Therefore
 
 $$
 e^{f(x)}\asymp\sqrt N\asymp\sqrt x
@@ -1186,8 +1015,6 @@ It converges if and only if
 $$
 \frac14+\frac p2>1
 $$
-
-Therefore
 
 $$
 p>\frac32

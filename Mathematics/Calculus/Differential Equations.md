@@ -4,13 +4,7 @@
 
 ##### First-order linear differential equation
 
-For
-
-$$
-\frac{dy}{dx}+P(x)y=Q(x)
-$$
-
-the solution is
+For $\frac{dy}{dx}+P(x)y=Q(x)$, the solution is
 
 $$
 y=e^{-\int P(x)\,dx}
@@ -21,25 +15,7 @@ $$
 
 ##### Bernoulli equation
 
-For
-
-$$
-\frac{dy}{dx}+P(x)y=Q(x)y^k
-$$
-
-dividing by $y^k$ gives
-
-$$
-y^{-k}\frac{dy}{dx}+P(x)y^{1-k}=Q(x)
-$$
-
-Let
-
-$$
-z=y^{1-k}
-$$
-
-Then
+For $\frac{dy}{dx}+P(x)y=Q(x)y^k$, dividing by $y^k$ gives $y^{-k}\frac{dy}{dx}+P(x)y^{1-k}=Q(x)$. Let $z=y^{1-k}$; then
 
 $$
 \frac{1}{1-k}\frac{dz}{dx}+P(x)z=Q(x)
@@ -51,25 +27,7 @@ which is a first-order linear equation.
 
 Case 1: $y$ does not appear explicitly
 
-If
-
-$$
-y''=f(x,y')
-$$
-
-let
-
-$$
-p=y'
-$$
-
-Then
-
-$$
-y''=\frac{dp}{dx}=p'
-$$
-
-so the equation becomes
+If $y''=f(x,y')$, let $p=y'$. Since $y''=\frac{dp}{dx}=p'$, the equation becomes
 
 $$
 p'=f(x,p)
@@ -77,25 +35,7 @@ $$
 
 Case 2: $x$ does not appear explicitly
 
-If
-
-$$
-y''=f(y,y')
-$$
-
-let
-
-$$
-p=y'
-$$
-
-Then
-
-$$
-y''=\frac{dp}{dy}\frac{dy}{dx}=p\frac{dp}{dy}
-$$
-
-so the equation becomes
+If $y''=f(y,y')$, let $p=y'$. Since $y''=\frac{dp}{dy}\frac{dy}{dx}=p\frac{dp}{dy}$, the equation becomes
 
 $$
 p\frac{dp}{dy}=f(y,p)
@@ -103,13 +43,7 @@ $$
 
 ##### Constant-coefficient nonhomogeneous linear equations
 
-Consider
-
-$$
-y''+py'+qy=f(x)
-$$
-
-The characteristic equation is
+Consider $y''+py'+qy=f(x)$. The characteristic equation is
 
 $$
 r^2+pr+q=0
@@ -125,13 +59,7 @@ $$
 
 **Particular solution**.
 
-If
-
-$$
-f(x)=e^{\lambda x}P_m(x)
-$$
-
-then a trial particular solution is
+If $f(x)=e^{\lambda x}P_m(x)$, then a trial particular solution is
 
 $$
 y^*=x^s Q_m(x)e^{\lambda x}
@@ -148,17 +76,7 @@ s=
 \end{cases}
 $$
 
-If
-
-$$
-f(x)=e^{\lambda x}\left[P_l^{(1)}(x)\cos\omega x+P_m^{(2)}(x)\sin\omega x\right]
-$$
-
-let
-
-$$
-n=\max\{l,m\}
-$$
+If $f(x)=e^{\lambda x}\left[P_l^{(1)}(x)\cos\omega x+P_m^{(2)}(x)\sin\omega x\right]$, let $n=\max\{l,m\}$.
 
 If $\lambda+i\omega$ is not a characteristic root, take
 
@@ -199,17 +117,7 @@ y_h(x)=C_1e^{3x}+C_2e^{-x}
 $$
 
 $$
-y_p=-\frac{1}{3},
-\qquad
-y(x)=C_1e^{3x}+C_2e^{-x}-\frac{1}{3}
-$$
-
-$$
-y(0)=0,
-\quad
-y'(0)=1
-\quad\Rightarrow\quad
- y(x)=\frac{1}{3}e^{3x}-\frac{1}{3}
+y_p=-\frac{1}{3}, \qquad y(x)=C_1e^{3x}+C_2e^{-x}-\frac{1}{3}\qquad y(0)=0, \quad y'(0)=1 \quad\Rightarrow\quad y(x)=\frac{1}{3}e^{3x}-\frac{1}{3}
 $$
 
 **eg.**
@@ -223,11 +131,7 @@ $$
 **Solution.**
 
 $$
--\ln x\,d\cos y+\cos y(1-x\cos y)d\ln x=0
-$$
-
-$$
-\cos y\,d\ln x-\ln x\,d\cos y=x\cos^2y\,d\ln x
+-\ln x\,d\cos y+\cos y(1-x\cos y)d\ln x=0\qquad\Longrightarrow\qquad \cos y\,d\ln x-\ln x\,d\cos y=x\cos^2y\,d\ln x
 $$
 
 $$
@@ -254,14 +158,7 @@ $$
 **Solution.**
 
 $$
-(x^2+y^2+3)dy^2=2dx^2(2y^2-x^2)
-\qquad
-u=x^2,
-v=y^2
-$$
-
-$$
-(u+v+3)dv=2du(2v-u)
+(x^2+y^2+3)dy^2=2dx^2(2y^2-x^2) \qquad u=x^2, v=y^2\qquad (u+v+3)dv=2du(2v-u)
 $$
 
 $$
@@ -319,16 +216,7 @@ $$
 $$
 
 $$
-\ln p=2\ln(z-1)-3\ln(z-2)+\ln C,
-\qquad
-p=x^2+2,
-\quad
-z=\frac{y^2+1}{x^2+2}
-$$
-
-$$
-\ln(x^2+2)
-=2\ln(y^2-x^2-1)-2\ln(x^2+2)-3\ln(y^2-2x^2-3)+3\ln(x^2+2)+\ln C
+\ln p=2\ln(z-1)-3\ln(z-2)+\ln C, \qquad p=x^2+2, \quad z=\frac{y^2+1}{x^2+2}\\ \ln(x^2+2) =2\ln(y^2-x^2-1)-2\ln(x^2+2)-3\ln(y^2-2x^2-3)+3\ln(x^2+2)+\ln C
 $$
 
 $$
